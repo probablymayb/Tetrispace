@@ -31,6 +31,7 @@ public class EventManager : Singleton<EventManager>
     /// EventManager.Instance.PlayerHpChanged(newHpValue);
     /// </summary>
     public event Action<int> onPlayerHpChanged;
+    public event Action<Transform> onPlayerMove;
 
     /// <summary>
     /// 플레이어 HP 변경 이벤트를 발생시키는 메서드
@@ -41,6 +42,10 @@ public class EventManager : Singleton<EventManager>
         onPlayerHpChanged?.Invoke(newHp);
     }
 
+    public void PlayerMove(Transform trans)
+    {
+        onPlayerMove?.Invoke(trans);
+    }
     #endregion
 
 

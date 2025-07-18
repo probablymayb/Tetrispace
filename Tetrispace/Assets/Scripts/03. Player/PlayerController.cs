@@ -49,6 +49,9 @@ public class PlayerController : MonoBehaviour
         worldPos.z = 0; // 2D 게임용
 
         transform.position = worldPos;
+        EventManager.Instance.PlayerMove(this.transform);
+
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -66,6 +69,9 @@ public class PlayerController : MonoBehaviour
             moveInput = Vector2.zero;
             SnapToNearestTile();
         }
+
+        //이동
+        EventManager.Instance.PlayerMove(this.transform);
     }
 
     private void SnapToNearestTile()

@@ -6,36 +6,58 @@ using UnityEngine;
 public class GridSystem
 {
     [System.Serializable]
-    // 그리드 시스템 설정
     public static class GridSettings
     {
-        public const float GRID_SIZE = 28f;          // 그리드 한 칸의 크기 (픽셀)
-        public const int GRID_WIDTH = 32;            // 가로 그리드 개수 (1024 / 32)
-        public const int GRID_HEIGHT = 24;           // 세로 그리드 개수 (768 / 32)
-        public const float REFERENCE_WIDTH = 1024f;  // 기준 해상도 가로
-        public const float REFERENCE_HEIGHT = 768f;  // 기준 해상도 세로
+        // === 고정 해상도 및 그리드 설정 ===
+        public const float REFERENCE_WIDTH = 1024f;   // 고정 해상도 가로
+        public const float REFERENCE_HEIGHT = 784f;   // 고정 해상도 세로
+        public const float GRID_SIZE = 28f;           // 그리드 한 칸 크기 (픽셀)
+
+        // === 계산된 그리드 정보 ===
+        public static int ActualGridWidth => 32;      // 1024 / 28 = 36.57 → 36개 (0~35)
+        public static int ActualGridHeight => 27;     // 784 / 28 = 28 → 28개 (0~27)
+
+        // === 여백 계산 ===
+        public static float HorizontalMargin => 128f;   // (1024 - 36*28) / 2 = 8px
+        public static float VerticalMargin => 12f;     // (784 - 28*28) / 2 = 0px (정확히 나누어떨어짐)
     }
 
-    public float MinY { get; private set; }
-    public float MaxY { get; private set; }
-    public float SpawnX { get; private set; }
-    public static Vector2Int GridPos = new Vector2Int(0,0);
-    public static Vector2Int GridMiddlePos = new Vector2Int(0,0);
+    private static Vector2Int minVector = new Vector2Int(64, 6);
+    private static Vector2Int maxVector = new Vector2Int(960, 762);
 
+    // === 정적 그리드 위치 변수 ===
+    public static Vector2Int GridPos = new Vector2Int(0, 0);
+    public static Vector2Int GridMiddlePos = new Vector2Int(0, 0);
+
+    /// <summary>
+    /// PlayerController용 그리드 위치 계산
+    /// GridPos[0][0] = 8px, GridPos[35][35] = 988px
+    /// </summary>
     public static Vector2Int GetGridPos(int gridX, int gridY)
     {
-        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
-            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
+        // 범위 체크
+        if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
+            gridY < 0 || gridY >= GridSettings.ActualGridHeight)
         {
-            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
+            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}] (최대: {GridSettings.ActualGridWidth - 1}x{GridSettings.ActualGridHeight - 1})");
             return Vector2Int.zero;
         }
 
-        float posX = (gridX * GridSettings.GRID_SIZE);
-        float posY = (gridY * GridSettings.GRID_SIZE);
+        // PlayerController 위치 계산: 여백 + (인덱스 * 그리드크기)
+        float posX = minVector.x + (gridX * GridSettings.GRID_SIZE);
+        float posY = minVector.x + (gridY * GridSettings.GRID_SIZE);
 
+        if (posX > maxVector.x)
+        {
+            posX = maxVector.x;
+        }
+        
+        if (posY > maxVector.y)
+        {
+            posY = maxVector.y;
+        }
 
-        // 현재 해상도에 맞게 스케일링
+        // 현재 해상도에 맞게 스케일링 (고정 해상도라면 보통 1.0)
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
         float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
 
@@ -45,22 +67,28 @@ public class GridSystem
         return new Vector2Int((int)posX, (int)posY);
     }
 
+    /// <summary>
+    /// Block용 그리드 중심점 계산
+    /// GridMiddlePos[0][0] = 22px, GridMiddlePos[35][35] = 1002px
+    /// </summary>
     public static Vector2Int GetGridMiddlePos(int gridX, int gridY)
     {
-        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
-            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
+        // 범위 체크
+        if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
+            gridY < 0 || gridY >= GridSettings.ActualGridHeight)
         {
-            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
+            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}] (최대: {GridSettings.ActualGridWidth - 1}x{GridSettings.ActualGridHeight - 1})");
             return Vector2Int.zero;
         }
 
-        // 그리드 중심점 계산 (기준 해상도 기준)
-        float posX = (gridX * GridSettings.GRID_SIZE) + (0.5f * GridSettings.GRID_SIZE);
-        float posY = (gridY * GridSettings.GRID_SIZE) + (0.5f * GridSettings.GRID_SIZE);
+        // Block 중심점 계산: 여백 + (인덱스 * 그리드크기) + (그리드크기 / 2)
+        float posX = GridSettings.HorizontalMargin + (gridX * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
+        float posY = GridSettings.VerticalMargin + (gridY * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
 
         // 현재 해상도에 맞게 스케일링
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
         float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
+
         posX *= scaleX;
         posY *= scaleY;
 
@@ -68,24 +96,21 @@ public class GridSystem
     }
 
     /// <summary>
-    /// 그리드 인덱스를 받아서 해당 그리드의 월드 좌표를 반환
+    /// PlayerController용 월드 좌표 계산
     /// </summary>
-    /// <param name="gridX">그리드 X 인덱스 (0 ~ 31)</param>
-    /// <param name="gridY">그리드 Y 인덱스 (0 ~ 23)</param>
-    /// <returns>그리드 중심점의 월드 좌표</returns>
     public static Vector3 GetGridWorldPosition(int gridX, int gridY)
     {
-        // 인덱스 범위 체크
-        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
-            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
+        // 범위 체크
+        if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
+            gridY < 0 || gridY >= GridSettings.ActualGridHeight)
         {
             Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
             return Vector3.zero;
         }
 
-        // 그리드 중심점 계산 (스크린 좌표)
-        float screenX = (gridX * GridSettings.GRID_SIZE);
-        float screenY = (gridY * GridSettings.GRID_SIZE);
+        // 스크린 좌표 계산
+        float screenX = GridSettings.HorizontalMargin + (gridX * GridSettings.GRID_SIZE);
+        float screenY = GridSettings.VerticalMargin + (gridY * GridSettings.GRID_SIZE);
 
         // 현재 해상도에 맞게 스케일링
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
@@ -94,40 +119,7 @@ public class GridSystem
         screenX *= scaleX;
         screenY *= scaleY;
 
-        // Unity 스크린 좌표계는 왼쪽 아래가 (0,0)이므로 Y축 보정
-        screenY = Screen.height - screenY;
-
-        // 스크린 좌표를 월드 좌표로 변환
-        Vector3 screenPos = new Vector3(screenX, screenY, 0);
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        worldPos.z = 0;
-
-        return worldPos;
-    }
-
-
-    public static Vector3 GetGridMiddleWorldPosition(int gridX, int gridY)
-    {
-        // 인덱스 범위 체크
-        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
-            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
-        {
-            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
-            return Vector3.zero;
-        }
-
-        // 그리드 중심점 계산 (스크린 좌표)
-        float screenX = (gridX * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
-        float screenY = (gridY * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
-
-        // 현재 해상도에 맞게 스케일링
-        float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
-        float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
-
-        screenX *= scaleX;
-        screenY *= scaleY;
-
-        // Unity 스크린 좌표계는 왼쪽 아래가 (0,0)이므로 Y축 보정
+        // Unity 스크린 좌표계 보정 (왼쪽 아래가 (0,0))
         screenY = Screen.height - screenY;
 
         // 스크린 좌표를 월드 좌표로 변환
@@ -139,24 +131,21 @@ public class GridSystem
     }
 
     /// <summary>
-    /// 그리드 인덱스를 받아서 해당 그리드의 스크린 좌표를 반환
+    /// Block용 월드 좌표 중심점 계산
     /// </summary>
-    /// <param name="gridX">그리드 X 인덱스 (0 ~ 31)</param>
-    /// <param name="gridY">그리드 Y 인덱스 (0 ~ 23)</param>
-    /// <returns>그리드 중심점의 스크린 좌표</returns>
-    public static Vector2 GetGridScreenPosition(int gridX, int gridY)
+    public static Vector3 GetGridMiddleWorldPosition(int gridX, int gridY)
     {
-        // 인덱스 범위 체크
-        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
-            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
+        // 범위 체크
+        if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
+            gridY < 0 || gridY >= GridSettings.ActualGridHeight)
         {
             Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
-            return Vector2.zero;
+            return Vector3.zero;
         }
 
-        // 그리드 중심점 계산 (스크린 좌표)
-        float screenX = (gridX * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
-        float screenY = (gridY * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
+        // 스크린 좌표 계산 (중심점)
+        float screenX = GridSettings.HorizontalMargin + (gridX * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
+        float screenY = GridSettings.VerticalMargin + (gridY * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
 
         // 현재 해상도에 맞게 스케일링
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
@@ -165,17 +154,46 @@ public class GridSystem
         screenX *= scaleX;
         screenY *= scaleY;
 
-        // Unity 스크린 좌표계는 왼쪽 아래가 (0,0)이므로 Y축 보정
+        // Unity 스크린 좌표계 보정
         screenY = Screen.height - screenY;
 
-        return new Vector2(screenX, screenY);
+        // 스크린 좌표를 월드 좌표로 변환
+        Vector3 screenPos = new Vector3(screenX, screenY, 0);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        worldPos.z = 0;
+
+        return worldPos;
+    }
+
+    /// <summary>
+    /// 스크린 좌표를 그리드 인덱스로 변환
+    /// </summary>
+    public static Vector2Int ScreenToGridIndex(Vector2 screenPos)
+    {
+        // 현재 해상도에 맞게 역스케일링
+        float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
+        float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
+
+        screenPos.x /= scaleX;
+        screenPos.y /= scaleY;
+
+        // 여백을 빼고 그리드 인덱스 계산
+        screenPos.x -= GridSettings.HorizontalMargin;
+        screenPos.y -= GridSettings.VerticalMargin;
+
+        int gridX = Mathf.FloorToInt(screenPos.x / GridSettings.GRID_SIZE);
+        int gridY = Mathf.FloorToInt(screenPos.y / GridSettings.GRID_SIZE);
+
+        // 범위 클램핑
+        gridX = Mathf.Clamp(gridX, 0, GridSettings.ActualGridWidth - 1);
+        gridY = Mathf.Clamp(gridY, 0, GridSettings.ActualGridHeight - 1);
+
+        return new Vector2Int(gridX, gridY);
     }
 
     /// <summary>
     /// 월드 좌표를 그리드 인덱스로 변환
     /// </summary>
-    /// <param name="worldPos">월드 좌표</param>
-    /// <returns>그리드 인덱스 (x, y)</returns>
     public static Vector2Int WorldToGridIndex(Vector3 worldPos)
     {
         // 월드 좌표를 스크린 좌표로 변환
@@ -184,47 +202,55 @@ public class GridSystem
         // Unity 스크린 좌표계 보정
         screenPos.y = Screen.height - screenPos.y;
 
-        // 현재 해상도에 맞게 역스케일링
-        float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
-        float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
-
-        screenPos.x /= scaleX;
-        screenPos.y /= scaleY;
-
-        // 그리드 인덱스 계산
-        int gridX = Mathf.FloorToInt(screenPos.x / GridSettings.GRID_SIZE);
-        int gridY = Mathf.FloorToInt(screenPos.y / GridSettings.GRID_SIZE);
-
-        // 범위 클램핑
-        gridX = Mathf.Clamp(gridX, 0, GridSettings.GRID_WIDTH - 1);
-        gridY = Mathf.Clamp(gridY, 0, GridSettings.GRID_HEIGHT - 1);
-
-        return new Vector2Int(gridX, gridY);
+        return ScreenToGridIndex(new Vector2(screenPos.x, screenPos.y));
     }
 
     /// <summary>
-    /// 그리드 영역 내의 유효한 인덱스인지 확인
+    /// 유효한 그리드 인덱스인지 확인
     /// </summary>
-    /// <param name="gridX">그리드 X 인덱스</param>
-    /// <param name="gridY">그리드 Y 인덱스</param>
-    /// <returns>유효한 인덱스인지 여부</returns>
     public static bool IsValidGridIndex(int gridX, int gridY)
     {
-        return gridX >= 0 && gridX < GridSettings.GRID_WIDTH &&
-               gridY >= 0 && gridY < GridSettings.GRID_HEIGHT;
+        return gridX >= 0 && gridX < GridSettings.ActualGridWidth &&
+               gridY >= 0 && gridY < GridSettings.ActualGridHeight;
     }
 
     /// <summary>
-    /// 그리드 시스템 디버그 정보 출력
+    //그리드 시스템 디버그 정보 출력
     /// </summary>
     public static void DebugGridInfo()
     {
-        Debug.Log($"그리드 시스템 정보:");
-        Debug.Log($"- 그리드 크기: {GridSettings.GRID_SIZE}px");
-        Debug.Log($"- 그리드 개수: {GridSettings.GRID_WIDTH} x {GridSettings.GRID_HEIGHT}");
-        Debug.Log($"- 기준 해상도: {GridSettings.REFERENCE_WIDTH} x {GridSettings.REFERENCE_HEIGHT}");
-        Debug.Log($"- 현재 해상도: {Screen.width} x {Screen.height}");
-        Debug.Log($"- 스케일 비율: {Screen.width / GridSettings.REFERENCE_WIDTH:F2} x {Screen.height / GridSettings.REFERENCE_HEIGHT:F2}");
+        Debug.Log($"===  최종 그리드 시스템 정보 ===");
+        Debug.Log($"해상도: {GridSettings.REFERENCE_WIDTH} x {GridSettings.REFERENCE_HEIGHT}");
+        Debug.Log($"그리드 크기: {GridSettings.GRID_SIZE}px");
+        Debug.Log($"그리드 개수: {GridSettings.ActualGridWidth} x {GridSettings.ActualGridHeight} (0~{GridSettings.ActualGridWidth - 1}, 0~{GridSettings.ActualGridHeight - 1})");
+        Debug.Log($"여백: 가로 {GridSettings.HorizontalMargin}px, 세로 {GridSettings.VerticalMargin}px");
+        Debug.Log($"");
+        Debug.Log($"=== PlayerController 위치 (GetGridPos) ===");
+        Debug.Log($"GridPos[0][0] = {GridSettings.HorizontalMargin}px");
+        Debug.Log($"GridPos[35][27] = {GridSettings.HorizontalMargin + 35 * GridSettings.GRID_SIZE}px, {GridSettings.VerticalMargin + 27 * GridSettings.GRID_SIZE}px");
+        Debug.Log($"");
+        Debug.Log($"=== Block 위치 (GetGridMiddlePos) ===");
+        Debug.Log($"GridMiddlePos[0][0] = {GridSettings.HorizontalMargin + GridSettings.GRID_SIZE * 0.5f}px");
+        Debug.Log($"GridMiddlePos[35][27] = {GridSettings.HorizontalMargin + 35 * GridSettings.GRID_SIZE + GridSettings.GRID_SIZE * 0.5f}px, {GridSettings.VerticalMargin + 27 * GridSettings.GRID_SIZE + GridSettings.GRID_SIZE * 0.5f}px");
     }
 
+    /// <summary>
+    /// 그리드 좌표 검증 (테스트용)
+    /// </summary>
+    public static void TestGridCalculation()
+    {
+        Debug.Log("===  그리드 계산 테스트 ===");
+
+        // PlayerController 위치 테스트
+        Vector2Int playerPos0 = GetGridPos(0, 0);
+        Vector2Int playerPos35 = GetGridPos(35, 27);
+        Debug.Log($"Player [0,0]: {playerPos0} (예상: 8, 0)");
+        Debug.Log($"Player [35,27]: {playerPos35} (예상: 988, 756)");
+
+        // Block 위치 테스트
+        Vector2Int blockPos0 = GetGridMiddlePos(0, 0);
+        Vector2Int blockPos35 = GetGridMiddlePos(35, 27);
+        Debug.Log($"Block [0,0]: {blockPos0} (예상: 22, 14)");
+        Debug.Log($"Block [35,27]: {blockPos35} (예상: 1002, 770)");
+    }
 }

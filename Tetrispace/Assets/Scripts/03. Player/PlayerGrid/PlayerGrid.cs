@@ -45,7 +45,6 @@ public class PlayerGrid : MonoBehaviour
 
     void Update()
     {
-        // 테스트 코드 제거하고 플레이어 따라다니기만 유지
         if (followPlayer && player != null)
         {
             UpdateGridPosition();
@@ -293,7 +292,7 @@ public class PlayerGrid : MonoBehaviour
         // 테트리미노 매니저에 알림
         if (TetriminoManager.Instance != null)
         {
-            TetriminoManager.Instance.OnLinesCleared(clearedCount);
+           // TetriminoManager.Instance.ClearLine(clearedCount);
         }
 
         Debug.Log($"라인 클리어 완료: {clearedCount}개");
