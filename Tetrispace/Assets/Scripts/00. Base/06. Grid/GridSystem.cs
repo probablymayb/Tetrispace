@@ -33,9 +33,6 @@ public class GridSystem
         float posX = (gridX * GridSettings.GRID_SIZE);
         float posY = (gridY * GridSettings.GRID_SIZE);
 
-        //// 그리드 중심점 계산 (기준 해상도 기준)
-        //float posX = (gridX * GridSettings.GRID_SIZE);
-        //float posY = (gridY * GridSettings.GRID_SIZE));
 
         // 현재 해상도에 맞게 스케일링
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
@@ -47,6 +44,27 @@ public class GridSystem
         return new Vector2Int((int)posX, (int)posY);
     }
 
+    public static Vector2Int GetGridMiddlePos(int gridX, int gridY)
+    {
+        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
+            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
+        {
+            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
+            return Vector2Int.zero;
+        }
+
+        // 그리드 중심점 계산 (기준 해상도 기준)
+        float posX = (gridX * GridSettings.GRID_SIZE) + (0.5f * GridSettings.GRID_SIZE);
+        float posY = (gridY * GridSettings.GRID_SIZE) + (0.5f * GridSettings.GRID_SIZE);
+
+        // 현재 해상도에 맞게 스케일링
+        float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
+        float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
+        posX *= scaleX;
+        posY *= scaleY;
+
+        return new Vector2Int((int)posX, (int)posY);
+    }
 
     /// <summary>
     /// 그리드 인덱스를 받아서 해당 그리드의 월드 좌표를 반환
