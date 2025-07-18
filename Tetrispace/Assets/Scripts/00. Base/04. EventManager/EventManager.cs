@@ -1,94 +1,105 @@
 using System;
 
 /// <summary>
-/// ÀÌº¥Æ® ¸Å´ÏÀú: °ÔÀÓ ³» ¸ğµç ÀÌº¥Æ®¸¦ Áß¾Ó¿¡¼­ °ü¸®ÇÏ´Â ½Ã½ºÅÛ
+/// ì´ë²¤íŠ¸ ë§¤ë‹ˆì €: ê²Œì„ ë‚´ ëª¨ë“  ì´ë²¤íŠ¸ë¥¼ ì¤‘ì•™ì—ì„œ ê´€ë¦¬í•˜ëŠ” ì‹œìŠ¤í…œ
 /// 
-/// »ç¿ë¹ı:
-/// 1. ÀÌº¥Æ® ±¸µ¶: EventManager.Instance.onPlayerHpChanged += ¸Ş¼­µå¸í;
-/// 2. ÀÌº¥Æ® ¹ß»ı: EventManager.Instance.PlayerHpChanged(°ª);
-/// 3. ±¸µ¶ ÇØÁ¦: EventManager.Instance.onPlayerHpChanged -= ¸Ş¼­µå¸í; (OnDestroy¿¡¼­ ÇÊ¼ö!)
+/// ì‚¬ìš©ë²•:
+/// 1. ì´ë²¤íŠ¸ êµ¬ë…: EventManager.Instance.onPlayerHpChanged += ë©”ì„œë“œëª…;
+/// 2. ì´ë²¤íŠ¸ ë°œìƒ: EventManager.Instance.PlayerHpChanged(ê°’);
+/// 3. êµ¬ë… í•´ì œ: EventManager.Instance.onPlayerHpChanged -= ë©”ì„œë“œëª…; (OnDestroyì—ì„œ í•„ìˆ˜!)
 /// 
-/// ÀåÁ¡: UI, »ç¿îµå, ÀÌÆåÆ® µîÀÌ ¼­·Î µ¶¸³ÀûÀ¸·Î ¹İÀÀ °¡´É
-///  ÁÖÀÇ: ¹İµå½Ã OnDestroy¿¡¼­ ±¸µ¶ ÇØÁ¦ÇÏ±â! (¸Ş¸ğ¸® ´©¼ö ¹æÁö)
+/// ì¥ì : UI, ì‚¬ìš´ë“œ, ì´í™íŠ¸ ë“±ì´ ì„œë¡œ ë…ë¦½ì ìœ¼ë¡œ ë°˜ì‘ ê°€ëŠ¥
+///  ì£¼ì˜: ë°˜ë“œì‹œ OnDestroyì—ì„œ êµ¬ë… í•´ì œí•˜ê¸°! (ë©”ëª¨ë¦¬ ëˆ„ìˆ˜ ë°©ì§€)
 /// </summary>
 public class EventManager : Singleton<EventManager>
 {
-    #region ÇÃ·¹ÀÌ¾î °ü·Ã ÀÌº¥Æ®
+    #region í”Œë ˆì´ì–´ ê´€ë ¨ ì´ë²¤íŠ¸
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î HP°¡ º¯°æµÉ ¶§ ¹ß»ıÇÏ´Â ÀÌº¥Æ®
+    /// í”Œë ˆì´ì–´ HPê°€ ë³€ê²½ë  ë•Œ ë°œìƒí•˜ëŠ” ì´ë²¤íŠ¸
     /// 
-    ///»ç¿ë ¿¹½Ã:
-    /// - HP UI ¾÷µ¥ÀÌÆ®
-    /// - Ã¼·Â ³·À» ¶§ È­¸é »¡°²°Ô
-    /// - Ã¼·Â È¸º¹ ÀÌÆåÆ®
+    ///ì‚¬ìš© ì˜ˆì‹œ:
+    /// - HP UI ì—…ë°ì´íŠ¸
+    /// - ì²´ë ¥ ë‚®ì„ ë•Œ í™”ë©´ ë¹¨ê°›ê²Œ
+    /// - ì²´ë ¥ íšŒë³µ ì´í™íŠ¸
     /// 
-    ///  ±¸µ¶ ¹æ¹ı:
+    ///  êµ¬ë… ë°©ë²•:
     /// EventManager.Instance.onPlayerHpChanged += UpdateHPUI;
     /// 
-    ///  ¹ß»ı ¹æ¹ı:
+    ///  ë°œìƒ ë°©ë²•:
     /// EventManager.Instance.PlayerHpChanged(newHpValue);
     /// </summary>
     public event Action<int> onPlayerHpChanged;
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î HP º¯°æ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ°´Â ¸Ş¼­µå
+    /// í”Œë ˆì´ì–´ HP ë³€ê²½ ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="newHp">»õ·Î¿î HP °ª</param>
+    /// <param name="newHp">ìƒˆë¡œìš´ HP ê°’</param>
     public void PlayerHpChanged(int newHp)
     {
         onPlayerHpChanged?.Invoke(newHp);
     }
+    
+    public event Action<PlayerEnforcement> onPlayerEnforcementLevelUp;
+
+    /// <summary>
+    /// í”Œë ˆì´ì–´ ê°•í™” ë ˆë²¨ì—… ë©”ì„œë“œ
+    /// </summary>
+    /// <param name="enforcement">ê°•í™”ì‹œí‚¬ ì¹´í…Œê³ ë¦¬</param>
+    public void PlayerEnforcementLevelUp(PlayerEnforcement enforcement)
+    {
+        onPlayerEnforcementLevelUp?.Invoke(enforcement);
+    }
 
     #endregion
 
-    #region º¸½º °ü·Ã ÀÌº¥Æ®
+    #region ë³´ìŠ¤ ê´€ë ¨ ì´ë²¤íŠ¸
 
     /// <summary>
-    /// º¸½ºÀÇ ¹ø°³ QTE ÀÌº¥Æ®°¡ ½ÃÀÛµÉ ¶§ ¹ß»ı
+    /// ë³´ìŠ¤ì˜ ë²ˆê°œ QTE ì´ë²¤íŠ¸ê°€ ì‹œì‘ë  ë•Œ ë°œìƒ
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - QTE UI Ç¥½Ã
-    /// - Ä«¸Ş¶ó ¼ÎÀÌÅ·
-    /// - ±ä¹ÚÇÑ À½¾Ç Àç»ı
+    /// ì‚¬ìš© ì˜ˆì‹œ:
+    /// - QTE UI í‘œì‹œ
+    /// - ì¹´ë©”ë¼ ì…°ì´í‚¹
+    /// - ê¸´ë°•í•œ ìŒì•… ì¬ìƒ
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// êµ¬ë… ë°©ë²•:
     /// EventManager.Instance.onBossLightningQTE += StartQTE;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
-    /// EventManager.Instance.BossLightningQTE(2.0f); // 2ÃÊ Á¦ÇÑ
+    /// ë°œìƒ ë°©ë²•:
+    /// EventManager.Instance.BossLightningQTE(2.0f); // 2ì´ˆ ì œí•œ
     /// </summary>
     public event Action<float> onBossLightningQTE;
 
     /// <summary>
-    /// º¸½º ¹ø°³ QTE ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ°´Â ¸Ş¼­µå
+    /// ë³´ìŠ¤ ë²ˆê°œ QTE ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="duration">QTE Á¦ÇÑ ½Ã°£ (ÃÊ)</param>
+    /// <param name="duration">QTE ì œí•œ ì‹œê°„ (ì´ˆ)</param>
     public void BossLightningQTE(float duration)
     {
         onBossLightningQTE?.Invoke(duration);
     }
 
     /// <summary>
-    /// QTE ¿Ï·á ½Ã ¹ß»ıÇÏ´Â ÀÌº¥Æ® (¼º°ø/½ÇÆĞ °á°ú Æ÷ÇÔ)
+    /// QTE ì™„ë£Œ ì‹œ ë°œìƒí•˜ëŠ” ì´ë²¤íŠ¸ (ì„±ê³µ/ì‹¤íŒ¨ ê²°ê³¼ í¬í•¨)
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ¼º°ø½Ã: º¸½º ½ºÅÏ, Ãß°¡ Á¡¼ö
-    /// - ½ÇÆĞ½Ã: ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö, º¸½º °­È­
+    /// ì‚¬ìš© ì˜ˆì‹œ:
+    /// - ì„±ê³µì‹œ: ë³´ìŠ¤ ìŠ¤í„´, ì¶”ê°€ ì ìˆ˜
+    /// - ì‹¤íŒ¨ì‹œ: í”Œë ˆì´ì–´ ë°ë¯¸ì§€, ë³´ìŠ¤ ê°•í™”
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// êµ¬ë… ë°©ë²•:
     /// EventManager.Instance.onQTECompleted += OnQTEResult;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
-    /// EventManager.Instance.QTECompleted(true);  // ¼º°ø
-    /// EventManager.Instance.QTECompleted(false); // ½ÇÆĞ
+    /// ë°œìƒ ë°©ë²•:
+    /// EventManager.Instance.QTECompleted(true);  // ì„±ê³µ
+    /// EventManager.Instance.QTECompleted(false); // ì‹¤íŒ¨
     /// </summary>
     public event Action<bool> onQTECompleted;
 
     /// <summary>
-    /// QTE ¿Ï·á ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ°´Â ¸Ş¼­µå
+    /// QTE ì™„ë£Œ ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="isSuccess">QTE ¼º°ø ¿©ºÎ (true: ¼º°ø, false: ½ÇÆĞ)</param>
+    /// <param name="isSuccess">QTE ì„±ê³µ ì—¬ë¶€ (true: ì„±ê³µ, false: ì‹¤íŒ¨)</param>
     public void QTECompleted(bool isSuccess)
     {
         onQTECompleted?.Invoke(isSuccess);
@@ -96,35 +107,35 @@ public class EventManager : Singleton<EventManager>
 
     #endregion
 
-    #region °ÔÀÓÀë¿ë Ãß°¡ ÀÌº¥Æ® (ÇÊ¿ä½Ã ÁÖ¼® ÇØÁ¦ÇÏ°í »ç¿ë)
+    #region ê²Œì„ì¼ìš© ì¶”ê°€ ì´ë²¤íŠ¸ (í•„ìš”ì‹œ ì£¼ì„ í•´ì œí•˜ê³  ì‚¬ìš©)
 
     /*
     /// <summary>
-    /// Á¡¼ö º¯°æ ÀÌº¥Æ® - Á¡¼ö UI ¾÷µ¥ÀÌÆ®¿ë
+    /// ì ìˆ˜ ë³€ê²½ ì´ë²¤íŠ¸ - ì ìˆ˜ UI ì—…ë°ì´íŠ¸ìš©
     /// </summary>
     public event Action<int> onScoreChanged;
     public void ScoreChanged(int newScore) { onScoreChanged?.Invoke(newScore); }
     
     /// <summary>
-    /// Àû Ã³Ä¡ ÀÌº¥Æ® - Å³ Ä«¿îÆ®, ÄŞº¸ ½Ã½ºÅÛ¿ë
+    /// ì  ì²˜ì¹˜ ì´ë²¤íŠ¸ - í‚¬ ì¹´ìš´íŠ¸, ì½¤ë³´ ì‹œìŠ¤í…œìš©
     /// </summary>
     public event Action<int> onEnemyKilled;
     public void EnemyKilled(int killCount) { onEnemyKilled?.Invoke(killCount); }
     
     /// <summary>
-    /// °ÔÀÓ ½ÃÀÛ ÀÌº¥Æ® - BGM Àç»ı, UI ÃÊ±âÈ­¿ë
+    /// ê²Œì„ ì‹œì‘ ì´ë²¤íŠ¸ - BGM ì¬ìƒ, UI ì´ˆê¸°í™”ìš©
     /// </summary>
     public event Action onGameStart;
     public void GameStart() { onGameStart?.Invoke(); }
     
     /// <summary>
-    /// °ÔÀÓ ¿À¹ö ÀÌº¥Æ® - °á°ú È­¸é, Á¡¼ö ÀúÀå¿ë
+    /// ê²Œì„ ì˜¤ë²„ ì´ë²¤íŠ¸ - ê²°ê³¼ í™”ë©´, ì ìˆ˜ ì €ì¥ìš©
     /// </summary>
     public event Action onGameOver;
     public void GameOver() { onGameOver?.Invoke(); }
     
     /// <summary>
-    /// ¾ÆÀÌÅÛ ¼öÁı ÀÌº¥Æ® - ÀÎº¥Åä¸®, È¿°úÀ½¿ë
+    /// ì•„ì´í…œ ìˆ˜ì§‘ ì´ë²¤íŠ¸ - ì¸ë²¤í† ë¦¬, íš¨ê³¼ìŒìš©
     /// </summary>
     public event Action<string> onItemCollected;
     public void ItemCollected(string itemName) { onItemCollected?.Invoke(itemName); }

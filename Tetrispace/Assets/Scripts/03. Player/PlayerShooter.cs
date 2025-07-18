@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerStat))]
 public class PlayerShooter : MonoBehaviour
 {
+    private PlayerStat stat;
     private InputAction shootAction;
     private const string ShootActionName = "Attack";
     
@@ -17,6 +19,7 @@ public class PlayerShooter : MonoBehaviour
     
     private void Awake()
     {
+        stat = GetComponent<PlayerStat>();
         shootAction = InputSystem.actions.FindAction(ShootActionName);
         PoolManager.Instance.CreatePool(bulletPrefab);
     }

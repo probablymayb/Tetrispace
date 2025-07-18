@@ -19,8 +19,8 @@ public class LMovePattern : IEnemyMovePattern
         points = new Vector2[]
         {
             startPosition + new Vector2(dx, dy),    // 0: 오른쪽 위
-            startPosition + new Vector2(0, -dy),    // 1: 아래
-            startPosition,                          // 2: 왼쪽
+            startPosition + new Vector2(dx, 0),    // 1: 오른쪽
+            startPosition,                          // 2: 원점
         };
     }
 

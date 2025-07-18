@@ -15,6 +15,7 @@ MonoBehaviour:
   hp: 10
   damage: 10
   speed: 6
-  attackSpeed: 10
+  attackSpeed: 3
+  bulletData: {fileID: 11400000, guid: cad128d8d73be074d9962bf378ebf1d6, type: 2}
   enemySprite: {fileID: 0}
   isEnforced: 0

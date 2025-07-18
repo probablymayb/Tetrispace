@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerStat))]
 public class PlayerController : MonoBehaviour
 {
+    private PlayerStat stat;
     private InputAction moveAction;
     private const string MoveActionName = "Move";
 
@@ -14,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        stat = GetComponent<PlayerStat>();
         moveAction = InputSystem.actions.FindAction(MoveActionName);
     }
     
@@ -38,7 +41,7 @@ public class PlayerController : MonoBehaviour
         if (isInputHeld)
         {
             // 좌우 연속 이동
-            Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (moveSpeed * Time.deltaTime);
+            Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (stat.GetStat(PlayerEnforcement.Speed) * Time.deltaTime);
             transform.position += move;
         }
     }
