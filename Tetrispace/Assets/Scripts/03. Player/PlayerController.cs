@@ -34,12 +34,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (isInputHeld)
-        {
-            // 좌우 연속 이동
-            Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (moveSpeed * Time.deltaTime);
-            transform.position += move;
-        }
+        //if (isInputHeld)
+        //{
+        //    // 좌우 연속 이동
+        //    Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (moveSpeed * Time.deltaTime);
+        //    transform.position += move;
+        //}
+
+        //for test
+        Transform trans = GetComponent<Transform>();
+        Vector2 gridPos = GridSystem.GetGridWorldPosition(GridSystem.GridPos.x, GridSystem.GridPos.y);
+        trans.position = new Vector3(gridPos.x, gridPos.y, 0);
     }
 
     public void OnMove(InputAction.CallbackContext context)

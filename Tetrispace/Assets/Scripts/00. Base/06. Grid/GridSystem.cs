@@ -20,6 +20,7 @@ public class GridSystem
     public float MaxY { get; private set; }
     public float SpawnX { get; private set; }
     public static Vector2Int GridPos = new Vector2Int(0,0);
+    public static Vector2Int GridMiddlePos = new Vector2Int(0,0);
 
     public static Vector2Int GetGridPos(int gridX, int gridY)
     {
@@ -73,6 +74,39 @@ public class GridSystem
     /// <param name="gridY">그리드 Y 인덱스 (0 ~ 23)</param>
     /// <returns>그리드 중심점의 월드 좌표</returns>
     public static Vector3 GetGridWorldPosition(int gridX, int gridY)
+    {
+        // 인덱스 범위 체크
+        if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
+            gridY < 0 || gridY >= GridSettings.GRID_HEIGHT)
+        {
+            Debug.LogWarning($"그리드 인덱스 범위 초과: [{gridX}][{gridY}]");
+            return Vector3.zero;
+        }
+
+        // 그리드 중심점 계산 (스크린 좌표)
+        float screenX = (gridX * GridSettings.GRID_SIZE);
+        float screenY = (gridY * GridSettings.GRID_SIZE);
+
+        // 현재 해상도에 맞게 스케일링
+        float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
+        float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
+
+        screenX *= scaleX;
+        screenY *= scaleY;
+
+        // Unity 스크린 좌표계는 왼쪽 아래가 (0,0)이므로 Y축 보정
+        screenY = Screen.height - screenY;
+
+        // 스크린 좌표를 월드 좌표로 변환
+        Vector3 screenPos = new Vector3(screenX, screenY, 0);
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        worldPos.z = 0;
+
+        return worldPos;
+    }
+
+
+    public static Vector3 GetGridMiddleWorldPosition(int gridX, int gridY)
     {
         // 인덱스 범위 체크
         if (gridX < 0 || gridX >= GridSettings.GRID_WIDTH ||
