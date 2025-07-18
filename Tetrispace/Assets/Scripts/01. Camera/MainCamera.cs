@@ -11,19 +11,31 @@ public class MainCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (target == null)
-            return;
 
-        // 목표 위치 계산 (플레이어 위치 + 오프셋)
-        Vector3 desiredPosition = target.position + offset;
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            GridSystem.GridPos.x += 1;
+            Debug.Log(GridSystem.GridPos);
+            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
 
-        // 부드러운 이동을 위해 Lerp 사용
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-
-        // 카메라 위치 업데이트
-        transform.position = desiredPosition;
-
-        // 카메라가 플레이어를 바라보도록 설정
-        transform.LookAt(target);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            GridSystem.GridPos.x -= 1;
+            Debug.Log(GridSystem.GridPos);
+            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GridSystem.GridPos.y += 1;
+            Debug.Log(GridSystem.GridPos);
+            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            GridSystem.GridPos.y -= 1;
+            Debug.Log(GridSystem.GridPos);
+            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
+        }
     }
 }
