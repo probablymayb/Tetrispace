@@ -75,6 +75,6 @@ public class PlayerShooter : MonoBehaviour
         pooledBullet.transform.rotation = Quaternion.identity;
 
         pooledBullet.Setup(bulletData);
-        pooledBullet.Fire(Vector2.up);
+        pooledBullet.Fire(Vector2.up, "Enemy");
     }
 }
