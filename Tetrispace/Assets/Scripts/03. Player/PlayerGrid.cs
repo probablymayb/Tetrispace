@@ -1,28 +1,41 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// 플레이어 그리드 (테트리미노 연동 버전)
+/// 
+/// 기능:
+/// - 4x5 플레이어 중심 그리드
+/// - 테트리미노 충돌 검사
+/// - 라인 클리어 시스템
+/// - 그리드 초기화
+/// </summary>
 public class PlayerGrid : MonoBehaviour
 {
-    [Header("플레이어 그리드 설정")]
+    [Header("=== 플레이어 그리드 설정 ===")]
     public int gridWidth = 4;           // 가로 4칸
     public int gridHeight = 5;          // 세로 5칸
-    public float gridCellSize = 28f;     // 각 칸의 크기
+    public float gridCellSize = 1f;     // 각 칸의 크기 (월드 단위)
 
-    [Header("그리드 위치 설정")]
+    [Header("=== 그리드 위치 설정 ===")]
     public Vector2 gridOffset = new Vector2(0, 2f);  // 플레이어 기준 오프셋
     public bool followPlayer = true;    // 플레이어를 따라다닐지 여부
 
-    [Header("참조")]
+    [Header("=== 참조 ===")]
     public Transform player;            // 플레이어 Transform
     public GameObject blockPrefab;      // 테트리스 블록 프리팹
 
-    // 그리드 시스템
+    [Header("=== 라인 클리어 이펙트 ===")]
+    public float clearLineDelay = 0.5f; // 라인 클리어 지연 시간
+    public Color clearLineColor = Color.yellow; // 클리어 라인 색상
+
+    // === 그리드 시스템 ===
     private Transform[,] grid;          // 4x5 그리드
     private Vector3 gridWorldCenter;    // 그리드의 월드 중심점
+    private List<int> linesToClear = new List<int>(); // 클리어할 라인 목록
 
-    // 현재 떨어지는 테트로미노
-    private Transform currentTetromino;
-    private List<Transform> tetrominoBlocks = new List<Transform>();
+
+    #region === 초기화 ===
 
     void Start()
     {
@@ -32,12 +45,7 @@ public class PlayerGrid : MonoBehaviour
 
     void Update()
     {
-        //test
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            CreateTestBlock();
-        }
+        // 테스트 코드 제거하고 플레이어 따라다니기만 유지
         if (followPlayer && player != null)
         {
             UpdateGridPosition();
@@ -50,12 +58,33 @@ public class PlayerGrid : MonoBehaviour
     void InitializeGrid()
     {
         grid = new Transform[gridWidth, gridHeight];
-
-        // 그리드 시각화용 오브젝트 생성 (디버그용)
-        CreateGridVisualizer();
-
         Debug.Log($"PlayerGrid 초기화: {gridWidth}x{gridHeight}");
     }
+
+    /// <summary>
+    /// 그리드 완전 초기화 (게임 재시작용)
+    /// </summary>
+    public void ResetGrid()
+    {
+        // 모든 블록 제거
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                if (grid[x, y] != null)
+                {
+                    Destroy(grid[x, y].gameObject);
+                    grid[x, y] = null;
+                }
+            }
+        }
+
+        Debug.Log("그리드 초기화 완료");
+    }
+
+    #endregion
+
+    #region === 위치 관리 ===
 
     /// <summary>
     /// 플레이어 위치에 따라 그리드 위치 업데이트
@@ -105,6 +134,10 @@ public class PlayerGrid : MonoBehaviour
         return new Vector2Int(gridX, gridY);
     }
 
+    #endregion
+
+    #region === 그리드 검사 ===
+
     /// <summary>
     /// 유효한 그리드 좌표인지 확인
     /// </summary>
@@ -123,6 +156,27 @@ public class PlayerGrid : MonoBehaviour
     }
 
     /// <summary>
+    /// 여러 위치가 모두 비어있는지 확인
+    /// </summary>
+    /// <param name="positions">확인할 위치 목록</param>
+    /// <returns>모두 비어있는지 여부</returns>
+    public bool ArePositionsEmpty(List<Vector2Int> positions)
+    {
+        foreach (Vector2Int pos in positions)
+        {
+            if (IsGridOccupied(pos.x, pos.y))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    #endregion
+
+    #region === 블록 배치 ===
+
+    /// <summary>
     /// 그리드에 블록 배치
     /// </summary>
     public void PlaceBlock(int gridX, int gridY, Transform block)
@@ -134,6 +188,11 @@ public class PlayerGrid : MonoBehaviour
             // 블록을 실제 월드 위치로 이동
             Vector3 worldPos = GridToWorldPosition(gridX, gridY);
             block.position = worldPos;
+
+            // 블록 부모 설정
+            block.SetParent(transform);
+
+            Debug.Log($"블록 배치: [{gridX}][{gridY}] at {worldPos}");
         }
     }
 
@@ -153,72 +212,42 @@ public class PlayerGrid : MonoBehaviour
     }
 
     /// <summary>
-    /// 테트로미노가 유효한 위치에 있는지 확인
+    /// 여러 블록을 한 번에 배치
     /// </summary>
-    public bool IsValidTetrominoPosition(Transform tetromino)
+    /// <param name="blocks">배치할 블록들</param>
+    /// <param name="positions">배치할 위치들</param>
+    public void PlaceBlocks(List<Transform> blocks, List<Vector2Int> positions)
     {
-        foreach (Transform block in tetromino)
+        for (int i = 0; i < blocks.Count && i < positions.Count; i++)
         {
-            Vector2Int gridPos = WorldToGridPosition(block.position);
-
-            // 경계 체크
-            if (!IsValidGridPosition(gridPos.x, gridPos.y))
-            {
-                return false;
-            }
-
-            // 다른 블록과 충돌 체크
-            if (IsGridOccupied(gridPos.x, gridPos.y))
-            {
-                // 같은 테트로미노의 블록이 아닌 경우만 충돌로 간주
-                if (grid[gridPos.x, gridPos.y].parent != tetromino)
-                {
-                    return false;
-                }
-            }
+            PlaceBlock(positions[i].x, positions[i].y, blocks[i]);
         }
-
-        return true;
     }
 
-    /// <summary>
-    /// 테트로미노를 그리드에 고정
-    /// </summary>
-    public void LockTetromino(Transform tetromino)
-    {
-        foreach (Transform block in tetromino)
-        {
-            Vector2Int gridPos = WorldToGridPosition(block.position);
+    #endregion
 
-            if (IsValidGridPosition(gridPos.x, gridPos.y))
-            {
-                grid[gridPos.x, gridPos.y] = block;
-
-                // 부모 관계 해제하여 개별 블록으로 만들기
-                block.SetParent(transform);
-            }
-        }
-
-        // 테트로미노 오브젝트 파괴
-        Destroy(tetromino.gameObject);
-
-        // 라인 클리어 체크
-        CheckForLines();
-    }
+    #region === 라인 클리어 시스템 ===
 
     /// <summary>
     /// 완성된 라인 체크 및 제거
     /// </summary>
-    void CheckForLines()
+    public void CheckAndClearLines()
     {
+        linesToClear.Clear();
+
+        // 완성된 라인 찾기
         for (int y = 0; y < gridHeight; y++)
         {
             if (IsLineFull(y))
             {
-                ClearLine(y);
-                DropLinesAbove(y);
-                y--; // 같은 줄 다시 체크
+                linesToClear.Add(y);
             }
+        }
+
+        // 라인이 있으면 클리어
+        if (linesToClear.Count > 0)
+        {
+            StartCoroutine(ClearLinesSequence());
         }
     }
 
@@ -238,6 +267,62 @@ public class PlayerGrid : MonoBehaviour
     }
 
     /// <summary>
+    /// 라인 클리어 시퀀스 (코루틴)
+    /// </summary>
+    System.Collections.IEnumerator ClearLinesSequence()
+    {
+        // 클리어될 라인 하이라이트
+        HighlightLines(linesToClear);
+
+        // 지연 시간
+        yield return new WaitForSeconds(clearLineDelay);
+
+        // 실제 라인 제거
+        int clearedCount = linesToClear.Count;
+        foreach (int y in linesToClear)
+        {
+            ClearLine(y);
+        }
+
+        // 블록들 아래로 이동
+        DropLinesAbove();
+
+        // 이벤트 발생
+        EventManager.Instance.LinesCleared(clearedCount, linesToClear.ToArray());
+
+        // 테트리미노 매니저에 알림
+        if (TetrominoManager.Instance != null)
+        {
+            TetrominoManager.Instance.OnLinesCleared(clearedCount);
+        }
+
+        Debug.Log($"라인 클리어 완료: {clearedCount}개");
+    }
+
+    /// <summary>
+    /// 라인 하이라이트 (시각 효과)
+    /// </summary>
+    /// <param name="lines">하이라이트할 라인 목록</param>
+    void HighlightLines(List<int> lines)
+    {
+        foreach (int y in lines)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                if (grid[x, y] != null)
+                {
+                    // 블록 색상 변경 (렌더러가 있다면)
+                    Renderer renderer = grid[x, y].GetComponent<Renderer>();
+                    if (renderer != null)
+                    {
+                        renderer.material.color = clearLineColor;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// 줄 제거
     /// </summary>
     void ClearLine(int y)
@@ -250,35 +335,118 @@ public class PlayerGrid : MonoBehaviour
                 grid[x, y] = null;
             }
         }
-
-        Debug.Log($"라인 클리어: Y={y}");
     }
 
     /// <summary>
     /// 제거된 줄 위의 블록들을 아래로 이동
     /// </summary>
-    void DropLinesAbove(int clearedY)
+    void DropLinesAbove()
     {
-        for (int y = clearedY + 1; y < gridHeight; y++)
+        // 아래쪽부터 위로 올라가면서 처리
+        for (int y = 0; y < gridHeight; y++)
         {
-            for (int x = 0; x < gridWidth; x++)
+            // 현재 줄이 비어있는지 확인
+            if (IsLineEmpty(y))
             {
-                if (grid[x, y] != null)
+                // 위쪽에서 블록 찾아서 내리기
+                for (int upperY = y + 1; upperY < gridHeight; upperY++)
                 {
-                    // 한 칸 아래로 이동
-                    grid[x, y - 1] = grid[x, y];
-                    grid[x, y] = null;
-
-                    // 실제 위치도 이동
-                    Vector3 newWorldPos = GridToWorldPosition(x, y - 1);
-                    grid[x, y - 1].position = newWorldPos;
+                    if (!IsLineEmpty(upperY))
+                    {
+                        // 한 줄 전체를 아래로 이동
+                        MoveLineDown(upperY, y);
+                        break;
+                    }
                 }
             }
         }
     }
 
     /// <summary>
-    /// 테스트용 블록 생성
+    /// 해당 줄이 비어있는지 확인
+    /// </summary>
+    bool IsLineEmpty(int y)
+    {
+        for (int x = 0; x < gridWidth; x++)
+        {
+            if (grid[x, y] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 한 줄을 아래로 이동
+    /// </summary>
+    void MoveLineDown(int fromY, int toY)
+    {
+        for (int x = 0; x < gridWidth; x++)
+        {
+            if (grid[x, fromY] != null)
+            {
+                // 블록 이동
+                grid[x, toY] = grid[x, fromY];
+                grid[x, fromY] = null;
+
+                // 실제 위치 업데이트
+                Vector3 newWorldPos = GridToWorldPosition(x, toY);
+                grid[x, toY].position = newWorldPos;
+            }
+        }
+    }
+
+    #endregion
+
+    #region === 테트리미노 관련 ===
+
+    /// <summary>
+    /// 테트리미노가 유효한 위치에 있는지 확인 (충돌 검사)
+    /// </summary>
+    /// <param name="positions">확인할 위치 목록</param>
+    /// <param name="ignoreTetrimino">무시할 테트리미노 (현재 테트리미노)</param>
+    /// <returns>유효한 위치인지 여부</returns>
+    public bool IsValidTetrominoPosition(List<Vector2Int> positions, Transform ignoreTetrimino = null)
+    {
+        foreach (Vector2Int pos in positions)
+        {
+            // 경계 체크
+            if (!IsValidGridPosition(pos.x, pos.y))
+            {
+                return false;
+            }
+
+            // 충돌 체크
+            if (grid[pos.x, pos.y] != null)
+            {
+                // 같은 테트리미노의 블록은 무시
+                if (ignoreTetrimino != null && grid[pos.x, pos.y].IsChildOf(ignoreTetrimino))
+                {
+                    continue;
+                }
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// 테트리미노 고정 후 라인 클리어 체크
+    /// </summary>
+    public void OnTetrominoLocked()
+    {
+        // 라인 클리어 체크
+        CheckAndClearLines();
+    }
+
+    #endregion
+
+    #region === 디버그 및 테스트 ===
+
+    /// <summary>
+    /// 테스트용 블록 생성 (수정된 버전)
     /// </summary>
     [ContextMenu("테스트 블록 생성")]
     public void CreateTestBlock()
@@ -289,36 +457,46 @@ public class PlayerGrid : MonoBehaviour
             return;
         }
 
-        //// 랜덤한 위치에 블록 생성
-        //int randomX = Random.Range(0, gridWidth);
-        //int randomY = Random.Range(0, gridHeight);
+        // 랜덤한 위치에 블록 생성
+        int randomX = Random.Range(0, gridWidth);
+        int randomY = Random.Range(0, gridHeight);
 
-        for(int i = 0; i < gridWidth; ++i)
+        if (!IsGridOccupied(randomX, randomY))
         {
-            for (int j = 0; j < gridHeight; ++j)
-            {
-                if (!IsGridOccupied(i, j))
-                {
-                    GameObject block = Instantiate(blockPrefab, transform);
-                    PlaceBlock(i, j, block.transform);
-
-                    Debug.Log($"테스트 블록 생성: [{i}][{j}]");
-                }
-
-            }
-
+            GameObject block = Instantiate(blockPrefab, transform);
+            PlaceBlock(randomX, randomY, block.transform);
+            Debug.Log($"테스트 블록 생성: [{randomX}][{randomY}]");
+        }
+        else
+        {
+            Debug.Log($"위치 [{randomX}][{randomY}]는 이미 점유되어 있습니다.");
         }
     }
 
     /// <summary>
-    /// 그리드 시각화 (디버그용)
+    /// 테스트용 라인 생성
     /// </summary>
-    void CreateGridVisualizer()
+    [ContextMenu("테스트 라인 생성")]
+    public void CreateTestLine()
     {
-        GameObject visualizer = new GameObject("GridVisualizer");
-        visualizer.transform.SetParent(transform);
+        if (blockPrefab == null)
+        {
+            Debug.LogWarning("blockPrefab이 설정되지 않았습니다!");
+            return;
+        }
 
-        // 나중에 LineRenderer나 Gizmos로 그리드 라인 그리기
+        // 맨 아래 줄에 블록 생성
+        int y = 0;
+        for (int x = 0; x < gridWidth; x++)
+        {
+            if (!IsGridOccupied(x, y))
+            {
+                GameObject block = Instantiate(blockPrefab, transform);
+                PlaceBlock(x, y, block.transform);
+            }
+        }
+
+        Debug.Log("테스트 라인 생성 완료");
     }
 
     /// <summary>
@@ -334,16 +512,31 @@ public class PlayerGrid : MonoBehaviour
         Debug.Log($"플레이어 위치: {(player != null ? player.position : Vector3.zero)}");
 
         // 그리드 상태 출력
+        int totalBlocks = 0;
         for (int y = gridHeight - 1; y >= 0; y--)
         {
             string line = $"Y{y}: ";
             for (int x = 0; x < gridWidth; x++)
             {
-                line += (grid[x, y] != null ? "[■]" : "[□]");
+                if (grid[x, y] != null)
+                {
+                    line += "[■]";
+                    totalBlocks++;
+                }
+                else
+                {
+                    line += "[□]";
+                }
             }
             Debug.Log(line);
         }
+
+        Debug.Log($"총 블록 개수: {totalBlocks}");
     }
+
+    #endregion
+
+    #region === 씬 뷰 시각화 ===
 
     /// <summary>
     /// 씬 뷰에서 그리드 시각화
@@ -382,21 +575,23 @@ public class PlayerGrid : MonoBehaviour
             Gizmos.DrawLine(start, end);
         }
 
-        // 그리드 셀 번호 표시 (에디터에서)
-        if (Application.isPlaying)
+        // 점유된 그리드 셀 표시
+        if (Application.isPlaying && grid != null)
         {
             Gizmos.color = Color.red;
             for (int x = 0; x < gridWidth; x++)
             {
                 for (int y = 0; y < gridHeight; y++)
                 {
-                    Vector3 cellCenter = GridToWorldPosition(x, y);
                     if (IsGridOccupied(x, y))
                     {
-                        Gizmos.DrawCube(cellCenter, Vector3.one * 0.3f);
+                        Vector3 cellCenter = GridToWorldPosition(x, y);
+                        Gizmos.DrawCube(cellCenter, Vector3.one * gridCellSize * 0.8f);
                     }
                 }
             }
         }
     }
+
+    #endregion
 }
