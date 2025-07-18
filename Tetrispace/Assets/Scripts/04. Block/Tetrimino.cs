@@ -118,7 +118,7 @@ public class Tetrimino : MonoBehaviour
     {
         // PlayerGrid 자동 찾기
         if (playerGrid == null)
-            playerGrid = FindObjectOfType<PlayerGrid>();
+            playerGrid = FindFirstObjectByType<PlayerGrid>();
 
         if (playerGrid == null)
         {

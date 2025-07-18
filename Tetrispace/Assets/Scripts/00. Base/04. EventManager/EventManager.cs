@@ -43,59 +43,6 @@ public class EventManager : Singleton<EventManager>
 
     #endregion
 
-    #region === 보스 관련 이벤트 ===
-
-    /// <summary>
-    /// 보스의 번개 QTE 이벤트가 시작될 때 발생
-    /// 
-    /// 사용 예시:
-    /// - QTE UI 표시
-    /// - 카메라 셰이킹
-    /// - 긴박한 음악 재생
-    /// 
-    /// 구독 방법:
-    /// EventManager.Instance.onBossLightningQTE += StartQTE;
-    /// 
-    /// 발생 방법:
-    /// EventManager.Instance.BossLightningQTE(2.0f); // 2초 제한
-    /// </summary>
-    public event Action<float> onBossLightningQTE;
-
-    /// <summary>
-    /// 보스 번개 QTE 이벤트를 발생시키는 메서드
-    /// </summary>
-    /// <param name="duration">QTE 제한 시간 (초)</param>
-    public void BossLightningQTE(float duration)
-    {
-        onBossLightningQTE?.Invoke(duration);
-    }
-
-    /// <summary>
-    /// QTE 완료 시 발생하는 이벤트 (성공/실패 결과 포함)
-    /// 
-    /// 사용 예시:
-    /// - 성공시: 보스 스턴, 추가 점수
-    /// - 실패시: 플레이어 데미지, 보스 강화
-    /// 
-    /// 구독 방법:
-    /// EventManager.Instance.onQTECompleted += OnQTEResult;
-    /// 
-    /// 발생 방법:
-    /// EventManager.Instance.QTECompleted(true);  // 성공
-    /// EventManager.Instance.QTECompleted(false); // 실패
-    /// </summary>
-    public event Action<bool> onQTECompleted;
-
-    /// <summary>
-    /// QTE 완료 이벤트를 발생시키는 메서드
-    /// </summary>
-    /// <param name="isSuccess">QTE 성공 여부 (true: 성공, false: 실패)</param>
-    public void QTECompleted(bool isSuccess)
-    {
-        onQTECompleted?.Invoke(isSuccess);
-    }
-
-    #endregion
 
     #region ===  테트리스 미니게임 이벤트 ===
 
@@ -121,8 +68,8 @@ public class EventManager : Singleton<EventManager>
     /// <param name="tetrominoType">생성된 테트리미노 타입</param>
     public void TetrominoSpawned(Tetrimino.TetrominoType tetrominoType)
     {
-        onTetrominoSpawned?.Invoke(tetrominoType);
-        Debug.Log($"[Event] 테트리미노 생성: {tetrominoType}");
+        //onTetrominoSpawned?.Invoke(tetrominoType);
+        //Debug.Log($"[Event] 테트리미노 생성: {tetrominoType}");
     }
 
     /// <summary>
@@ -148,8 +95,8 @@ public class EventManager : Singleton<EventManager>
     /// <param name="position">착지 위치</param>
     public void TetrominoLocked(Tetrimino.TetrominoType tetrominoType, Vector2Int position)
     {
-        onTetrominoLocked?.Invoke(tetrominoType, position);
-        Debug.Log($"[Event] 테트리미노 착지: {tetrominoType} at {position}");
+        //onTetrominoLocked?.Invoke(tetrominoType, position);
+        //Debug.Log($"[Event] 테트리미노 착지: {tetrominoType} at {position}");
     }
 
     /// <summary>

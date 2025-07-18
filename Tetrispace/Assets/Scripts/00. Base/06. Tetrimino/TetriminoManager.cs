@@ -11,7 +11,8 @@ using System.Collections;
 /// - 게임 오버 체크
 /// - 레벨 및 속도 관리
 /// </summary>
-public class TetrominoManager : Singleton<TetrominoManager>
+/// 
+public class TetriminoManager : Singleton<TetriminoManager>
 {
     [Header("=== 테트리미노 설정 ===")]
     [SerializeField] private GameObject tetrominoPrefab;     // 테트리미노 프리팹
@@ -24,7 +25,7 @@ public class TetrominoManager : Singleton<TetrominoManager>
     [SerializeField] private Transform nextBlockPreview;   // 다음 블록 미리보기 위치
 
     [Header("=== 게임 상태 ===")]
-    [SerializeField] private bool autoSpawn = true;        // 자동 생성 여부
+    [SerializeField] private bool autoSpawn = false;        // 자동 생성 여부
     [SerializeField] private float spawnDelay = 0.5f;      // 생성 지연 시간
     [SerializeField] private int maxLevel = 20;            // 최대 레벨
 
@@ -78,7 +79,7 @@ public class TetrominoManager : Singleton<TetrominoManager>
         // PlayerGrid 자동 찾기
         if (playerGrid == null)
             playerGrid = FindFirstObjectByType<PlayerGrid>();
-
+        //
         if (playerGrid == null)
         {
             Debug.LogError("PlayerGrid를 찾을 수 없습니다!");

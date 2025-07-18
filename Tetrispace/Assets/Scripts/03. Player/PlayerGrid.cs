@@ -291,9 +291,9 @@ public class PlayerGrid : MonoBehaviour
         EventManager.Instance.LinesCleared(clearedCount, linesToClear.ToArray());
 
         // 테트리미노 매니저에 알림
-        if (TetrominoManager.Instance != null)
+        if (TetriminoManager.Instance != null)
         {
-            TetrominoManager.Instance.OnLinesCleared(clearedCount);
+            TetriminoManager.Instance.OnLinesCleared(clearedCount);
         }
 
         Debug.Log($"라인 클리어 완료: {clearedCount}개");
