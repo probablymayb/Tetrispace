@@ -97,7 +97,7 @@ public class Tetrimino : MonoBehaviour
     // === √ ±‚»≠ ===
     void Start()
     {
-        InitializeTetrimino();
+        //InitializeTetrimino();
     }
 
     void Update()

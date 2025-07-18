@@ -7,7 +7,7 @@ public class TetrisBlock : MonoBehaviour
 
     void Start()
     {
-        SetBlockSize();
+        //SetBlockSize();
     }
 
     void Update()
@@ -26,14 +26,14 @@ public class TetrisBlock : MonoBehaviour
     /// <summary>
     /// 블록 크기를 28x28 픽셀로 설정
     /// </summary>
-    void SetBlockSize()
-    {
-        // 현재 그리드 크기 (32픽셀)와 원하는 크기 (28픽셀)의 비율 계산
-        float scaleRatio = blockPixelSize / GridSystem.GridSettings.GRID_SIZE;
+    //void SetBlockSize()
+    //{
+    //    // 현재 그리드 크기 (32픽셀)와 원하는 크기 (28픽셀)의 비율 계산
+    //    float scaleRatio = blockPixelSize / GridSystem.GridSettings.GRID_SIZE;
 
-        // 블록 스케일 적용
-        transform.localScale = Vector3.one * scaleRatio;
+    //    // 블록 스케일 적용
+    //    transform.localScale = Vector3.one * scaleRatio;
 
-        Debug.Log($"블록 크기 조정: {GridSystem.GridSettings.GRID_SIZE}px → {blockPixelSize}px (비율: {scaleRatio:F2})");
-    }
+    //    Debug.Log($"블록 크기 조정: {GridSystem.GridSettings.GRID_SIZE}px → {blockPixelSize}px (비율: {scaleRatio:F2})");
+    //}
 }
