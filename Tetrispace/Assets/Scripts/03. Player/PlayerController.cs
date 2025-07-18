@@ -42,9 +42,12 @@ public class PlayerController : MonoBehaviour
         //}
 
         //for test
-        Transform trans = GetComponent<Transform>();
-        Vector2 gridPos = GridSystem.GetGridWorldPosition(GridSystem.GridPos.x, GridSystem.GridPos.y);
-        trans.position = new Vector3(gridPos.x, gridPos.y, 0);
+        Vector2Int gridPos = GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y);
+        Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f); // Z는 카메라와의 거리
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        worldPos.z = 0; // 2D 게임용
+
+        transform.position = worldPos;
     }
 
     public void OnMove(InputAction.CallbackContext context)

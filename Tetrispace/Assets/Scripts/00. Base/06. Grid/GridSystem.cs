@@ -9,7 +9,7 @@ public class GridSystem
     // 그리드 시스템 설정
     public static class GridSettings
     {
-        public const float GRID_SIZE = 32f;          // 그리드 한 칸의 크기 (픽셀)
+        public const float GRID_SIZE = 28f;          // 그리드 한 칸의 크기 (픽셀)
         public const int GRID_WIDTH = 32;            // 가로 그리드 개수 (1024 / 32)
         public const int GRID_HEIGHT = 24;           // 세로 그리드 개수 (768 / 32)
         public const float REFERENCE_WIDTH = 1024f;  // 기준 해상도 가로

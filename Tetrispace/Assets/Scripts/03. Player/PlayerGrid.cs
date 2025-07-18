@@ -6,7 +6,7 @@ public class PlayerGrid : MonoBehaviour
     [Header("플레이어 그리드 설정")]
     public int gridWidth = 4;           // 가로 4칸
     public int gridHeight = 5;          // 세로 5칸
-    public float gridCellSize = 1f;     // 각 칸의 크기 (Unity 단위)
+    public float gridCellSize = 28f;     // 각 칸의 크기
 
     [Header("그리드 위치 설정")]
     public Vector2 gridOffset = new Vector2(0, 2f);  // 플레이어 기준 오프셋
@@ -289,16 +289,24 @@ public class PlayerGrid : MonoBehaviour
             return;
         }
 
-        // 랜덤한 위치에 블록 생성
-        int randomX = Random.Range(0, gridWidth);
-        int randomY = Random.Range(0, gridHeight);
+        //// 랜덤한 위치에 블록 생성
+        //int randomX = Random.Range(0, gridWidth);
+        //int randomY = Random.Range(0, gridHeight);
 
-        if (!IsGridOccupied(randomX, randomY))
+        for(int i = 0; i < gridWidth; ++i)
         {
-            GameObject block = Instantiate(blockPrefab, transform);
-            PlaceBlock(randomX, randomY, block.transform);
+            for (int j = 0; j < gridHeight; ++j)
+            {
+                if (!IsGridOccupied(i, j))
+                {
+                    GameObject block = Instantiate(blockPrefab, transform);
+                    PlaceBlock(i, j, block.transform);
 
-            Debug.Log($"테스트 블록 생성: [{randomX}][{randomY}]");
+                    Debug.Log($"테스트 블록 생성: [{i}][{j}]");
+                }
+
+            }
+
         }
     }
 
