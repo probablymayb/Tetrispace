@@ -16,33 +16,20 @@ using UnityEngine;
 /// </summary>
 public class PoolManager : Singleton<PoolManager>
 {
-    private Dictionary<string, ObjectPool> poolDict = new Dictionary<string, ObjectPool>();
-
-    protected override void Awake()
-    {
-        base.Awake();
-        DontDestroyOnLoad(gameObject);
-    }
+    private Dictionary<string, IObjectPool> poolDict = new();
 
     /// <summary>
     /// 오브젝트 풀 생성
     /// </summary>
     /// <param name="prefab">풀링할 프리팹</param>
     /// <param name="initialSize">초기 생성 개수</param>
-    public void CreatePool(GameObject prefab, int initialSize = 10)
+    public void CreatePool<T>(T prefab, int size = 10) where T : Component
     {
-        string key = prefab.name;  // 프리팹 이름을 key로 사용
+        string key = prefab.name;
+        if (poolDict.ContainsKey(key)) return;
 
-        if (poolDict.ContainsKey(key))
-        {
-            Debug.LogWarning($"[PoolManager] {key} 풀이 이미 존재합니다.");
-            return;
-        }
-
-        Debug.Log($"[PoolManager] {key} 풀 생성됨 (크기: {initialSize})");
-
-        ObjectPool pool = new ObjectPool(prefab, initialSize);
-        poolDict.Add(key, pool);
+        var pool = new ObjectPool<T>(prefab, size);
+        poolDict[key] = pool;
     }
 
     /// <summary>
@@ -50,39 +37,34 @@ public class PoolManager : Singleton<PoolManager>
     /// </summary>
     /// <param name="prefab">가져올 프리팹</param>
     /// <returns>활성화된 게임 오브젝트</returns>
-    public GameObject Get(GameObject prefab)
+    public T Get<T>(T prefab) where T : Component
     {
         string key = prefab.name;
-
-        // 풀이 없으면 자동 생성
         if (!poolDict.ContainsKey(key))
-        {
-            Debug.LogWarning($"[PoolManager] {key} 풀이 없습니다. 자동 생성합니다.");
             CreatePool(prefab, 5);
-        }
 
-        return poolDict[key].GetObject();
+        return ((ObjectPool<T>)poolDict[key]).GetObject();
     }
 
     /// <summary>
     /// 개선! 오브젝트를 풀에 반환 (프리팹 참조 불필요)
     /// </summary>
     /// <param name="obj">반환할 게임 오브젝트</param>
-    public void Return(GameObject obj)
+    public void Return<T>(T obj) where T : Component
     {
-        // "(Clone)" 제거해서 원본 프리팹 이름 추출
-        string prefabName = obj.name.Replace("(Clone)", "").Trim();
+        string key = obj.name.Replace("(Clone)", "").Trim();
 
-        if (poolDict.ContainsKey(prefabName))
+        if (poolDict.ContainsKey(key))
         {
-            poolDict[prefabName].ReturnObject(obj);
+            poolDict[key].ReturnObject(obj);
         }
         else
         {
-            Debug.LogWarning($"[PoolManager] {prefabName}에 해당하는 풀을 찾을 수 없습니다. 오브젝트를 파괴합니다.");
-            Destroy(obj);
+            Debug.LogWarning($"[PoolManager] {key} 풀 없음 → 파괴");
+            Destroy(obj.gameObject);
         }
     }
+
 
     /// <summary>
     /// 특정 풀의 정보 확인 (디버깅용)

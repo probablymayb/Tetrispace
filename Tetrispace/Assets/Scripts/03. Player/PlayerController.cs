@@ -4,8 +4,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerInputActions inputActions;
-    
+    private InputAction moveAction;
+    private const string MoveActionName = "Move";
+
     [SerializeField] private float moveSpeed = 3f;        // 연속 이동 속도
     [SerializeField] private float tileSize = 1f;         // 한 칸 크기 (스냅 기준)
     private Vector2 moveInput = Vector2.zero;
@@ -13,23 +14,23 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        inputActions = new PlayerInputActions();
+        moveAction = InputSystem.actions.FindAction(MoveActionName);
     }
     
     private void OnEnable()
     {
-        inputActions.PlayerActions.Enable();
-        inputActions.PlayerActions.Move.performed += OnMove;
-        inputActions.PlayerActions.Move.started += OnMove;
-        inputActions.PlayerActions.Move.canceled += OnMove;
+        moveAction.Enable();
+        moveAction.performed += OnMove;
+        moveAction.started += OnMove;
+        moveAction.canceled += OnMove;
     }
 
     private void OnDisable()
     {
-        inputActions.PlayerActions.Move.performed -= OnMove;
-        inputActions.PlayerActions.Move.started -= OnMove;
-        inputActions.PlayerActions.Move.canceled -= OnMove;
-        inputActions.PlayerActions.Disable();
+        moveAction.performed -= OnMove;
+        moveAction.started -= OnMove;
+        moveAction.canceled -= OnMove;
+        moveAction.Disable();
     }
 
     private void Update()
