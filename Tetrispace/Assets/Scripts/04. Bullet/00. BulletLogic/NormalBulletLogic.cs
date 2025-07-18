@@ -14,6 +14,6 @@ public class NormalBulletLogic : IBulletLogic
             yield return null;
         }
 
-        PoolManager.Instance.Return(bullet);
+        bullet.OnDeath();
     }
 }
