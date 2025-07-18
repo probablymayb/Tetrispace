@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyPhaseData", menuName = "Enemy", order = 0)]
+[CreateAssetMenu(menuName = "Enemy/EnemyPhaseData")]
 public class EnemyPhaseData : ScriptableObject
 {
     public int enemyCount;
