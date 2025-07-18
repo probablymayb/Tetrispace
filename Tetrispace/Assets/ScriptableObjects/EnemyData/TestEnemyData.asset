@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 10
   damage: 10
-  speed: 10
+  speed: 6
   attackSpeed: 10
   enemySprite: {fileID: 0}
   isEnforced: 0
