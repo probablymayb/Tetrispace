@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d9fa58c87734f888e070fedba3753f8, type: 3}
   m_Name: TestPhaseData
   m_EditorClassIdentifier: 
-  enemyCount: 0
-  enemyTypes: -1
-  isTetrisEnemyCountFixed: 0
-  tetrisCount: 0
+  enemyCount: 4
+  enemyTypes: 000000000100000002000000030000000400000005000000
+  isTetrisEnemyCountFixed: 1
+  tetrisCount: 3

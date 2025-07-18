@@ -5,6 +5,8 @@ public class EnemyData : ScriptableObject
 {
     public float hp;
     public float damage;
+    public float speed;
+    public float attackSpeed;
     public Texture2D enemySprite;
     public bool isEnforced;
 }
