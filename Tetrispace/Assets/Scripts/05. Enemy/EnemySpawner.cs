@@ -99,7 +99,7 @@ public class EnemySpawner : MonoBehaviour
 
             // 이 적이 블럭화 가능인지
             bool isTetris = tetrisIndices.Contains(i);
-            enemy.Init(spawnPos, selectedType);
+            enemy.Init(spawnPos, selectedType, isTetris);
             enemy.OnDeath += OnEnemyDeath;
             aliveEnemies++;
         }

@@ -15,6 +15,7 @@ public partial class Enemy : MonoBehaviour, IEntity
     private bool isInited;
     private bool isStarted;
     private Vector2 startPosition;
+    private bool canBlock;
     
     private Rigidbody2D rigid;
     private SpriteRenderer sprite;
@@ -77,12 +78,13 @@ public partial class Enemy : MonoBehaviour, IEntity
         StopAllCoroutines();
     }
 
-    public void Init(Vector2 startPos, EnemyType enemyType)
+    public void Init(Vector2 startPos, EnemyType enemyType, bool canTetris)
     {
         isInited = true;
         isStarted = false;
         startPosition = startPos;
         type = enemyType;
+        canBlock = canTetris;
         data = DataManager.Instance.GetEnemyData(enemyType);
         hp = data.hp;
         movePattern = EnemyMovePatternFactory.Create(enemyType);
@@ -139,10 +141,13 @@ public partial class Enemy : MonoBehaviour, IEntity
     {
         OnDeath?.Invoke();
         dieEffect.SetParent(null);
-        Vector2Int adjGrid = GridSystem.WorldToGridIndex(transform.position);
-        Vector3 spawnPos = GridSystem.GetGridMiddleWorldPosition(adjGrid.x, adjGrid.y);
-        spawnPos.y = transform.position.y;
-        Instantiate(data.BlockPrefab, spawnPos, Quaternion.identity);
+        if (canBlock)
+        {
+            Vector2Int adjGrid = GridSystem.WorldToGridIndex(transform.position);
+            Vector3 spawnPos = GridSystem.GetGridMiddleWorldPosition(adjGrid.x, adjGrid.y);
+            spawnPos.y = transform.position.y;
+            Instantiate(data.BlockPrefab, spawnPos, Quaternion.identity);
+        }
         PoolManager.Instance.Return(dieEffect);
         PoolManager.Instance.Return(this);
     }
