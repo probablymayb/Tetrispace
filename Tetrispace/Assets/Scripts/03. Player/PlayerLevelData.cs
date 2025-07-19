@@ -3,8 +3,8 @@ using UnityEngine;
 
 public enum PlayerEnforcement
 {
-    Ammo,
-    Damage,
+    AutoAmmo,
+    AutoDamage,
     Speed,
     Drone,
     Bomb,

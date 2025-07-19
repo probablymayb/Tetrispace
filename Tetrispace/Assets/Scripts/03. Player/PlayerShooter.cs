@@ -15,6 +15,7 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] private BulletData bulletData;
 
     private float attackTimer = 0f;
+    private float bombTimer = 0f;
     private bool isAttackHeld = false;
     
     private void Awake()
@@ -30,6 +31,9 @@ public class PlayerShooter : MonoBehaviour
         shootAction.started += OnAttack;
         shootAction.performed += OnAttack;
         shootAction.canceled += OnAttack;
+
+        attackTimer = 0f;
+        bombTimer = 0f;
     }
 
     private void OnDisable()
@@ -77,7 +81,7 @@ public class PlayerShooter : MonoBehaviour
         pooledBullet.transform.position = firePoint.position;
         pooledBullet.transform.rotation = Quaternion.identity;
 
-        pooledBullet.Setup(bulletData, stat.GetStat(PlayerEnforcement.Damage));
-        pooledBullet.Fire(Vector2.up, "Enemy");
+        pooledBullet.Setup(bulletData, stat.GetStat(PlayerEnforcement.AutoDamage));
+        pooledBullet.Fire(Vector2.up, true);
     }
 }

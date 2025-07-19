@@ -1,12 +1,19 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerStat : MonoBehaviour
 {
+    public event Action<PlayerEnforcement> OnLevelUp;
     private Dictionary<PlayerEnforcement, int> levelsByEnforcement = new();
     private Dictionary<PlayerEnforcement, List<float>> valuesByEnforcement = new();
     [SerializeField] private PlayerLevelData playerLevelData;
+    
+    private PlayerSlowArea slowArea;
+    private PlayerDrone drone;
+    private PlayerAutoShooter autoShooter;
+    [SerializeField] private Vector2 dronePos;
     
     private void Awake()
     {
@@ -20,12 +27,23 @@ public class PlayerStat : MonoBehaviour
             levelsByEnforcement.Add(enforcement, 0);
         }
         
+        slowArea = GetComponentInChildren<PlayerSlowArea>(true);
+        drone = GetComponentInChildren<PlayerDrone>(true);
+        autoShooter = GetComponentInChildren<PlayerAutoShooter>();
+        autoShooter.Init(this);
+
+        OnLevelUp -= InitSlowArea;
+        OnLevelUp += InitSlowArea;
+        OnLevelUp -= InitDrone;
+        OnLevelUp += InitDrone;
+        
         EventManager.Instance.onPlayerEnforcementLevelUp -= LevelUp;
         EventManager.Instance.onPlayerEnforcementLevelUp += LevelUp;
         
-        EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Speed);
-        EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Speed);
-        EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Speed);
+        // Test
+        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Speed);
+        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.AutoAmmo);
+        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.AutoAmmo);
     }
 
     public float GetStat(PlayerEnforcement enforcement)
@@ -47,5 +65,27 @@ public class PlayerStat : MonoBehaviour
     private void LevelUp(PlayerEnforcement enforcement)
     {
         levelsByEnforcement[enforcement]++;
+        OnLevelUp?.Invoke(enforcement);
+    }
+
+    private void InitSlowArea(PlayerEnforcement enforcement)
+    {
+        if (enforcement != PlayerEnforcement.Area) return;
+        if (GetLevel(PlayerEnforcement.Area) < 1) return;
+
+        OnLevelUp -= InitSlowArea;
+        slowArea.gameObject.SetActive(true);
+    }
+    
+    private void InitDrone(PlayerEnforcement enforcement)
+    {
+        if (enforcement != PlayerEnforcement.Drone) return;
+        if (GetLevel(PlayerEnforcement.Drone) < 1) return;
+
+        OnLevelUp -= InitDrone;
+        drone.gameObject.SetActive(true);
+        drone.transform.SetParent(null);
+        drone.transform.position = dronePos;
+        drone.Init(this);
     }
 }
