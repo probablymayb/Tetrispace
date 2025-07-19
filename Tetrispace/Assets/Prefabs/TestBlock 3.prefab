@@ -115,35 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isLocked: 0
   fadeOutDuration: 1
-  scaleCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0.2
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  rotationSpeed: 180
-  useScaleEffect: 0
-  useRotationEffect: 0
-  fadeOutSound: {fileID: 0}
-  soundVolume: 0.5
+  fadePropertyName: _Fade
 --- !u!61 &3903252126051000622
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -174,7 +146,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

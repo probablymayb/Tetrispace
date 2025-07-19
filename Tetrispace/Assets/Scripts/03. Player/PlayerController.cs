@@ -42,22 +42,22 @@ public class PlayerController : MonoBehaviour
 
 
         //for test
-        // Vector2Int gridPos = GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y);
-        // Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f); // Z는 카메라와의 거리
-        // Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        // worldPos.z = 0; // 2D 게임용
+        Vector2Int gridPos = GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y);
+        Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f); // Z는 카메라와의 거리
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        worldPos.z = 0; // 2D 게임용
 
-        // transform.position = worldPos;
-        // EventManager.Instance.PlayerMove(this.transform);
+        transform.position = worldPos;
+        EventManager.Instance.PlayerMove(this.transform);
 
 
 
-        if (isInputHeld)
-        {
-            // 좌우 연속 이동
-            Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (stat.GetStat(PlayerEnforcement.Speed) * Time.deltaTime);
-            transform.position += move;
-        }
+        //if (isInputHeld)
+        //{
+        //    // 좌우 연속 이동
+        //    Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (stat.GetStat(PlayerEnforcement.Speed) * Time.deltaTime);
+        //    transform.position += move;
+        //}
 
     }
 

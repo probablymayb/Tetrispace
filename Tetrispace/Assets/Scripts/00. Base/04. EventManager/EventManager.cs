@@ -82,19 +82,8 @@ public class EventManager : Singleton<EventManager>
     /// </summary>
     public event Action<Tetrimino.TetrominoType> onTetrominoSpawned;
 
-    /// <summary>
-    /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
-    /// </summary>
-    /// <param name="tetrominoType">������ ��Ʈ���̳� Ÿ��</param>
-    public void TetrominoSpawned(Tetrimino.TetrominoType tetrominoType)
-    /// 보스 번개 QTE 이벤트를 발생시키는 메서드
-    /// </summary>
-    /// <param name="duration">QTE 제한 시간 (초)</param>
-    public void BossLightningQTE(float duration)
-    {
-        //onTetrominoSpawned?.Invoke(tetrominoType);
-        //Debug.Log($"[Event] ��Ʈ���̳� ����: {tetrominoType}");
-    }
+    public event Action<Tetrimino.TetrominoType, Vector2Int> onTetrominoLocked;
+
 
     /// <summary>
 
@@ -106,10 +95,10 @@ public class EventManager : Singleton<EventManager>
     /// - ���� ���� �غ�
     /// 
     /// ���� ���:
-    /// EventManager.Instance.onTetrominoLocked += OnBlockLocked;
-    /// 
-    /// �߻� ���:
-    /// EventManager.Instance.TetrominoLocked(tetrominoType, position);
+    //EventManager.Instance.onTetrominoLocked += OnBlockLocked;
+    ///// 
+    ///// �߻� ���:
+    // EventManager.Instance.TetrominoLocked(tetrominoType, position);
     /// QTE 완료 시 발생하는 이벤트 (성공/실패 결과 포함)
     /// 
     /// 사용 예시:
@@ -123,7 +112,6 @@ public class EventManager : Singleton<EventManager>
     /// EventManager.Instance.QTECompleted(true);  // 성공
     /// EventManager.Instance.QTECompleted(false); // 실패
     /// </summary>
-    public event Action<Tetrimino.TetrominoType, Vector2Int> onTetrominoLocked;
 
     /// <summary>
     /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
@@ -131,13 +119,9 @@ public class EventManager : Singleton<EventManager>
     /// <param name="tetrominoType">������ ��Ʈ���̳� Ÿ��</param>
     /// <param name="position">���� ��ġ</param>
     public void TetrominoLocked(Tetrimino.TetrominoType tetrominoType, Vector2Int position)
-    /// QTE 완료 이벤트를 발생시키는 메서드
-    /// </summary>
-    /// <param name="isSuccess">QTE 성공 여부 (true: 성공, false: 실패)</param>
-    public void QTECompleted(bool isSuccess)
     {
-        //onTetrominoLocked?.Invoke(tetrominoType, position);
-        //Debug.Log($"[Event] ��Ʈ���̳� ����: {tetrominoType} at {position}");
+        onTetrominoLocked?.Invoke(tetrominoType, position);
+        Debug.Log($"[Event] ��Ʈ���̳� ����: {tetrominoType} at {position}");
     }
 
     /// <summary>
@@ -478,11 +462,12 @@ public class EventManager : Singleton<EventManager>
     public void FireTestEvents()
     {
         Debug.Log("=== �׽�Ʈ �̺�Ʈ �߻� ===");
-        TetrominoSpawned(Tetrimino.TetrominoType.T);
+        //TetrominoSpawned(Tetrimino.TetrominoType.T);
         ScoreChanged(1000);
         PlaySFX("TestSound");
         Debug.Log("�׽�Ʈ �̺�Ʈ �߻� �Ϸ�");
     }
 
+    #endregion
     #endregion
 }

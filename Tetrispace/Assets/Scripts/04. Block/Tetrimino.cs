@@ -401,8 +401,8 @@ public class Tetrimino : MonoBehaviour
         Debug.Log($"테트리미노 고정: {blockType} at {gridPosition}");
 
         // 테트리미노 매니저에 완료 알림
-        //TetrominoManager.Instance?.OnTetrominoLocked(this);
-        EventManager.Instance.TetrominoLocked(blockType, gridPosition);
+        //TetriminoManager.Instance?.OnTetrominoLocked();
+        //EventManager.Instance.TetrominoLocked(blockType, gridPosition);
 
         // 자기 자신 파괴
         Destroy(gameObject);
