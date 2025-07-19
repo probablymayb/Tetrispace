@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections;
 
 /// <summary>
-/// Emission까지 포함한 완전한 페이드아웃
+/// 커스텀 Fade 변수를 사용한 페이드아웃
+/// 아트 디자이너가 만든 Material의 Fade 값을 조절
 /// </summary>
 public class PlayerGridFloor : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class PlayerGridFloor : MonoBehaviour
 
     [Header("페이드 아웃 설정")]
     [SerializeField] private float fadeOutDuration = 2f;
+
+    [Header("커스텀 Fade 설정")]
+    [SerializeField] private string fadePropertyName = "_Fade"; // Material의 Fade 변수 이름
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -28,8 +32,8 @@ public class PlayerGridFloor : MonoBehaviour
 
         if (other.CompareTag("Wall"))
         {
-            Debug.Log("*** Wall 충돌 - Emission 포함 페이드아웃 시작! ***");
-            StartEmissionFadeOut();
+            Debug.Log("*** Wall 충돌 - 커스텀 Fade 페이드아웃 시작! ***");
+            StartCustomFadeOut();
         }
         else if (other.CompareTag("Floor"))
         {
@@ -42,9 +46,9 @@ public class PlayerGridFloor : MonoBehaviour
     }
 
     /// <summary>
-    /// Emission까지 포함한 페이드아웃 시작
+    /// 커스텀 Fade 변수를 사용한 페이드아웃 시작
     /// </summary>
-    private void StartEmissionFadeOut()
+    private void StartCustomFadeOut()
     {
         if (_isFading) return;
         _isFading = true;
@@ -68,24 +72,28 @@ public class PlayerGridFloor : MonoBehaviour
             tc.enabled = false;
         }
 
-        StartCoroutine(EmissionFadeOutCoroutine());
+        StartCoroutine(CustomFadeOutCoroutine());
     }
 
     /// <summary>
-    /// Emission까지 포함한 페이드아웃 코루틴
+    /// 커스텀 Fade 변수를 사용한 페이드아웃 코루틴
     /// </summary>
-    private IEnumerator EmissionFadeOutCoroutine()
+    private IEnumerator CustomFadeOutCoroutine()
     {
-        Debug.Log("=== Emission 포함 페이드아웃 시작 ===");
+        Debug.Log("=== 커스텀 Fade 페이드아웃 시작 ===");
 
         // 렌더러와 머티리얼 정보 수집
-        List<RendererData> rendererDataList = new List<RendererData>();
+        List<MaterialData> materialDataList = new List<MaterialData>();
 
         // 자신의 렌더러
         SpriteRenderer mainRenderer = GetComponent<SpriteRenderer>();
         if (mainRenderer != null)
         {
-            rendererDataList.Add(new RendererData(mainRenderer));
+            MaterialData data = new MaterialData(mainRenderer, fadePropertyName);
+            if (data.isValid)
+            {
+                materialDataList.Add(data);
+            }
         }
 
         // 자식들의 렌더러
@@ -94,57 +102,53 @@ public class PlayerGridFloor : MonoBehaviour
         {
             if (renderer != mainRenderer && renderer != null)
             {
-                rendererDataList.Add(new RendererData(renderer));
+                MaterialData data = new MaterialData(renderer, fadePropertyName);
+                if (data.isValid)
+                {
+                    materialDataList.Add(data);
+                }
             }
         }
 
-        Debug.Log($"총 {rendererDataList.Count}개 렌더러로 Emission 페이드아웃 진행");
+        Debug.Log($"총 {materialDataList.Count}개 Material에서 Fade 변수 발견");
 
-        if (rendererDataList.Count == 0)
+        if (materialDataList.Count == 0)
         {
-            Debug.LogWarning("렌더러가 없어서 즉시 파괴");
+            Debug.LogWarning("Fade 변수를 가진 Material이 없어서 즉시 파괴");
             Destroy(gameObject);
             yield break;
         }
 
         // 초기 상태 로그
-        foreach (RendererData data in rendererDataList)
+        foreach (MaterialData data in materialDataList)
         {
             Debug.Log($"{data.renderer.gameObject.name}: " +
-                     $"색상={data.originalColor}, " +
-                     $"Emission={data.originalEmission}");
+                     $"원본 Fade={data.originalFadeValue:F2}");
         }
 
-        // 페이드아웃 실행
+        // 커스텀 Fade 페이드아웃 실행
         float fadeTimer = 0f;
 
         while (fadeTimer < fadeOutDuration)
         {
             fadeTimer += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, fadeTimer / fadeOutDuration);
+            float fadeProgress = fadeTimer / fadeOutDuration;
+
+            // 1에서 0으로 페이드 (아트 디자이너가 0이 완전 투명이라고 했으니)
+            float currentFadeValue = Mathf.Lerp(1f, 0f, fadeProgress);
 
             // 30프레임마다 로그
             if (Time.frameCount % 30 == 0)
             {
-                Debug.Log($"페이드 진행: {fadeTimer:F2}s / {fadeOutDuration:F2}s, 알파: {alpha:F3}");
+                Debug.Log($"Fade 진행: {fadeTimer:F2}s / {fadeOutDuration:F2}s, Fade값: {currentFadeValue:F3}");
             }
 
-            // 모든 렌더러에 알파와 Emission 적용
-            foreach (RendererData data in rendererDataList)
+            // 모든 Material에 Fade 값 적용
+            foreach (MaterialData data in materialDataList)
             {
-                if (data.renderer != null)
+                if (data.renderer != null && data.renderer.material != null)
                 {
-                    // 알파 적용
-                    Color newColor = data.originalColor;
-                    newColor.a = data.originalColor.a * alpha;
-                    data.renderer.color = newColor;
-
-                    // Emission 적용 (Material이 있는 경우)
-                    if (data.renderer.material != null && data.hasEmission)
-                    {
-                        Color newEmission = data.originalEmission * alpha;
-                        data.renderer.material.SetColor("_EmissionColor", newEmission);
-                    }
+                    data.renderer.material.SetFloat(data.fadePropertyName, currentFadeValue);
                 }
             }
 
@@ -152,27 +156,17 @@ public class PlayerGridFloor : MonoBehaviour
         }
 
         // 최종 완전 투명 처리
-        Debug.Log("최종 투명 처리 (Emission 포함)");
-        foreach (RendererData data in rendererDataList)
+        Debug.Log("최종 Fade 값 0 적용");
+        foreach (MaterialData data in materialDataList)
         {
-            if (data.renderer != null)
+            if (data.renderer != null && data.renderer.material != null)
             {
-                // 완전 투명
-                Color finalColor = data.originalColor;
-                finalColor.a = 0f;
-                data.renderer.color = finalColor;
-
-                // Emission 완전 제거
-                if (data.renderer.material != null && data.hasEmission)
-                {
-                    data.renderer.material.SetColor("_EmissionColor", Color.black);
-                }
-
-                Debug.Log($"최종: {data.renderer.gameObject.name}: 색상={finalColor}, Emission=Black");
+                data.renderer.material.SetFloat(data.fadePropertyName, 0f);
+                Debug.Log($"최종: {data.renderer.gameObject.name}: Fade=0");
             }
         }
 
-        Debug.Log("Emission 포함 페이드아웃 완료 - 파괴 대기");
+        Debug.Log("커스텀 Fade 페이드아웃 완료 - 파괴 대기");
         yield return new WaitForSeconds(0.1f);
 
         Debug.Log("*** 오브젝트 파괴 ***");
@@ -180,31 +174,31 @@ public class PlayerGridFloor : MonoBehaviour
     }
 
     /// <summary>
-    /// 렌더러 데이터 클래스
+    /// Material 데이터 클래스
     /// </summary>
-    private class RendererData
+    private class MaterialData
     {
         public SpriteRenderer renderer;
-        public Color originalColor;
-        public Color originalEmission;
-        public bool hasEmission;
+        public string fadePropertyName;
+        public float originalFadeValue;
+        public bool isValid;
 
-        public RendererData(SpriteRenderer r)
+        public MaterialData(SpriteRenderer r, string propertyName)
         {
             renderer = r;
-            originalColor = r.color;
+            fadePropertyName = propertyName;
+            isValid = false;
 
-            // Emission 정보 확인
-            if (r.material != null && r.material.HasProperty("_EmissionColor"))
+            if (r.material != null && r.material.HasProperty(propertyName))
             {
-                originalEmission = r.material.GetColor("_EmissionColor");
-                hasEmission = true;
-                Debug.Log($"{r.gameObject.name}: Emission 감지 - {originalEmission}");
+                originalFadeValue = r.material.GetFloat(propertyName);
+                isValid = true;
+                Debug.Log($"{r.gameObject.name}: Fade 변수 발견 - 현재값: {originalFadeValue:F2}");
             }
             else
             {
-                originalEmission = Color.black;
-                hasEmission = false;
+                Debug.Log($"{r.gameObject.name}: Fade 변수 없음");
+                originalFadeValue = 1f;
             }
         }
     }
@@ -212,64 +206,76 @@ public class PlayerGridFloor : MonoBehaviour
     /// <summary>
     /// 테스트용 메서드들
     /// </summary>
-    [ContextMenu("Test Emission Fade Out")]
-    public void TestEmissionFadeOut()
+    [ContextMenu("Test Custom Fade Out")]
+    public void TestCustomFadeOut()
     {
-        StartEmissionFadeOut();
+        StartCustomFadeOut();
     }
 
-    [ContextMenu("Check Emission Values")]
-    public void CheckEmissionValues()
+    [ContextMenu("Check Fade Properties")]
+    public void CheckFadeProperties()
     {
-        Debug.Log("=== Emission 값 확인 ===");
+        Debug.Log("=== Fade 변수 확인 ===");
         SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         foreach (SpriteRenderer renderer in allRenderers)
         {
             Debug.Log($"{renderer.gameObject.name}:");
-            Debug.Log($"  - 색상: {renderer.color}");
             Debug.Log($"  - Material: {renderer.material?.name}");
 
-            if (renderer.material != null && renderer.material.HasProperty("_EmissionColor"))
+            if (renderer.material != null && renderer.material.HasProperty(fadePropertyName))
             {
-                Color emission = renderer.material.GetColor("_EmissionColor");
-                Debug.Log($"  - Emission: {emission} (강도: {emission.maxColorComponent:F2})");
+                float fadeValue = renderer.material.GetFloat(fadePropertyName);
+                Debug.Log($"  - {fadePropertyName}: {fadeValue:F2} ✅");
             }
             else
             {
-                Debug.Log($"  - Emission: 없음");
+                Debug.Log($"  - {fadePropertyName}: 없음 ❌");
             }
         }
     }
 
-    [ContextMenu("Force Remove Emission")]
-    public void ForceRemoveEmission()
+    [ContextMenu("Set Fade to 0")]
+    public void SetFadeToZero()
     {
         SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         foreach (SpriteRenderer renderer in allRenderers)
         {
-            if (renderer.material != null && renderer.material.HasProperty("_EmissionColor"))
+            if (renderer.material != null && renderer.material.HasProperty(fadePropertyName))
             {
-                renderer.material.SetColor("_EmissionColor", Color.black);
-                Debug.Log($"{renderer.gameObject.name}: Emission 제거");
+                renderer.material.SetFloat(fadePropertyName, 0f);
+                Debug.Log($"{renderer.gameObject.name}: Fade를 0으로 설정");
             }
         }
     }
 
-    [ContextMenu("Reset Emission to Original")]
-    public void ResetEmissionToOriginal()
+    [ContextMenu("Set Fade to 1")]
+    public void SetFadeToOne()
     {
         SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         foreach (SpriteRenderer renderer in allRenderers)
         {
-            if (renderer.material != null && renderer.material.HasProperty("_EmissionColor"))
+            if (renderer.material != null && renderer.material.HasProperty(fadePropertyName))
             {
-                // 원본 Emission 복원 (예: 흰색 * 2.2)
-                Color originalEmission = Color.white * 2.2f;
-                renderer.material.SetColor("_EmissionColor", originalEmission);
-                Debug.Log($"{renderer.gameObject.name}: Emission 복원 - {originalEmission}");
+                renderer.material.SetFloat(fadePropertyName, 1f);
+                Debug.Log($"{renderer.gameObject.name}: Fade를 1로 설정");
+            }
+        }
+    }
+
+    [ContextMenu("Set Fade to 0.5")]
+    public void SetFadeToHalf()
+    {
+        SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        foreach (SpriteRenderer renderer in allRenderers)
+        {
+            if (renderer.material != null && renderer.material.HasProperty(fadePropertyName))
+            {
+                renderer.material.SetFloat(fadePropertyName, 0.5f);
+                Debug.Log($"{renderer.gameObject.name}: Fade를 0.5로 설정");
             }
         }
     }
