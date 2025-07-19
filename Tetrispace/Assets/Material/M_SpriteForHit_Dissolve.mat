@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: M_SpriteForHit_Dissolve
   m_Shader: {fileID: -6465566751694194690, guid: 3964cc6126ee51049a19f602820b6911, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -57,7 +57,27 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0291bcb34f184d69969286ad1b2d5cc0_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 80ac121c2d2416e47ad8cf5ba562d429, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_3984a8eaaad9485390775a546f8bd8d6_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 0abbb0bb014ce27419902ed702435301, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_83a40a3208394160bda8e86284d01877_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 0abbb0bb014ce27419902ed702435301, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_ac38d69e2e9f44c1ad2fa34ee6880549_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 8b77f0c5bf8046549a18db66099b123f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_e1f30a223f9b45c29da0c3cbd133080b_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 80ac121c2d2416e47ad8cf5ba562d429, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_e93c83bf4c8a44d6a1fe3d38fe8f357b_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 80ac121c2d2416e47ad8cf5ba562d429, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -80,13 +100,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _Color_1: 0
-    - _Color_Switch: 1
+    - _Color_Switch: 0
+    - _Dissolve: 0
+    - _Dissolve_Sharpness: 1
     - _EnableExternalAlpha: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 0.2783019, b: 0.2783019, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
