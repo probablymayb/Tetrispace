@@ -89,6 +89,8 @@ public partial class Enemy : MonoBehaviour, IEntity
         hp = data.hp;
         movePattern = EnemyMovePatternFactory.Create(enemyType);
         movePattern.Init(startPos, data.speed, rigid);
+        sprite.sprite = data.enemySprite;
+        sprite.flipX = enemyType == EnemyType.Z;
         if (data.isEnforced) { ChangeEnforcedSprite(); }
     }
 

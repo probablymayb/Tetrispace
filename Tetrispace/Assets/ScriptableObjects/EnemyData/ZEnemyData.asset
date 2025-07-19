@@ -17,6 +17,6 @@ MonoBehaviour:
   speed: 2
   attackSpeed: 2
   bulletData: {fileID: 11400000, guid: 520f637e8f2671341b3cd57f7c935c5b, type: 2}
-  enemySprite: {fileID: 0}
+  enemySprite: {fileID: 21300000, guid: 1c5e2f59e3a97bc46a34e6cfaefac598, type: 3}
   isEnforced: 0
   BlockPrefab: {fileID: 516356324441038549, guid: 203df3d93d6334e45aa58021baaba79d, type: 3}
