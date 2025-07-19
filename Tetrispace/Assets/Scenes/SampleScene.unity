@@ -1206,6 +1206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dabd4c3dd0a429a8159fd28d14b0c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enforcementUI: {fileID: 0}
   moveSpeed: 3
   tileSize: 1
   gridWorldUnitPerStep: 0.28
@@ -1323,9 +1324,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 6635951090713665813, guid: 761a55904de9f1e4395ae2415dbab977, type: 3}
+  CCWBulletPrefab: {fileID: 0}
+  CWBulletPrefab: {fileID: 0}
   firePoint: {fileID: 586898067}
   attackCooldown: 0.3
+  rotationAttackCooldown: 0.5
   bulletData: {fileID: 11400000, guid: cad128d8d73be074d9962bf378ebf1d6, type: 2}
+  CCWBulletData: {fileID: 11400000, guid: a87d9f2cdbf2ca14983ec3d7bfb27af4, type: 2}
+  CWBulletData: {fileID: 11400000, guid: d23c9017163a93e499ed51f2deb0211e, type: 2}
 --- !u!1 &618780412
 GameObject:
   m_ObjectHideFlags: 0

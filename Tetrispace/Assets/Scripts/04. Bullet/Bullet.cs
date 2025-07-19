@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
     private IBulletLogic logic;
     private BulletData data;
     private Transform effectTransform;
-    private string targetTag;
+    private string targetTag = "Enemy";
     private bool isSetup = false;
     private float damage;
     public float Speed { private set; get; }
@@ -47,16 +47,16 @@ public class Bullet : MonoBehaviour
     /// </summary>
     /// <param name="dir">이동시키는 방향</param>
     /// <param name="isTargetEnemy">대상이 적인지, 플레이어인지 true or false</param>
-    public void Fire(Vector2 dir, bool isTargetEnemy)
+    public void Fire(Vector2 dir, string trgtTag)
     {
         if (!isSetup)
         {
             print("Bullet이 Setup되지 않은채로 Fire 시도");
             return;
         }
+        targetTag = trgtTag;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
-        targetTag = isTargetEnemy ? EnemyTag : PlayerTag;
         StartCoroutine(logic.Execute(this, dir));
     }
 
@@ -77,6 +77,24 @@ public class Bullet : MonoBehaviour
         if (!other.CompareTag(targetTag)) return;
 
         print("Bullet Hit with " + other.name);
+
+        //회전총알
+        switch (data.logicType)
+        {
+            case BulletLogicType.CCW:
+                {
+                    other.GetComponent<TetriminoController>().TurnLeft();
+                    Die();
+                }
+                break;
+            case BulletLogicType.CW:
+                {
+                    other.GetComponent<TetriminoController>().TurnRight();
+                    Die();
+                }
+                break;
+        }
+
         IEntity entity = other.GetComponent<IEntity>();
         entity?.OnHit(damage, other.ClosestPoint(transform.position));
         Die();

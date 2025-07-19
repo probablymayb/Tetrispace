@@ -87,7 +87,7 @@ public class PlayerAutoShooter : MonoBehaviour
             Bullet bullet = PoolManager.Instance.Get(bulletPrefab);
             bullet.transform.position = shootPositions[ammo-1][i].position;
             bullet.Setup(bulletDatas[i], damage);
-            bullet.Fire(direction, true);
+            bullet.Fire(direction, "Enemy");
         }
     }
     
@@ -107,7 +107,7 @@ public class PlayerAutoShooter : MonoBehaviour
         bomb.OnDeath += () => { Bomb(bomb.transform); };
         bomb.transform.position = transform.position;
         bomb.Setup(bombData, damage);
-        bomb.Fire(direction, true);
+        bomb.Fire(direction, "Enemy");
     }
 
     private void Bomb(Transform bombTransform)

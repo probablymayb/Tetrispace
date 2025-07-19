@@ -46,7 +46,7 @@ public class PlayerDrone : MonoBehaviour
         Bullet bullet = PoolManager.Instance.Get(bulletPrefab);
         bullet.transform.position = transform.position;
         bullet.Setup(bulletData, damage);
-        bullet.Fire(direction, true);
+        bullet.Fire(direction, "Enemy");
     }
 
     private IEnumerator Patrol()

@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 5422869007413842325}
   - component: {fileID: -8598400690374522798}
   m_Layer: 0
-  m_Name: TestBlock 1
-  m_TagString: Untagged
+  m_Name: TestBlock I
+  m_TagString: TetriminoBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

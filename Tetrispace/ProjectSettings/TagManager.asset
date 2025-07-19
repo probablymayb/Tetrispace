@@ -10,6 +10,7 @@ TagManager:
   - Wall
   - SlowArea
   - UselessBlock
+  - TetriminoBlock
   layers:
   - Default
   - TransparentFX

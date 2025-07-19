@@ -32,15 +32,15 @@ public class TetriminoController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            TurnLeft();
-        }
+        //if(Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    TurnLeft();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            TurnRight();
-        }
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    TurnRight();
+        //}
 
     }
 
