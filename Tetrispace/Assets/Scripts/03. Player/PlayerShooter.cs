@@ -15,7 +15,6 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] private BulletData bulletData;
 
     private float attackTimer = 0f;
-    private float bombTimer = 0f;
     private bool isAttackHeld = false;
     
     private void Awake()
@@ -33,7 +32,6 @@ public class PlayerShooter : MonoBehaviour
         shootAction.canceled += OnAttack;
 
         attackTimer = 0f;
-        bombTimer = 0f;
     }
 
     private void OnDisable()

@@ -41,9 +41,7 @@ public class PlayerStat : MonoBehaviour
         EventManager.Instance.onPlayerEnforcementLevelUp += LevelUp;
         
         // Test
-        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Speed);
-        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.AutoAmmo);
-        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.AutoAmmo);
+        // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Bomb);
     }
 
     public float GetStat(PlayerEnforcement enforcement)

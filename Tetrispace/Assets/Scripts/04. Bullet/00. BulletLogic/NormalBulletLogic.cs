@@ -14,6 +14,6 @@ public class NormalBulletLogic : IBulletLogic
             yield return null;
         }
 
-        bullet.OnDeath();
+        bullet.Die();
     }
 }

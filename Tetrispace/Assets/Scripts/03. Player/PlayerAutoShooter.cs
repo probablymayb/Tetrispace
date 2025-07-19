@@ -8,9 +8,12 @@ public class PlayerAutoShooter : MonoBehaviour
     [SerializeField] private float attackSpeed;
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private List<BulletData> bulletDatas;
+    [SerializeField] private BulletData bombData;
+    [SerializeField] private float bombRadius;
     private List<List<Transform>> shootPositions = new();
     private float damage;
     private int ammo;
+    private float bombCoolTime;
     private PlayerStat playerStat;
 
     private void Awake()
@@ -35,10 +38,14 @@ public class PlayerAutoShooter : MonoBehaviour
         playerStat = stat;
         ammo = (int)playerStat.GetStat(PlayerEnforcement.AutoAmmo);
         damage = playerStat.GetStat(PlayerEnforcement.AutoDamage);
+        bombCoolTime = playerStat.GetStat(PlayerEnforcement.Bomb);
+        
         playerStat.OnLevelUp -= OnAutoDamageLevelUp;
         playerStat.OnLevelUp += OnAutoDamageLevelUp;
         playerStat.OnLevelUp -= OnAutoAmmoLevelUp;
         playerStat.OnLevelUp += OnAutoAmmoLevelUp;
+        playerStat.OnLevelUp -= OnBombLevelUp;
+        playerStat.OnLevelUp += OnBombLevelUp;
         StartCoroutine(AutoFire());
     }
 
@@ -52,6 +59,13 @@ public class PlayerAutoShooter : MonoBehaviour
     {
         if (enforcement != PlayerEnforcement.AutoAmmo) return;
         ammo = (int)playerStat.GetStat(PlayerEnforcement.AutoAmmo);
+    }
+
+    private void OnBombLevelUp(PlayerEnforcement enforcement)
+    {
+        if (enforcement != PlayerEnforcement.Bomb) return;
+        bombCoolTime = playerStat.GetStat(PlayerEnforcement.Bomb);
+        if (playerStat.GetLevel(PlayerEnforcement.Bomb) == 1) StartCoroutine(AutoBomb());
     }
 
     private IEnumerator AutoFire()
@@ -75,5 +89,52 @@ public class PlayerAutoShooter : MonoBehaviour
             bullet.Setup(bulletDatas[i], damage);
             bullet.Fire(direction, true);
         }
+    }
+    
+    private IEnumerator AutoBomb()
+    {
+        while (true)
+        {
+            FireBomb();
+            yield return new WaitForSeconds(bombCoolTime);
+        }
+    }
+    
+    private void FireBomb()
+    {
+        Vector2 direction = Vector2.up;
+        Bullet bomb = PoolManager.Instance.Get(bulletPrefab);
+        bomb.OnDeath += () => { Bomb(bomb.transform); };
+        bomb.transform.position = transform.position;
+        bomb.Setup(bombData, damage);
+        bomb.Fire(direction, true);
+    }
+
+    private void Bomb(Transform bombTransform)
+    {
+        print("Bomb");
+        Vector2 bombCenter = bombTransform.position;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(bombCenter, bombRadius);
+        foreach (var hit in hits)
+        {
+            if (!hit.CompareTag("Enemy")) continue;
+            print("Bomb Hit with " + hit.name);
+            IEntity entity = hit.GetComponent<IEntity>();
+            entity?.OnHit(damage, hit.ClosestPoint(transform.position));
+        }
+        
+        #if UNITY_EDITOR
+        float angleStep = 360f / 32;
+        for (int i = 0; i < 32; i++)
+        {
+            float angle1 = Mathf.Deg2Rad * (angleStep * i);
+            float angle2 = Mathf.Deg2Rad * (angleStep * (i + 1));
+
+            Vector3 point1 = bombCenter + new Vector2(Mathf.Cos(angle1), Mathf.Sin(angle1)) * bombRadius;
+            Vector3 point2 = bombCenter + new Vector2(Mathf.Cos(angle2), Mathf.Sin(angle2)) * bombRadius;
+
+            Debug.DrawLine(point1, point2, Color.red, 1.0f); // 마지막 인자는 지속 시간
+        }
+        #endif
     }
 }

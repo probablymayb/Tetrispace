@@ -45,7 +45,7 @@ MonoBehaviour:
     - 1
   - enforcement: 5
     valueByLevel:
-    - 0
+    - 15
     - 5
-    - 6
-    - 7
+    - 15
+    - 15

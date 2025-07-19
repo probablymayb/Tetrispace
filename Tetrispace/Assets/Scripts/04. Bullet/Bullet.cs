@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     private float damage;
     public float Speed { private set; get; }
     public float LifeTime { private set; get; }
+    public event Action OnDeath;
 
     private const string EnemyTag = "Enemy";
     private const string PlayerTag = "Player";
@@ -49,6 +50,7 @@ public class Bullet : MonoBehaviour
     private void OnDisable()
     {
         isSetup = false;
+        OnDeath = null;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -64,7 +66,7 @@ public class Bullet : MonoBehaviour
         print("Bullet Hit with " + other.name);
         IEntity entity = other.GetComponent<IEntity>();
         entity?.OnHit(damage, other.ClosestPoint(transform.position));
-        OnDeath();
+        Die();
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -73,12 +75,12 @@ public class Bullet : MonoBehaviour
         if (other.CompareTag(PlayerSlowArea.Tag))
         {
             Speed = data.speed;
-            return;
         }
     }
 
-    public void OnDeath()
+    public void Die()
     {
+        OnDeath?.Invoke();
         StopAllCoroutines();
         PoolManager.Instance.Return(this);
     }

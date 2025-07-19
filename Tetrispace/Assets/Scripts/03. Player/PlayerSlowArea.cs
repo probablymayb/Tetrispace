@@ -11,7 +11,7 @@ public class PlayerSlowArea : MonoBehaviour
     private float radius;
     private float Radius
     {
-        get { return radius; }
+        get => radius;
         set
         {
             radius = value;
@@ -35,6 +35,6 @@ public class PlayerSlowArea : MonoBehaviour
     private void OnSlowAreaLevelUp(PlayerEnforcement enforcement)
     {
         if (enforcement != PlayerEnforcement.Area) return;
-        Radius = stat.GetStat(PlayerEnforcement.Drone);
+        Radius = stat.GetStat(PlayerEnforcement.Area);
     }
 }

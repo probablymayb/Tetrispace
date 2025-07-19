@@ -271,7 +271,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1
+  m_Radius: 5
 --- !u!114 &6645080902224559310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,6 +358,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1903659577634550147}
     m_Modifications:
+    - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
+      propertyPath: bombData
+      value: 
+      objectReference: {fileID: 11400000, guid: cad128d8d73be074d9962bf378ebf1d6, type: 2}
+    - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
+      propertyPath: bombRadius
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2930462690842931160, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -328,6 +328,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerTest
       objectReference: {fileID: 0}
+    - target: {fileID: 5041475871384525543, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: m_Radius
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6000015426470724136, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: bombData
+      value: 
+      objectReference: {fileID: 11400000, guid: cad128d8d73be074d9962bf378ebf1d6, type: 2}
+    - target: {fileID: 6000015426470724136, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: bombRadius
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
