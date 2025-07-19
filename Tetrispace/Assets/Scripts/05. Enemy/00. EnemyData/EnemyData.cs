@@ -10,4 +10,5 @@ public class EnemyData : ScriptableObject
     public BulletData bulletData;
     public Texture2D enemySprite;
     public bool isEnforced;
+    public GameObject BlockPrefab;
 }

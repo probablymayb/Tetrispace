@@ -1,28 +1,28 @@
 using UnityEngine;
 
 /// <summary>
-/// ¿Ïº® Á¤·Ä Å×Æ®¸®½º ºí·Ï
+/// ì™„ë²½ ì •ë ¬ í…ŒíŠ¸ë¦¬ìŠ¤ ë¸”ë¡
 /// 
-/// PlayerController¿Í Á¤È®È÷ °°Àº ±×¸®µå ½Ã½ºÅÛ »ç¿ë
-/// - PlayerController: GetGridPos() »ç¿ë (±×¸®µå ¸ğ¼­¸®)
-/// - TetrisBlock: GetGridMiddlePos() »ç¿ë (±×¸®µå Áß½É)
+/// PlayerControllerì™€ ì •í™•íˆ ê°™ì€ ê·¸ë¦¬ë“œ ì‹œìŠ¤í…œ ì‚¬ìš©
+/// - PlayerController: GetGridPos() ì‚¬ìš© (ê·¸ë¦¬ë“œ ëª¨ì„œë¦¬)
+/// - TetrisBlock: GetGridMiddlePos() ì‚¬ìš© (ê·¸ë¦¬ë“œ ì¤‘ì‹¬)
 /// </summary>
 public class TetriminoController : MonoBehaviour
 {
-    [Header("=== ºí·Ï ¼³Á¤ ===")]
-    [SerializeField] private float blockPixelSize = 28f;  // ºí·Ï Å©±â
+    [Header("=== ë¸”ë¡ ì„¤ì • ===")]
+    [SerializeField] private float blockPixelSize = 28f;  // ë¸”ë¡ í¬ê¸°
 
-    [Header("=== ±×¸®µå À§Ä¡ ===")]
-    [SerializeField] private bool useStaticPosition = true;  // Á¤Àû À§Ä¡ »ç¿ë ¿©ºÎ
-    [SerializeField] private int customGridX = 0;           // Ä¿½ºÅÒ ±×¸®µå X
-    [SerializeField] private int customGridY = 0;           // Ä¿½ºÅÒ ±×¸®µå Y
+    [Header("=== ê·¸ë¦¬ë“œ ìœ„ì¹˜ ===")]
+    [SerializeField] private bool useStaticPosition = true;  // ì •ì  ìœ„ì¹˜ ì‚¬ìš© ì—¬ë¶€
+    [SerializeField] private int customGridX = 0;           // ì»¤ìŠ¤í…€ ê·¸ë¦¬ë“œ X
+    [SerializeField] private int customGridY = 0;           // ì»¤ìŠ¤í…€ ê·¸ë¦¬ë“œ Y
 
     void Start()
     {
-        // ºí·Ï Å©±â ¼³Á¤
+        // ë¸”ë¡ í¬ê¸° ì„¤ì •
         //SetBlockSize();
 
-        // ±×¸®µå Á¤º¸ Ãâ·Â (ÇÑ ¹ø¸¸)
+        // ê·¸ë¦¬ë“œ ì •ë³´ ì¶œë ¥ (í•œ ë²ˆë§Œ)
         if (useStaticPosition)
         {
             //GridSystem.DebugGridInfo();

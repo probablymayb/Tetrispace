@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour, IEntity
 
             while (Mathf.Abs(gridMoveBuffer) >= 1f)
             {
-                GridSystem.GridPos.x += (int)Mathf.Sign(gridMoveBuffer);
+                GridSystem.GridPos.x = Mathf.Clamp(GridSystem.GridPos.x + (int)Mathf.Sign(gridMoveBuffer), 0, GridSystem.GridSettings.ActualGridWidth);
                 gridMoveBuffer -= Mathf.Sign(gridMoveBuffer);
                 SetTargetWorldPosByGrid();
             }
@@ -98,13 +98,20 @@ public class PlayerController : MonoBehaviour, IEntity
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        // 눌렸을 때
         if (context.started || context.performed)
         {
-            moveInput = context.ReadValue<Vector2>();
+            Vector2 newInput = context.ReadValue<Vector2>();
+            int newDir = (int)Mathf.Sign(newInput.x);
+            int oldDir = (int)Mathf.Sign(moveInput.x);
+
+            moveInput = newInput;
             isInputHeld = true;
+
+            if (newDir != 0 && newDir != oldDir)
+            {
+                gridMoveBuffer = 0f;
+            }
         }
-        // 뗐을 때 이동 취소 및 가장 가까운 타일로
         else if (context.canceled)
         {
             isInputHeld = false;

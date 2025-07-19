@@ -10,7 +10,7 @@ public class DataManager : Singleton<DataManager>
     /// <summary>
     /// EnemyType에 맞는 EnemyData를 반환해주는 함수
     /// </summary>
-    /// <param name="type">EnemyType은 Flags지만, 하나의 Enum만 선택해 넘겨줘야 올바른 Data 전달 가능</param>
+    /// <param name="type">EnemyType 전달</param>
     /// <returns></returns>
     public EnemyData GetEnemyData(EnemyType type)
     {

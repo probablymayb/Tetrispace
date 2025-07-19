@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<EnemyPhaseData> phaseDatas;
     [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private Bounds spawnBounds;
+    [SerializeField] private float phaseIntervalTime = 3.0f;
 
     private int currentPhase;
     private int aliveEnemies;
@@ -108,7 +110,13 @@ public class EnemySpawner : MonoBehaviour
         if (--aliveEnemies <= 0)
         {
             aliveEnemies = 0;
-            StartNextPhase();
+            StartCoroutine(NextPhaseCoroutine());
         }
+    }
+
+    private IEnumerator NextPhaseCoroutine()
+    {
+        yield return new WaitForSeconds(phaseIntervalTime);
+        StartNextPhase();   
     }
 }
