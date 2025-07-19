@@ -8,54 +8,54 @@ public class GridSystem
     [System.Serializable]
     public static class GridSettings
     {
-        // === ê³ ì • í•´ìƒë„ ë° ê·¸ë¦¬ë“œ ì„¤ì • ===
+        // === °íÁ¤ ÇØ»óµµ ¹× ±×¸®µå ¼³Á¤ ===
         public const float REFERENCE_WIDTH = 1024f;
         public const float REFERENCE_HEIGHT = 768f;
         public const float GRID_SIZE = 28f;
 
-        // === ì •í™•í•œ ê³„ì‚° ===
-        public static int ActualGridWidth => 32;      // 896 / 28 = 32ê°œ (0~31)
-        public static int ActualGridHeight => 27;     // 768 / 28 = 27.43 â†’ 27ê°œ (0~26)
+        // === Á¤È®ÇÑ °è»ê ===
+        public static int ActualGridWidth => 32;      // 896 / 28 = 32°³ (0~31)
+        public static int ActualGridHeight => 27;     // 768 / 28 = 27.43 ¡æ 27°³ (0~26)
 
-        // === ì—¬ë°± ê³„ì‚° (ìˆ˜ì •) ===
+        // === ¿©¹é °è»ê (¼öÁ¤) ===
         public static float HorizontalMargin => 64f;    // (1024 - 896) / 2 = 64px
         public static float VerticalMargin => 12f;      // (768 - 27*28) / 2 = 12px
 
-        // === ê²Œì„ ì˜ì—­ ===
-        public static float GameAreaWidth => 896f;      // ì‹¤ì œ ê²Œì„ ì˜ì—­
-        public static float GameAreaStartX => 64f;      // ê²Œì„ ì˜ì—­ ì‹œì‘ì 
-        public static float GameAreaEndX => 960f;       // ê²Œì„ ì˜ì—­ ëì  (64 + 896)
+        // === °ÔÀÓ ¿µ¿ª ===
+        public static float GameAreaWidth => 896f;      // ½ÇÁ¦ °ÔÀÓ ¿µ¿ª
+        public static float GameAreaStartX => 64f;      // °ÔÀÓ ¿µ¿ª ½ÃÀÛÁ¡
+        public static float GameAreaEndX => 960f;       // °ÔÀÓ ¿µ¿ª ³¡Á¡ (64 + 896)
     }
 
-    // === ì •ì  ê·¸ë¦¬ë“œ ìœ„ì¹˜ ë³€ìˆ˜ ===
+    // === Á¤Àû ±×¸®µå À§Ä¡ º¯¼ö ===
     public static Vector2Int GridPos = new Vector2Int(5, 5);
     public static Vector2Int GridMiddlePos = new Vector2Int(0, 0);
 
     /// <summary>
-    /// PlayerControllerìš© ê·¸ë¦¬ë“œ ìœ„ì¹˜ ê³„ì‚° (ê·¸ë¦¬ë“œ ì™¼ìª½ ëª¨ì„œë¦¬)
+    /// PlayerController¿ë ±×¸®µå À§Ä¡ °è»ê (±×¸®µå ¿ŞÂÊ ¸ğ¼­¸®)
     /// grid[0] = 64px, grid[1] = 92px, grid[31] = 932px
     /// </summary>
     public static Vector2Int GetGridPos(int gridX, int gridY)
     {
         gridX = Mathf.Clamp(gridX, 0, GridSettings.ActualGridWidth - 1);
         gridY = Mathf.Clamp(gridY, 0, GridSettings.ActualGridHeight - 1);
-        // ë²”ìœ„ ì²´í¬
+        // ¹üÀ§ Ã¼Å©
         if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
             gridY < 0 || gridY >= GridSettings.ActualGridHeight)
         {
-            Debug.LogWarning($"ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ ë²”ìœ„ ì´ˆê³¼: [{gridX}][{gridY}] (ìµœëŒ€: {GridSettings.ActualGridWidth - 1}x{GridSettings.ActualGridHeight - 1})");
+            Debug.LogWarning($"±×¸®µå ÀÎµ¦½º ¹üÀ§ ÃÊ°ú: [{gridX}][{gridY}] (ÃÖ´ë: {GridSettings.ActualGridWidth - 1}x{GridSettings.ActualGridHeight - 1})");
             return Vector2Int.zero;
         }
 
-        // ì •í™•í•œ ê³„ì‚°: ì™¼ìª½ ì—¬ë°± + (ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ * ê·¸ë¦¬ë“œ í¬ê¸°)
+        // Á¤È®ÇÑ °è»ê: ¿ŞÂÊ ¿©¹é + (±×¸®µå ÀÎµ¦½º * ±×¸®µå Å©±â)
         float posX = GridSettings.HorizontalMargin + (gridX * GridSettings.GRID_SIZE);
         float posY = GridSettings.VerticalMargin + (gridY * GridSettings.GRID_SIZE);
 
-        // ë²”ìœ„ ì²´í¬ (ê²Œì„ ì˜ì—­ ë‚´)
+        // ¹üÀ§ Ã¼Å© (°ÔÀÓ ¿µ¿ª ³»)
         posX = Mathf.Clamp(posX, GridSettings.GameAreaStartX, GridSettings.GameAreaEndX - GridSettings.GRID_SIZE);
         posY = Mathf.Clamp(posY, GridSettings.VerticalMargin, GridSettings.VerticalMargin + (GridSettings.ActualGridHeight - 1) * GridSettings.GRID_SIZE);
 
-        // í•´ìƒë„ ìŠ¤ì¼€ì¼ë§
+        // ÇØ»óµµ ½ºÄÉÀÏ¸µ
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
         float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
 
@@ -66,28 +66,28 @@ public class GridSystem
     }
 
     /// <summary>
-    /// Blockìš© ê·¸ë¦¬ë“œ ì¤‘ì‹¬ì  ê³„ì‚° (ê·¸ë¦¬ë“œ ì¤‘ì•™)
+    /// Block¿ë ±×¸®µå Áß½ÉÁ¡ °è»ê (±×¸®µå Áß¾Ó)
     /// grid[0] = 78px, grid[1] = 106px, grid[31] = 946px
     /// </summary>
     public static Vector2Int GetGridMiddlePos(int gridX, int gridY)
     {
-        // ë²”ìœ„ ì²´í¬
+        // ¹üÀ§ Ã¼Å©
         if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
             gridY < 0 || gridY >= GridSettings.ActualGridHeight)
         {
-            Debug.LogWarning($"ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ ë²”ìœ„ ì´ˆê³¼: [{gridX}][{gridY}] (ìµœëŒ€: {GridSettings.ActualGridWidth - 1}x{GridSettings.ActualGridHeight - 1})");
+            Debug.LogWarning($"±×¸®µå ÀÎµ¦½º ¹üÀ§ ÃÊ°ú: [{gridX}][{gridY}] (ÃÖ´ë: {GridSettings.ActualGridWidth - 1}x{GridSettings.ActualGridHeight - 1})");
             return Vector2Int.zero;
         }
 
-        // ì •í™•í•œ ê³„ì‚°: ì™¼ìª½ ì—¬ë°± + (ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ * ê·¸ë¦¬ë“œ í¬ê¸°) + (ê·¸ë¦¬ë“œ í¬ê¸° / 2)
+        // Á¤È®ÇÑ °è»ê: ¿ŞÂÊ ¿©¹é + (±×¸®µå ÀÎµ¦½º * ±×¸®µå Å©±â) + (±×¸®µå Å©±â / 2)
         float posX = GridSettings.HorizontalMargin + (gridX * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
         float posY = GridSettings.VerticalMargin + (gridY * GridSettings.GRID_SIZE) + (GridSettings.GRID_SIZE * 0.5f);
 
-        // ë²”ìœ„ ì²´í¬
+        // ¹üÀ§ Ã¼Å©
         posX = Mathf.Clamp(posX, GridSettings.HorizontalMargin + 14f, GridSettings.GameAreaEndX - 14f);
         posY = Mathf.Clamp(posY, GridSettings.VerticalMargin + 14f, GridSettings.VerticalMargin + GridSettings.ActualGridHeight * GridSettings.GRID_SIZE - 14f);
 
-        // í•´ìƒë„ ìŠ¤ì¼€ì¼ë§
+        // ÇØ»óµµ ½ºÄÉÀÏ¸µ
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
         float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
 
@@ -98,7 +98,7 @@ public class GridSystem
     }
 
     /// <summary>
-    /// PlayerControllerìš© ì›”ë“œ ì¢Œí‘œ ê³„ì‚°
+    /// PlayerController¿ë ¿ùµå ÁÂÇ¥ °è»ê
     /// </summary>
     public static Vector3 GetGridWorldPosition(int gridX, int gridY)
     {
@@ -107,7 +107,7 @@ public class GridSystem
     }
 
     /// <summary>
-    /// Blockìš© ì›”ë“œ ì¢Œí‘œ ì¤‘ì‹¬ì  ê³„ì‚°
+    /// Block¿ë ¿ùµå ÁÂÇ¥ Áß½ÉÁ¡ °è»ê
     /// </summary>
     public static Vector3 GetGridMiddleWorldPosition(int gridX, int gridY)
     {
@@ -116,7 +116,7 @@ public class GridSystem
     }
 
     /// <summary>
-    /// ìŠ¤í¬ë¦° ì¢Œí‘œë¥¼ ì›”ë“œ ì¢Œí‘œë¡œ ë³€í™˜
+    /// ½ºÅ©¸° ÁÂÇ¥¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
     /// </summary>
     private static Vector3 ScreenToWorld(Vector2Int screenPos)
     {
@@ -127,25 +127,25 @@ public class GridSystem
     }
 
     /// <summary>
-    /// ìŠ¤í¬ë¦° ì¢Œí‘œë¥¼ ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ë¡œ ë³€í™˜
+    /// ½ºÅ©¸° ÁÂÇ¥¸¦ ±×¸®µå ÀÎµ¦½º·Î º¯È¯
     /// </summary>
     public static Vector2Int ScreenToGridIndex(Vector2 screenPos)
     {
-        // í•´ìƒë„ ì—­ìŠ¤ì¼€ì¼ë§
+        // ÇØ»óµµ ¿ª½ºÄÉÀÏ¸µ
         float scaleX = Screen.width / GridSettings.REFERENCE_WIDTH;
         float scaleY = Screen.height / GridSettings.REFERENCE_HEIGHT;
 
         screenPos.x /= scaleX;
         screenPos.y /= scaleY;
 
-        // ì—¬ë°±ì„ ë¹¼ê³  ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ ê³„ì‚°
+        // ¿©¹éÀ» »©°í ±×¸®µå ÀÎµ¦½º °è»ê
         screenPos.x -= GridSettings.HorizontalMargin;
         screenPos.y -= GridSettings.VerticalMargin;
 
         int gridX = Mathf.FloorToInt(screenPos.x / GridSettings.GRID_SIZE);
         int gridY = Mathf.FloorToInt(screenPos.y / GridSettings.GRID_SIZE);
 
-        // ë²”ìœ„ í´ë¨í•‘
+        // ¹üÀ§ Å¬·¥ÇÎ
         gridX = Mathf.Clamp(gridX, 0, GridSettings.ActualGridWidth - 1);
         gridY = Mathf.Clamp(gridY, 0, GridSettings.ActualGridHeight - 1);
 
@@ -153,7 +153,7 @@ public class GridSystem
     }
 
     /// <summary>
-    /// ì›”ë“œ ì¢Œí‘œë¥¼ ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ë¡œ ë³€í™˜
+    /// ¿ùµå ÁÂÇ¥¸¦ ±×¸®µå ÀÎµ¦½º·Î º¯È¯
     /// </summary>
     public static Vector2Int WorldToGridIndex(Vector3 worldPos)
     {
@@ -162,7 +162,7 @@ public class GridSystem
     }
 
     /// <summary>
-    /// ìœ íš¨í•œ ê·¸ë¦¬ë“œ ì¸ë±ìŠ¤ì¸ì§€ í™•ì¸
+    /// À¯È¿ÇÑ ±×¸®µå ÀÎµ¦½ºÀÎÁö È®ÀÎ
     /// </summary>
     public static bool IsValidGridIndex(int gridX, int gridY)
     {
@@ -171,84 +171,47 @@ public class GridSystem
     }
 
     /// <summary>
-    /// ê·¸ë¦¬ë“œ ì‹œìŠ¤í…œ ë””ë²„ê·¸ ì •ë³´ ì¶œë ¥
+    /// ±×¸®µå ½Ã½ºÅÛ µğ¹ö±× Á¤º¸ Ãâ·Â
     /// </summary>
     public static void DebugGridInfo()
     {
-        Debug.Log("=== ìˆ˜ì •ëœ ê·¸ë¦¬ë“œ ì‹œìŠ¤í…œ ì •ë³´ ===");
-        Debug.Log($"í•´ìƒë„: {GridSettings.REFERENCE_WIDTH} x {GridSettings.REFERENCE_HEIGHT}");
-        Debug.Log($"ê²Œì„ ì˜ì—­: {GridSettings.GameAreaWidth}px (ì‹œì‘: {GridSettings.GameAreaStartX}, ë: {GridSettings.GameAreaEndX})");
-        Debug.Log($"ê·¸ë¦¬ë“œ í¬ê¸°: {GridSettings.GRID_SIZE}px");
-        Debug.Log($"ê·¸ë¦¬ë“œ ê°œìˆ˜: {GridSettings.ActualGridWidth} x {GridSettings.ActualGridHeight}");
-        Debug.Log($"ì—¬ë°±: ì¢Œìš° ê° {GridSettings.HorizontalMargin}px, ìƒí•˜ ê° {GridSettings.VerticalMargin}px");
+        Debug.Log("=== ¼öÁ¤µÈ ±×¸®µå ½Ã½ºÅÛ Á¤º¸ ===");
+        Debug.Log($"ÇØ»óµµ: {GridSettings.REFERENCE_WIDTH} x {GridSettings.REFERENCE_HEIGHT}");
+        Debug.Log($"°ÔÀÓ ¿µ¿ª: {GridSettings.GameAreaWidth}px (½ÃÀÛ: {GridSettings.GameAreaStartX}, ³¡: {GridSettings.GameAreaEndX})");
+        Debug.Log($"±×¸®µå Å©±â: {GridSettings.GRID_SIZE}px");
+        Debug.Log($"±×¸®µå °³¼ö: {GridSettings.ActualGridWidth} x {GridSettings.ActualGridHeight}");
+        Debug.Log($"¿©¹é: ÁÂ¿ì °¢ {GridSettings.HorizontalMargin}px, »óÇÏ °¢ {GridSettings.VerticalMargin}px");
         Debug.Log("");
-        Debug.Log("=== ê³„ì‚° ê²€ì¦ ===");
-        Debug.Log($"í”Œë ˆì´ì–´ grid[0] = {GetGridPos(0, 0)} (ì˜ˆìƒ: 64)");
-        Debug.Log($"í”Œë ˆì´ì–´ grid[1] = {GetGridPos(1, 0)} (ì˜ˆìƒ: 92)");
-        Debug.Log($"í”Œë ˆì´ì–´ grid[31] = {GetGridPos(31, 0)} (ì˜ˆìƒ: 932)");
-        Debug.Log($"ë¸”ë¡ grid[0] = {GetGridMiddlePos(0, 0)} (ì˜ˆìƒ: 78)");
-        Debug.Log($"ë¸”ë¡ grid[1] = {GetGridMiddlePos(1, 0)} (ì˜ˆìƒ: 106)");
-        Debug.Log($"ë¸”ë¡ grid[31] = {GetGridMiddlePos(31, 0)} (ì˜ˆìƒ: 946)");
+        Debug.Log("=== °è»ê °ËÁõ ===");
+        Debug.Log($"ÇÃ·¹ÀÌ¾î grid[0] = {GetGridPos(0, 0)} (¿¹»ó: 64)");
+        Debug.Log($"ÇÃ·¹ÀÌ¾î grid[1] = {GetGridPos(1, 0)} (¿¹»ó: 92)");
+        Debug.Log($"ÇÃ·¹ÀÌ¾î grid[31] = {GetGridPos(31, 0)} (¿¹»ó: 932)");
+        Debug.Log($"ºí·Ï grid[0] = {GetGridMiddlePos(0, 0)} (¿¹»ó: 78)");
+        Debug.Log($"ºí·Ï grid[1] = {GetGridMiddlePos(1, 0)} (¿¹»ó: 106)");
+        Debug.Log($"ºí·Ï grid[31] = {GetGridMiddlePos(31, 0)} (¿¹»ó: 946)");
     }
 
     /// <summary>
-    /// ê·¸ë¦¬ë“œ ê³„ì‚° í…ŒìŠ¤íŠ¸
+    /// ±×¸®µå °è»ê Å×½ºÆ®
     /// </summary>
     public static void TestGridCalculation()
     {
-        Debug.Log("=== ê·¸ë¦¬ë“œ ê³„ì‚° ì •í™•ì„± í…ŒìŠ¤íŠ¸ ===");
+        Debug.Log("=== ±×¸®µå °è»ê Á¤È®¼º Å×½ºÆ® ===");
 
-        // í”Œë ˆì´ì–´ ìœ„ì¹˜ í…ŒìŠ¤íŠ¸
+        // ÇÃ·¹ÀÌ¾î À§Ä¡ Å×½ºÆ®
         for (int i = 0; i <= 31; i += 10)
         {
             Vector2Int pos = GetGridPos(i, 0);
             int expected = 64 + i * 28;
-            Debug.Log($"í”Œë ˆì´ì–´ grid[{i}] = {pos.x} (ì˜ˆìƒ: {expected}) - {(pos.x == expected ? "o" : "x")}");
+            Debug.Log($"ÇÃ·¹ÀÌ¾î grid[{i}] = {pos.x} (¿¹»ó: {expected}) - {(pos.x == expected ? "o" : "x")}");
         }
 
-        // ë¸”ë¡ ìœ„ì¹˜ í…ŒìŠ¤íŠ¸
+        // ºí·Ï À§Ä¡ Å×½ºÆ®
         for (int i = 0; i <= 31; i += 10)
         {
             Vector2Int pos = GetGridMiddlePos(i, 0);
             int expected = 64 + i * 28 + 14;
-            Debug.Log($"ë¸”ë¡ grid[{i}] = {pos.x} (ì˜ˆìƒ: {expected}) - {(pos.x == expected ? "o" : "x")}");
+            Debug.Log($"ºí·Ï grid[{i}] = {pos.x} (¿¹»ó: {expected}) - {(pos.x == expected ? "o" : "x")}");
         }
     }
-    
-    /// <summary>
-    /// ì£¼ì–´ì§„ ê·¸ë¦¬ë“œ ì¹¸ ìˆ˜ì— í•´ë‹¹í•˜ëŠ” ì›”ë“œ ê±°ë¦¬ (Xì¶• ë˜ëŠ” Yì¶• ë°©í–¥)
-    /// </summary>
-    /// <param name="gridCount">ê·¸ë¦¬ë“œ ë‹¨ìœ„ ìˆ˜</param>
-    /// <param name="axis">ê³„ì‚°í•  ë°©í–¥ (Vector2.right ë˜ëŠ” Vector2.up)</param>
-    /// <returns>í•´ë‹¹ ê·¸ë¦¬ë“œ ìˆ˜ë§Œí¼ì˜ ì›”ë“œ ê±°ë¦¬</returns>
-    public static float GetWorldDistanceFromGridCount(int gridCount, Vector2 axis)
-    {
-        if (axis == Vector2.right)
-        {
-            // X ë°©í–¥: GridPos.x = 0 â†’ GridPos.x = gridCount ê¹Œì§€ì˜ ê±°ë¦¬
-            Vector3 worldStart = GetGridWorldPosition(0, 0);
-            Vector3 worldEnd = GetGridWorldPosition(gridCount, 0);
-            return Mathf.Abs(worldEnd.x - worldStart.x);
-        }
-        else if (axis == Vector2.up)
-        {
-            // Y ë°©í–¥
-            Vector3 worldStart = GetGridWorldPosition(0, 0);
-            Vector3 worldEnd = GetGridWorldPosition(0, gridCount);
-            return Mathf.Abs(worldEnd.y - worldStart.y);
-        }
-        else
-        {
-            Debug.LogWarning("GetWorldDistanceFromGridCount: axisëŠ” Vector2.right ë˜ëŠ” Vector2.upì´ì–´ì•¼ í•©ë‹ˆë‹¤.");
-            return 0f;
-        }
-    }
-    /// <summary>
-    /// Grid X 1ë‹¨ìœ„ ë‹¹ ì–¼ë§ˆì˜ ì›”ë“œ ê±°ë¦¬ì¸ì§€ ë°˜í™˜
-    /// </summary>
-    public static float WorldUnitsPerGridX => GetWorldDistanceFromGridCount(1, Vector2.right);
-    /// <summary>
-    /// Grid Y 1ë‹¨ìœ„ ë‹¹ ì–¼ë§ˆì˜ ì›”ë“œ ê±°ë¦¬ì¸ì§€ ë°˜í™˜
-    /// </summary>
-    public static float WorldUnitsPerGridY => GetWorldDistanceFromGridCount(1, Vector2.up);
 }

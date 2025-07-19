@@ -12,8 +12,8 @@ public class SMovePattern : IEnemyMovePattern
         rigid = rigidBody;
         moveSpeed = speed;
 
-        float dx = GridSystem.WorldUnitsPerGridX * 7f;
-        float dy = GridSystem.WorldUnitsPerGridY * 3f;
+        float dx = 7f;
+        float dy = 5f;
 
         // S자 평행사변형 경로 (우상 → 우 → 좌하 → 좌)
         points = new Vector2[]

@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;
     private const string MoveActionName = "Move";
 
-    [SerializeField] private UI_Enforcement enforcementUI;
     [SerializeField] private float moveSpeed = 3f; // 연속 이동 속도
     [SerializeField] private float tileSize = 1f; // 한 칸 크기 (스냅 기준)
     private Vector2 moveInput = Vector2.zero;
@@ -55,11 +54,6 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        // enforcementUI 테스트
-        // if (Input.GetKeyDown(KeyCode.B))
-        // {
-        //     enforcementUI.gameObject.SetActive(true);
-        // }
         float speed = stat.GetStat(PlayerEnforcement.Speed); // 초당 이동속도
         bool hasArrived = Vector3.Distance(transform.position, targetWorldPos) < 0.001f;
 

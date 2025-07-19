@@ -12,9 +12,8 @@ public class OMovePattern : IEnemyMovePattern
     {
         rigid = rigidBody;
         angleSpeed = speed;
-        
-        float dy = GridSystem.WorldUnitsPerGridY * radius;
-        center = startPosition + new Vector2(0, -dy); // 시작점 기준 아래로 중심점 설정
+
+        center = startPosition + new Vector2(0, -radius); // 시작점 기준 아래로 중심점 설정
         angle = Mathf.PI / 2f; // 처음에는 정점 (0, radius)
     }
 

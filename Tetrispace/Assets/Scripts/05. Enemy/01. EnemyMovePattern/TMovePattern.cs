@@ -12,8 +12,8 @@ public class TMovePattern : IEnemyMovePattern
         moveSpeed = speed;
         rigid = rigidBody;
 
-        float dx = GridSystem.WorldUnitsPerGridX * 10f;
-        float dy = GridSystem.WorldUnitsPerGridY * 5f;
+        float dx = 10f;
+        float dy = 5f;
 
         // 이동 경로: 좌 → 중앙 → 하 → 중앙 → 우 → 중앙 → 반복
         points = new Vector2[]
