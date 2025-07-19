@@ -12,6 +12,8 @@ public class PlayerGridFloor : MonoBehaviour
     private bool _isProcessing = false;
     private bool _isFading = false;
 
+    private bool _isGameOver = false;
+
     private HashSet<Transform> registeredChildren = new HashSet<Transform>();
 
     [Header("페이드 아웃 설정")]
@@ -373,7 +375,7 @@ public class PlayerGridFloor : MonoBehaviour
             }
             else
             {
-                if (gridPos.x < 0 || gridPos.x >= 4 || gridPos.y < 0)
+               if (gridPos.x < 0 || gridPos.x >= 4 || gridPos.y < 0)
                 {
                     Destroy(child.gameObject);
                 }

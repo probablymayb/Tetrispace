@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections;
 
 /// <summary>
-/// 테트리스 매니저 개선 버전
+/// 테트리스 매니저 개선 버전 (게임오버 상태 관리 추가)
 /// 
 /// 주요 개선사항:
 /// 1. 블록 상태 동기화 강화
 /// 2. 지연 파괴 문제 해결
 /// 3. 그리드 이동 시 안전성 강화
+/// 4. 전역 게임오버 상태 관리 (맨 위칸 블록 체크)
 /// </summary>
 public class TetriminoManager : Singleton<TetriminoManager>
 {
@@ -28,6 +29,21 @@ public class TetriminoManager : Singleton<TetriminoManager>
     // 파괴 예정 블록들을 추적 (지연 파괴 문제 해결)
     private HashSet<GameObject> pendingDestroy = new HashSet<GameObject>();
 
+    // 전역 게임오버 상태 관리
+    private bool _globalGameOver = false;
+    public bool IsGameOver
+    {
+        get { return _globalGameOver; }
+        private set
+        {
+            if (_globalGameOver != value)
+            {
+                _globalGameOver = value;
+                Debug.Log($"전역 게임오버 상태 변경: {value}");
+            }
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -37,7 +53,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// 블록을 그리드에 등록 (중복 등록 방지)
+    /// 블록을 그리드에 등록 (게임오버 상태 체크 포함)
     /// </summary>
     public void RegisterBlock(Vector2Int gridPos, GameObject block)
     {
@@ -54,6 +70,43 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
             // 블록 상태 확실히 설정
             block.tag = "LockedBlock";
+
+            // 맨 위칸에 블록이 등록되면 게임오버 상태 체크
+            if (gridPos.y == 4) // 맨 위칸
+            {
+                CheckAndUpdateGameOverState();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 게임오버 상태 체크 및 업데이트
+    /// </summary>
+    private void CheckAndUpdateGameOverState()
+    {
+        bool hasTopRowBlocks = false;
+
+        // 맨 위칸(Y=4)에 블록이 있는지 확인
+        for (int x = 0; x < width; x++)
+        {
+            if (IsLocked(x, 4))
+            {
+                hasTopRowBlocks = true;
+                Debug.Log($"맨 위칸 Grid({x}, 4)에 블록 발견");
+                break;
+            }
+        }
+
+        // 게임오버 상태 업데이트
+        IsGameOver = hasTopRowBlocks;
+
+        if (hasTopRowBlocks)
+        {
+            Debug.Log(" 맨 위칸에 블록이 있음 - 게임오버 조건 활성화");
+        }
+        else
+        {
+            Debug.Log(" 맨 위칸 비어있음 - 게임오버 조건 해제");
         }
     }
 
@@ -72,7 +125,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// 라인 체크 및 제거 (개선된 버전)
+    /// 라인 체크 및 제거 (게임오버 상태 업데이트 포함)
     /// </summary>
     public void CheckAndClearLines()
     {
@@ -103,15 +156,18 @@ public class TetriminoManager : Singleton<TetriminoManager>
         // 라인 제거 실행
         if (linesToClear.Count > 0)
         {
+            Debug.Log($"라인 클리어 발생: {linesToClear.Count}줄");
             StartCoroutine(ClearLinesCoroutine(linesToClear));
         }
     }
 
     /// <summary>
-    /// 라인 제거를 코루틴으로 처리 (안전한 파괴)
+    /// 라인 제거를 코루틴으로 처리 (게임오버 상태 업데이트 포함)
     /// </summary>
     private IEnumerator ClearLinesCoroutine(List<int> linesToClear)
     {
+        Debug.Log("=== 라인 클리어 시작 ===");
+
         // 제거할 블록들을 먼저 비활성화하고 파괴 예정 목록에 추가
         foreach (int y in linesToClear)
         {
@@ -130,15 +186,6 @@ public class TetriminoManager : Singleton<TetriminoManager>
         // 한 프레임 대기 (다른 시스템들이 상태 변화를 인식할 수 있도록)
         yield return null;
 
-        // 실제 파괴
-        foreach (int y in linesToClear)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                // 이미 gridArray에서는 제거되었으므로 pendingDestroy에서만 찾아서 파괴
-            }
-        }
-
         // 파괴 예정 블록들 정리
         foreach (GameObject block in pendingDestroy)
         {
@@ -154,6 +201,12 @@ public class TetriminoManager : Singleton<TetriminoManager>
         {
             DropLinesAbove(clearedY);
         }
+
+        Debug.Log("=== 라인 클리어 완료 ===");
+
+        // *** 중요: 라인 클리어 후 게임오버 상태 재체크 ***
+        Debug.Log("라인 클리어 후 게임오버 상태 재체크");
+        CheckAndUpdateGameOverState();
     }
 
     /// <summary>
@@ -249,6 +302,10 @@ public class TetriminoManager : Singleton<TetriminoManager>
             }
         }
         pendingDestroy.Clear();
+
+        // 모든 블록 제거 후 게임오버 상태 리셋
+        IsGameOver = false;
+        Debug.Log("모든 블록 제거 - 게임오버 상태 리셋");
     }
 
     private bool IsInsideGrid(Vector2Int pos)
@@ -291,6 +348,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
         MoveEntireGrid(delta);
     }
 
+    /// <summary>
+    /// 디버그용 테스트 메서드들
+    /// </summary>
     private void Test()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -308,6 +368,36 @@ public class TetriminoManager : Singleton<TetriminoManager>
             }
             Debug.Log($"Locked 그리드 개수: {count}");
         }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("=== 수동 게임오버 상태 체크 ===");
+            CheckAndUpdateGameOverState();
+        }
+    }
+
+    /// <summary>
+    /// 맨 위칸 상태 로그 출력 (디버그용)
+    /// </summary>
+    [ContextMenu("Log Top Row Status")]
+    public void LogTopRowStatus()
+    {
+        Debug.Log("=== 맨 위칸(Y=4) 상태 ===");
+        for (int x = 0; x < width; x++)
+        {
+            bool isLocked = IsLocked(x, 4);
+            Debug.Log($"Grid({x}, 4): {(isLocked ? "■" : "□")}");
+        }
+        Debug.Log($"현재 전역 게임오버 상태: {IsGameOver}");
+    }
+
+    /// <summary>
+    /// 강제 게임오버 상태 체크 (디버그용)
+    /// </summary>
+    [ContextMenu("Force Check Game Over")]
+    public void ForceCheckGameOver()
+    {
+        CheckAndUpdateGameOverState();
     }
 
     public void Update()
