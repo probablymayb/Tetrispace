@@ -86,7 +86,6 @@ public class EventManager : Singleton<EventManager>
     /// EventManager.Instance.BossLightningQTE(2.0f); // 2초 제한
 
     /// </summary>
-    public event Action<Tetrimino.TetrominoType> onTetrominoSpawned;
     /// <summary>
     /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
     /// </summary>
@@ -118,20 +117,7 @@ public class EventManager : Singleton<EventManager>
     /// EventManager.Instance.QTECompleted(true);  // 성공
     /// EventManager.Instance.QTECompleted(false); // 실패
 
-    /// </summary>
-    public event Action<Tetrimino.TetrominoType, Vector2Int> onTetrominoLocked;
-
-    /// <summary>
-    /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
-    /// </summary>
-    /// <param name="tetrominoType">������ ��Ʈ���̳� Ÿ��</param>
-    /// <param name="position">���� ��ġ</param>
-    public void TetrominoLocked(Tetrimino.TetrominoType tetrominoType, Vector2Int position)
-
-    {
-        //onTetrominoLocked?.Invoke(tetrominoType, position);
-        //Debug.Log($"[Event] ��Ʈ���̳� ����: {tetrominoType} at {position}");
-    }
+ 
 
     /// <summary>
     /// ���� Ŭ���� �̺�Ʈ (Ŭ����� ���� ���� ��ġ ����)
@@ -453,8 +439,6 @@ public class EventManager : Singleton<EventManager>
     public void PrintEventSubscribers()
     {
         Debug.Log("=== EventManager ������ �� ===");
-        Debug.Log($"��Ʈ���̳� ����: {onTetrominoSpawned?.GetInvocationList().Length ?? 0}");
-        Debug.Log($"��Ʈ���̳� ����: {onTetrominoLocked?.GetInvocationList().Length ?? 0}");
         Debug.Log($"���� Ŭ����: {onLinesCleared?.GetInvocationList().Length ?? 0}");
         Debug.Log($"������: {onTetrisLevelUp?.GetInvocationList().Length ?? 0}");
         Debug.Log($"���� ����: {onTetrisGameOver?.GetInvocationList().Length ?? 0}");

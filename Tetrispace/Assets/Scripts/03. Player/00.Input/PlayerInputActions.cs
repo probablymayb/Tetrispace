@@ -109,6 +109,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotationAttackCCW"",
+                    ""type"": ""Button"",
+                    ""id"": ""f72823da-fe71-4685-866c-dde765e6f74a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotationAttackCW"",
+                    ""type"": ""Button"",
+                    ""id"": ""dacc175e-85b8-408c-b4cc-5d3f1237df13"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -232,6 +250,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""40495adb-b8c4-4190-9697-d01ab8cde9fa"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotationAttackCCW"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c4c27dfe-60ca-4dbb-90e2-cfede8c9ecbf"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotationAttackCW"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -242,6 +282,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
         m_PlayerActions_Move = m_PlayerActions.FindAction("Move", throwIfNotFound: true);
         m_PlayerActions_Attack = m_PlayerActions.FindAction("Attack", throwIfNotFound: true);
+        m_PlayerActions_RotationAttackCCW = m_PlayerActions.FindAction("RotationAttackCCW", throwIfNotFound: true);
+        m_PlayerActions_RotationAttackCW = m_PlayerActions.FindAction("RotationAttackCW", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -324,6 +366,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
     private readonly InputAction m_PlayerActions_Move;
     private readonly InputAction m_PlayerActions_Attack;
+    private readonly InputAction m_PlayerActions_RotationAttackCCW;
+    private readonly InputAction m_PlayerActions_RotationAttackCW;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerActions".
     /// </summary>
@@ -343,6 +387,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerActions/Attack".
         /// </summary>
         public InputAction @Attack => m_Wrapper.m_PlayerActions_Attack;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/RotationAttackCCW".
+        /// </summary>
+        public InputAction @RotationAttackCCW => m_Wrapper.m_PlayerActions_RotationAttackCCW;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/RotationAttackCW".
+        /// </summary>
+        public InputAction @RotationAttackCW => m_Wrapper.m_PlayerActions_RotationAttackCW;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -375,6 +427,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @RotationAttackCCW.started += instance.OnRotationAttackCCW;
+            @RotationAttackCCW.performed += instance.OnRotationAttackCCW;
+            @RotationAttackCCW.canceled += instance.OnRotationAttackCCW;
+            @RotationAttackCW.started += instance.OnRotationAttackCW;
+            @RotationAttackCW.performed += instance.OnRotationAttackCW;
+            @RotationAttackCW.canceled += instance.OnRotationAttackCW;
         }
 
         /// <summary>
@@ -392,6 +450,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @RotationAttackCCW.started -= instance.OnRotationAttackCCW;
+            @RotationAttackCCW.performed -= instance.OnRotationAttackCCW;
+            @RotationAttackCCW.canceled -= instance.OnRotationAttackCCW;
+            @RotationAttackCW.started -= instance.OnRotationAttackCW;
+            @RotationAttackCW.performed -= instance.OnRotationAttackCW;
+            @RotationAttackCW.canceled -= instance.OnRotationAttackCW;
         }
 
         /// <summary>
@@ -446,5 +510,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnAttack(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RotationAttackCCW" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotationAttackCCW(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RotationAttackCW" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotationAttackCW(InputAction.CallbackContext context);
     }
 }

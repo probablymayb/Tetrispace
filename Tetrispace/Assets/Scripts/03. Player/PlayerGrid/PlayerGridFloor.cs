@@ -32,7 +32,7 @@ public class PlayerGridFloor : MonoBehaviour
             return;
         }
 
-        if (other.CompareTag("Wall"))
+        if (other.CompareTag("Wall") && !gameObject.CompareTag("UselessBlock"))
         {
             Debug.Log("*** Wall 충돌 - 커스텀 Fade 페이드아웃 시작! ***");
             StartCustomFadeOut();
@@ -41,7 +41,7 @@ public class PlayerGridFloor : MonoBehaviour
         {
             StartLockProcess();
         }
-        else if (other.CompareTag("LockedBlock"))
+        else if (other.CompareTag("LockedBlock") || other.CompareTag("UselessBlock"))
         {
             CheckAndLock();
         }
@@ -375,7 +375,8 @@ public class PlayerGridFloor : MonoBehaviour
             }
             else
             {
-               if (gridPos.x < 0 || gridPos.x >= 4 || gridPos.y < 0)
+                // Y=0 허용 (UselessBlock 위에 락 가능)
+                if (gridPos.x < 0 || gridPos.x >= 4 || gridPos.y < -1) // Y=-1부터 파괴
                 {
                     Destroy(child.gameObject);
                 }

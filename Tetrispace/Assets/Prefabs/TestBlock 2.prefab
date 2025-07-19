@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2271877807638971081}
   - component: {fileID: 5048249720744875482}
-  - component: {fileID: -5605952803790912712}
   - component: {fileID: 5422869007413842325}
   - component: {fileID: -8598400690374522798}
   - component: {fileID: 6414678919222582047}
@@ -56,24 +55,6 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
---- !u!114 &-5605952803790912712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516356324441038549}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ed18746b242d142b498abaadae079a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockType: 2
-  fallSpeed: 1
-  moveSpeed: 0.15
-  lockDelay: 0.5
-  blockPrefab: {fileID: 516356324441038549}
-  playerGrid: {fileID: 0}
 --- !u!50 &5422869007413842325
 Rigidbody2D:
   serializedVersion: 5
@@ -115,35 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isLocked: 0
   fadeOutDuration: 1
-  scaleCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0.2
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  rotationSpeed: 180
-  useScaleEffect: 0
-  useRotationEffect: 0
-  fadeOutSound: {fileID: 0}
-  soundVolume: 0.5
+  fadePropertyName: _Fade
 --- !u!60 &6414678919222582047
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -208,7 +161,6 @@ GameObject:
   - component: {fileID: 6200566527126459556}
   - component: {fileID: 9073584953203604133}
   - component: {fileID: 6307563734587945069}
-  - component: {fileID: 1532155764427918611}
   - component: {fileID: 7433535099928150698}
   m_Layer: 0
   m_Name: TestBlock 1
@@ -303,24 +255,6 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
---- !u!114 &1532155764427918611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4600612449037945458}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ed18746b242d142b498abaadae079a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockType: 2
-  fallSpeed: 1
-  moveSpeed: 0.15
-  lockDelay: 0.5
-  blockPrefab: {fileID: 4600612449037945458}
-  playerGrid: {fileID: 0}
 --- !u!61 &7433535099928150698
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -378,7 +312,6 @@ GameObject:
   - component: {fileID: 5601832704873719525}
   - component: {fileID: 7526156183384348440}
   - component: {fileID: 5336531915770946282}
-  - component: {fileID: 3332263914783741352}
   - component: {fileID: 6349328391043261174}
   m_Layer: 0
   m_Name: TestBlock 1 (1)
@@ -473,24 +406,6 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
---- !u!114 &3332263914783741352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4823181088903669500}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ed18746b242d142b498abaadae079a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockType: 2
-  fallSpeed: 1
-  moveSpeed: 0.15
-  lockDelay: 0.5
-  blockPrefab: {fileID: 4823181088903669500}
-  playerGrid: {fileID: 0}
 --- !u!61 &6349328391043261174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -548,7 +463,6 @@ GameObject:
   - component: {fileID: 7158144816896637867}
   - component: {fileID: 6636345525532515122}
   - component: {fileID: 7866418998087593035}
-  - component: {fileID: 549622733482076923}
   - component: {fileID: 4686413992834624538}
   m_Layer: 0
   m_Name: TestBlock 1 (3)
@@ -643,24 +557,6 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
---- !u!114 &549622733482076923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6274593743001068179}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ed18746b242d142b498abaadae079a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockType: 2
-  fallSpeed: 1
-  moveSpeed: 0.15
-  lockDelay: 0.5
-  blockPrefab: {fileID: 6274593743001068179}
-  playerGrid: {fileID: 0}
 --- !u!61 &4686413992834624538
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -718,7 +614,6 @@ GameObject:
   - component: {fileID: 754959704684321906}
   - component: {fileID: 553273380023905586}
   - component: {fileID: 7718747566447252441}
-  - component: {fileID: 8304835370656299043}
   - component: {fileID: 4989975742821321828}
   m_Layer: 0
   m_Name: TestBlock 1 (2)
@@ -813,24 +708,6 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
---- !u!114 &8304835370656299043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7535302929571504459}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ed18746b242d142b498abaadae079a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockType: 2
-  fallSpeed: 1
-  moveSpeed: 0.15
-  lockDelay: 0.5
-  blockPrefab: {fileID: 7535302929571504459}
-  playerGrid: {fileID: 0}
 --- !u!61 &4989975742821321828
 BoxCollider2D:
   m_ObjectHideFlags: 0

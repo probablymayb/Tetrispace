@@ -39,7 +39,6 @@ public class TetriminoController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-
             TurnRight();
         }
 

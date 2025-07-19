@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections;
 
 /// <summary>
-/// 테트리스 매니저 개선 버전 (게임오버 상태 관리 추가)
+/// 테트리미노 매니저 간단 버전 (UselessBlock 그리드 등록, 라인 클리어만 제외)
 /// 
-/// 주요 개선사항:
-/// 1. 블록 상태 동기화 강화
-/// 2. 지연 파괴 문제 해결
-/// 3. 그리드 이동 시 안전성 강화
-/// 4. 전역 게임오버 상태 관리 (맨 위칸 블록 체크)
+/// 주요 기능:
+/// 1. UselessBlock도 그리드에 정상 등록
+/// 2. 라인 클리어 체크에서만 UselessBlock 제외
+/// 3. 플레이어 움직임에 자동으로 따라다님
+/// 4. 10초 후 자동 삭제
 /// </summary>
 public class TetriminoManager : Singleton<TetriminoManager>
 {
@@ -26,8 +26,10 @@ public class TetriminoManager : Singleton<TetriminoManager>
     // 그리드 이동 중 트리거 이벤트 무시를 위한 플래그
     public bool IsGridMoving { get; private set; } = false;
 
-    // 파괴 예정 블록들을 추적 (지연 파괴 문제 해결)
+    // 파괴 예정 블록들을 추적 (중복 파괴 문제 해결)
     private HashSet<GameObject> pendingDestroy = new HashSet<GameObject>();
+    // UselessBlock 위치 추적 배열 추가
+    private bool[,] uselessBlockPositions = new bool[4, 5];
 
     // 전역 게임오버 상태 관리
     private bool _globalGameOver = false;
@@ -40,9 +42,22 @@ public class TetriminoManager : Singleton<TetriminoManager>
             {
                 _globalGameOver = value;
                 Debug.Log($"전역 게임오버 상태 변경: {value}");
+
+                if (value)
+                {
+                    OnGameOver();
+                }
             }
         }
     }
+
+    [Header("=== UselessBlock 시스템 ===")]
+    [SerializeField] private GameObject uselessBlockPrefab; // I자형 UselessBlock 프리팹
+    [SerializeField] private float uselessBlockLifetime = 10f;
+    [SerializeField] private bool showUselessBlockWarning = true;
+
+    // UselessBlock 관리 (간단하게)
+    private List<UselessBlock> activeUselessBlocks = new List<UselessBlock>();
 
     protected override void Awake()
     {
@@ -53,7 +68,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// 블록을 그리드에 등록 (게임오버 상태 체크 포함)
+    /// 블록을 그리드에 등록 (UselessBlock도 포함)
     /// </summary>
     public void RegisterBlock(Vector2Int gridPos, GameObject block)
     {
@@ -65,14 +80,29 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 Debug.LogWarning($"Grid position {gridPos} already occupied! Replacing...");
             }
 
-            Debug.Log($"Registering block at {gridPos}: {block.name}");
+            Debug.Log($"Registering block at {gridPos}: {block.name} (태그: {block.tag})");
             gridArray[gridPos.x, gridPos.y] = block;
 
-            // 블록 상태 확실히 설정
-            block.tag = "LockedBlock";
+            // 블록 상태 설정 (UselessBlock이든 일반 블록이든 동일하게)
+            if (block.CompareTag("UselessBlock"))
+            {
+                // UselessBlock은 태그 유지
+                Debug.Log($"UselessBlock 그리드 등록: {block.name}");
+            }
+            else
+            {
+                block.tag = "LockedBlock";
+            }
+
+            // 콜라이더 활성화
+            Collider2D collider = block.GetComponent<Collider2D>();
+            if (collider != null)
+            {
+                collider.enabled = true;
+            }
 
             // 맨 위칸에 블록이 등록되면 게임오버 상태 체크
-            if (gridPos.y == 4) // 맨 위칸
+            if (gridPos.y == height - 1)
             {
                 CheckAndUpdateGameOverState();
             }
@@ -86,13 +116,13 @@ public class TetriminoManager : Singleton<TetriminoManager>
     {
         bool hasTopRowBlocks = false;
 
-        // 맨 위칸(Y=4)에 블록이 있는지 확인
+        // 맨 위칸에 블록이 있는지 확인 (UselessBlock도 포함)
         for (int x = 0; x < width; x++)
         {
-            if (IsLocked(x, 4))
+            if (IsLocked(x, height - 1))
             {
                 hasTopRowBlocks = true;
-                Debug.Log($"맨 위칸 Grid({x}, 4)에 블록 발견");
+                Debug.Log($"맨 위칸 Grid({x}, {height - 1})에 블록 발견");
                 break;
             }
         }
@@ -102,16 +132,25 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         if (hasTopRowBlocks)
         {
-            Debug.Log(" 맨 위칸에 블록이 있음 - 게임오버 조건 활성화");
+            Debug.Log("맨 위칸에 블록이 있음 - 게임오버 조건 활성화");
         }
         else
         {
-            Debug.Log(" 맨 위칸 비어있음 - 게임오버 조건 해제");
+            Debug.Log("맨 위칸 비어있음 - 게임오버 조건 해제");
         }
     }
 
     /// <summary>
-    /// 해당 위치가 잠겨있는지 확인 (파괴 예정 블록 제외)
+    /// 게임오버 발생 시 처리
+    /// </summary>
+    private void OnGameOver()
+    {
+        Debug.Log("=== 게임오버 발생 ===");
+        // 추가 게임오버 처리 로직 여기에 구현
+    }
+
+    /// <summary>
+    /// 해당 위치가 잠겨있는지 확인 (UselessBlock도 잠긴 것으로 인식)
     /// </summary>
     public bool IsLocked(int x, int y)
     {
@@ -125,7 +164,25 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// 라인 체크 및 제거 (게임오버 상태 업데이트 포함)
+    /// 라인 클리어용 잠김 체크 (UselessBlock 제외)
+    /// </summary>
+    private bool IsLockedForLineClear(int x, int y)
+    {
+        if (x < 0 || x > width - 1 || y < 0 || y > height - 1)
+            return true;
+
+        // 해당 위치에 UselessBlock이 있으면 라인 클리어 제외
+        if (uselessBlockPositions[x, y])
+        {
+            return false;
+        }
+
+        GameObject block = gridArray[x, y];
+        return block != null && !pendingDestroy.Contains(block);
+    }
+
+    /// <summary>
+    /// 라인 체크 및 제거 (UselessBlock 제외)
     /// </summary>
     public void CheckAndClearLines()
     {
@@ -134,13 +191,13 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         List<int> linesToClear = new List<int>();
 
-        // 먼저 제거할 라인들을 모두 찾기
+        // 모든 제거할 라인들을 먼저 찾기 (UselessBlock 제외)
         for (int y = 0; y < height; y++)
         {
             bool isLineFull = true;
             for (int x = 0; x < width; x++)
             {
-                if (!IsLocked(x, y))
+                if (!IsLockedForLineClear(x, y))
                 {
                     isLineFull = false;
                     break;
@@ -156,34 +213,51 @@ public class TetriminoManager : Singleton<TetriminoManager>
         // 라인 제거 실행
         if (linesToClear.Count > 0)
         {
-            Debug.Log($"라인 클리어 발생: {linesToClear.Count}줄");
+            Debug.Log($"라인 클리어 발생: {linesToClear.Count}줄 (UselessBlock 제외)");
             StartCoroutine(ClearLinesCoroutine(linesToClear));
         }
     }
 
+    public void ClearLine(int i)
+    {
+        // 그리드 이동 중에는 라인 체크하지 않음
+        if (IsGridMoving) return;
+
+        List<int> linesToClear = new List<int>();
+    
+        linesToClear.Add(i);
+        StartCoroutine(ClearLinesCoroutine(linesToClear));
+        
+    }
+
     /// <summary>
-    /// 라인 제거를 코루틴으로 처리 (게임오버 상태 업데이트 포함)
+    /// 라인 제거를 코루틴으로 처리 (UselessBlock 제외)
     /// </summary>
     private IEnumerator ClearLinesCoroutine(List<int> linesToClear)
     {
         Debug.Log("=== 라인 클리어 시작 ===");
 
-        // 제거할 블록들을 먼저 비활성화하고 파괴 예정 목록에 추가
+        // 제거할 블록들을 먼저 비활성화 (UselessBlock 제외)
         foreach (int y in linesToClear)
         {
             for (int x = 0; x < width; x++)
             {
                 GameObject block = gridArray[x, y];
-                if (block != null)
+                if (block != null && !block.CompareTag("UselessBlock"))
                 {
                     pendingDestroy.Add(block);
-                    block.SetActive(false); // 즉시 비활성화로 충돌 방지
+                    block.SetActive(false);
                     gridArray[x, y] = null;
+                    Debug.Log($"라인 클리어: Grid({x}, {y}) 블록 제거");
+                }
+                else if (block != null && block.CompareTag("UselessBlock"))
+                {
+                    Debug.Log($"UselessBlock 유지: Grid({x}, {y}) - {block.name}");
                 }
             }
         }
 
-        // 한 프레임 대기 (다른 시스템들이 상태 변화를 인식할 수 있도록)
+        // 한 프레임 대기
         yield return null;
 
         // 파괴 예정 블록들 정리
@@ -196,21 +270,20 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
         pendingDestroy.Clear();
 
-        // 위쪽 라인들 드롭
+        // 위쪽 라인들 드롭 (UselessBlock도 함께)
         foreach (int clearedY in linesToClear)
         {
             DropLinesAbove(clearedY);
         }
 
-        Debug.Log("=== 라인 클리어 완료 ===");
+        Debug.Log("=== 라인 클리어 완료 (UselessBlock은 영향 없음) ===");
 
-        // *** 중요: 라인 클리어 후 게임오버 상태 재체크 ***
-        Debug.Log("라인 클리어 후 게임오버 상태 재체크");
+        // 라인 클리어 후 게임오버 상태 재체크
         CheckAndUpdateGameOverState();
     }
 
     /// <summary>
-    /// 위쪽 라인들을 아래로 떨어뜨리기 (개선된 버전)
+    /// 위쪽 라인들을 아래로 떨어뜨리기 (UselessBlock도 함께)
     /// </summary>
     private void DropLinesAbove(int clearedY)
     {
@@ -230,6 +303,11 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
                     // 블록 상태 재확인 및 업데이트
                     UpdateBlockState(block);
+
+                    if (block.CompareTag("UselessBlock"))
+                    {
+                        Debug.Log($"UselessBlock 드롭: {block.name} to Grid({x}, {y - 1})");
+                    }
                 }
             }
         }
@@ -242,10 +320,13 @@ public class TetriminoManager : Singleton<TetriminoManager>
     {
         if (block != null)
         {
-            // 락된 블록으로 태그 설정
-            block.tag = "LockedBlock";
+            // UselessBlock이 아닌 경우만 태그 변경
+            if (!block.CompareTag("UselessBlock"))
+            {
+                block.tag = "LockedBlock";
+            }
 
-            // 필요시 콜라이더 재활성화
+            // 콜라이더 재활성화
             Collider2D collider = block.GetComponent<Collider2D>();
             if (collider != null)
             {
@@ -255,26 +336,28 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// 전체 그리드 이동 (안전성 강화)
+    /// 전체 그리드 이동 (UselessBlock도 자동으로 함께 이동)
     /// </summary>
     public void MoveEntireGrid(Vector3 moveDelta)
     {
-        // 그리드 이동 플래그 설정
         IsGridMoving = true;
 
+        // 이미 이동한 오브젝트 추적
+        HashSet<GameObject> movedObjects = new HashSet<GameObject>();
+
+        // 1. 그리드 배열의 블록들 이동
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 GameObject block = gridArray[x, y];
-                if (block != null && !pendingDestroy.Contains(block))
+                if (block != null && !pendingDestroy.Contains(block) && !movedObjects.Contains(block))
                 {
                     block.transform.position += moveDelta;
+                    movedObjects.Add(block);
                 }
             }
         }
-
-        // 한 프레임 후 플래그 해제
         StartCoroutine(ResetGridMovingFlag());
     }
 
@@ -287,8 +370,248 @@ public class TetriminoManager : Singleton<TetriminoManager>
         IsGridMoving = false;
     }
 
+    /// <summary>
+    /// UselessBlock 소환 (I자형, 맨 아래줄)
+    /// </summary>
+    public void SpawnUselessBlock()
+    {
+        if (uselessBlockPrefab == null)
+        {
+            Debug.LogError("uselessBlockPrefab이 설정되지 않았습니다!");
+            return;
+        }
+        if (IsGridMoving)
+        {
+            Debug.LogWarning("그리드 이동 중에는 UselessBlock을 생성할 수 없습니다.");
+            return;
+        }
+
+        // 맨 아래줄이 비어있는지 확인
+        bool canSpawn = true;
+        for (int x = 0; x < width; x++)
+        {
+            if (IsLocked(x, 0))
+            {
+                canSpawn = false;
+                break;
+            }
+        }
+
+        if (!canSpawn)
+        {
+            Debug.Log("맨 아래줄이 차서 기존 라인들을 위로 올립니다!");
+            StartCoroutine(PushUpAndSpawnUselessBlockCoroutine());
+        }
+        else
+        {
+            Debug.Log("=== UselessBlock 소환 시작 ===");
+            StartCoroutine(SpawnUselessBlockCoroutine());
+        }
+    }
+
+    /// <summary>
+    /// 기존 라인들을 위로 올리고 UselessBlock 소환
+    /// </summary>
+    private IEnumerator PushUpAndSpawnUselessBlockCoroutine()
+    {
+        Debug.Log("=== 라인 위로 올리기 시작 ===");
+
+        // 맨 위줄 체크 (게임오버 방지)
+        bool topRowHasBlocks = false;
+        for (int x = 0; x < width; x++)
+        {
+            if (IsLocked(x, height - 1))
+            {
+                topRowHasBlocks = true;
+                break;
+            }
+        }
+
+        if (topRowHasBlocks)
+        {
+            Debug.LogWarning("맨 위줄에 블록이 있어서 더 이상 올릴 수 없습니다! 게임오버!");
+            // 게임오버 처리
+            CheckAndUpdateGameOverState();
+            yield break;
+        }
+
+        // 위에서부터 아래로 모든 라인을 한 칸씩 위로 이동
+        for (int y = height - 1; y >= 1; y--) // 맨 위(height-1)부터 Y=1까지
+        {
+            for (int x = 0; x < width; x++)
+            {
+                GameObject blockBelow = gridArray[x, y - 1]; // 아래쪽 블록
+
+                if (blockBelow != null && !pendingDestroy.Contains(blockBelow))
+                {
+                    // 그리드 배열 업데이트
+                    gridArray[x, y] = blockBelow;
+                    gridArray[x, y - 1] = null;
+
+                    // 실제 위치 이동
+                    blockBelow.transform.position += Vector3.up * cellSize;
+
+                    // UselessBlock 위치 마킹도 함께 이동
+                    if (uselessBlockPositions[x, y - 1])
+                    {
+                        uselessBlockPositions[x, y] = true;
+                        uselessBlockPositions[x, y - 1] = false;
+                    }
+
+                    Debug.Log($"블록 위로 이동: {blockBelow.name} from Grid({x}, {y - 1}) to Grid({x}, {y})");
+                }
+                else
+                {
+                    // 빈 공간은 그대로 빈 공간으로
+                    gridArray[x, y] = null;
+                    uselessBlockPositions[x, y] = false;
+                }
+            }
+        }
+
+        // 맨 아래줄(Y=0) 완전히 비우기
+        for (int x = 0; x < width; x++)
+        {
+            gridArray[x, 0] = null;
+            uselessBlockPositions[x, 0] = false;
+        }
+
+        Debug.Log("=== 라인 위로 올리기 완료 ===");
+
+        // 한 프레임 대기
+        yield return null;
+
+        // 이제 맨 아래줄이 비었으므로 UselessBlock 소환
+        Debug.Log("=== UselessBlock 소환 시작 (라인 올리기 후) ===");
+        yield return StartCoroutine(SpawnUselessBlockCoroutine());
+    }
+
+    /// <summary>
+    /// UselessBlock 소환 코루틴 (기존과 동일)
+    /// </summary>
+    private IEnumerator SpawnUselessBlockCoroutine()
+    {
+        if (showUselessBlockWarning)
+        {
+            Debug.Log("UselessBlock이 소환됩니다!");
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        gridOrigin = gridOriginTransform.position;
+
+        // I자형 블록 정확한 중앙 위치
+        Vector3 spawnPosition = gridOrigin + new Vector3(2f * cellSize, 0.5f * cellSize, 0f);
+        Debug.Log("UselessBlock 포지션 " + spawnPosition);
+
+        // UselessBlock 생성
+        GameObject uselessBlockObj = Instantiate(uselessBlockPrefab, spawnPosition, Quaternion.identity);
+        uselessBlockObj.name = $"UselessBlock_I_{Time.time:F1}";
+
+        // UselessBlock 컴포넌트 가져오기
+        UselessBlock uselessBlockComponent = uselessBlockObj.GetComponent<UselessBlock>();
+        if (uselessBlockComponent == null)
+        {
+            uselessBlockComponent = uselessBlockObj.AddComponent<UselessBlock>();
+        }
+
+        // 즉시 그리드 등록 완료
+        for (int x = 0; x < width; x++)
+        {
+            Vector2Int gridPos = new Vector2Int(x, 0);
+            RegisterBlock(gridPos, uselessBlockObj);
+            uselessBlockPositions[x, 0] = true;
+        }
+
+        // 그리드 등록 완료 후 관리 목록에 추가
+        activeUselessBlocks.Add(uselessBlockComponent);
+
+        // 한 프레임 대기로 확실한 등록 보장
+        yield return null;
+
+        Debug.Log($"UselessBlock 생성 및 그리드 등록 완료: {uselessBlockObj.name}");
+        Debug.Log("=== UselessBlock 소환 완료 ===");
+
+        // 라인 올리기 후 게임오버 상태 체크
+        CheckAndUpdateGameOverState();
+    }
+
+    /// <summary>
+    /// UselessBlock 소환 코루틴
+    /// </summary>
+    /// <summary>
+    /// UselessBlock 소환 코루틴 (즉시 완료 보장)
+    /// </summary>
+
+    /// <summary>
+    /// UselessBlock이 삭제될 때 그리드에서 제거
+    /// </summary>
+    public void RemoveUselessBlockFromGrid(UselessBlock uselessBlock)
+    {
+        if (uselessBlock == null) return;
+
+        GameObject uselessBlockObj = uselessBlock.gameObject;
+
+        // UselessBlock 위치 해제
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (gridArray[x, y] == uselessBlockObj)
+                {
+                    gridArray[x, y] = null;
+                    uselessBlockPositions[x, y] = false; // 위치 마킹 해제
+                }
+            }
+        }
+
+        // 관리 목록에서 제거
+        activeUselessBlocks.Remove(uselessBlock);
+
+        Debug.Log($"UselessBlock 완전 제거: {uselessBlock.name}");
+
+        // 라인 클리어 체크 (빈 공간이 생겼을 수 있음)
+        CheckAndClearLines();
+
+        // 게임오버 상태 재체크
+        CheckAndUpdateGameOverState();
+    }
+
+    /// <summary>
+    /// 모든 UselessBlock 즉시 제거
+    /// </summary>
+    public void RemoveAllUselessBlocks()
+    {
+        Debug.Log("=== 모든 UselessBlock 즉시 제거 ===");
+
+        List<UselessBlock> blocksToRemove = new List<UselessBlock>(activeUselessBlocks);
+        foreach (UselessBlock uselessBlock in blocksToRemove)
+        {
+            if (uselessBlock != null)
+            {
+                uselessBlock.ForceDestroy();
+            }
+        }
+
+        activeUselessBlocks.Clear();
+    }
+
+    /// <summary>
+    /// 활성 UselessBlock 개수 반환
+    /// </summary>
+    public int GetUselessBlockCount()
+    {
+        return activeUselessBlocks.Count;
+    }
+
+    /// <summary>
+    /// 모든 블록 제거
+    /// </summary>
     public void ClearAll()
     {
+        // UselessBlock 먼저 정리
+        RemoveAllUselessBlocks();
+
+        // 모든 그리드 블록 제거
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -303,9 +626,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
         pendingDestroy.Clear();
 
-        // 모든 블록 제거 후 게임오버 상태 리셋
+        // 게임오버 상태 리셋
         IsGameOver = false;
-        Debug.Log("모든 블록 제거 - 게임오버 상태 리셋");
+        Debug.Log("모든 블록 제거 - 게임 상태 완전 리셋");
     }
 
     private bool IsInsideGrid(Vector2Int pos)
@@ -321,7 +644,6 @@ public class TetriminoManager : Singleton<TetriminoManager>
         int x = Mathf.FloorToInt(local.x / cellSize);
         int y = Mathf.FloorToInt(local.y / cellSize);
 
-        // 클램프 대신 유효 범위 체크 후 경고
         if (x < 0 || x >= width || y < 0 || y >= height)
         {
             Debug.LogWarning($"WorldToGrid: Position {worldPos} is outside grid bounds");
@@ -349,24 +671,31 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// 디버그용 테스트 메서드들
+    /// 디버그 테스트 메서드들
     /// </summary>
     private void Test()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            int count = 0;
+            int totalCount = 0;
+            int uselessCount = 0;
+
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     if (IsLocked(x, y))
                     {
-                        count++;
+                        totalCount++;
+                        GameObject block = gridArray[x, y];
+                        if (block != null && block.CompareTag("UselessBlock"))
+                        {
+                            uselessCount++;
+                        }
                     }
                 }
             }
-            Debug.Log($"Locked 그리드 개수: {count}");
+            Debug.Log($"전체 Locked 블록: {totalCount}개 (UselessBlock: {uselessCount}개)");
         }
 
         if (Input.GetKeyDown(KeyCode.G))
@@ -374,34 +703,110 @@ public class TetriminoManager : Singleton<TetriminoManager>
             Debug.Log("=== 수동 게임오버 상태 체크 ===");
             CheckAndUpdateGameOverState();
         }
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            Debug.Log("=== 수동 UselessBlock 소환 ===");
+            SpawnUselessBlock();
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Debug.Log("=== 수동 UselessBlock 제거 ===");
+            RemoveAllUselessBlocks();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log($"=== UselessBlock 상태 ===");
+            Debug.Log($"활성 UselessBlock: {GetUselessBlockCount()}개");
+
+            foreach (UselessBlock uselessBlock in activeUselessBlocks)
+            {
+                if (uselessBlock != null)
+                {
+                    Vector2Int pos = WorldToGrid(uselessBlock.transform.position);
+                    Debug.Log($"  - {uselessBlock.name} at Grid({pos.x}, {pos.y})");
+                }
+            }
+        }
     }
 
-    /// <summary>
-    /// 맨 위칸 상태 로그 출력 (디버그용)
-    /// </summary>
     [ContextMenu("Log Top Row Status")]
     public void LogTopRowStatus()
     {
-        Debug.Log("=== 맨 위칸(Y=4) 상태 ===");
+        Debug.Log("=== 맨 위칸 상태 ===");
         for (int x = 0; x < width; x++)
         {
-            bool isLocked = IsLocked(x, 4);
-            Debug.Log($"Grid({x}, 4): {(isLocked ? "■" : "□")}");
+            bool isLocked = IsLocked(x, height - 1);
+            GameObject block = gridArray[x, height - 1];
+            string blockType = "";
+
+            if (block != null && block.CompareTag("UselessBlock"))
+            {
+                blockType = " (UselessBlock)";
+            }
+
+            Debug.Log($"Grid({x}, {height - 1}): {(isLocked ? "■" : "□")}{blockType}");
         }
         Debug.Log($"현재 전역 게임오버 상태: {IsGameOver}");
     }
 
-    /// <summary>
-    /// 강제 게임오버 상태 체크 (디버그용)
-    /// </summary>
     [ContextMenu("Force Check Game Over")]
     public void ForceCheckGameOver()
     {
         CheckAndUpdateGameOverState();
     }
 
+    [ContextMenu("Test Spawn UselessBlock")]
+    public void TestSpawnUselessBlock()
+    {
+        SpawnUselessBlock();
+    }
+
+    [ContextMenu("Remove All UselessBlocks")]
+    public void TestRemoveAllUselessBlocks()
+    {
+        RemoveAllUselessBlocks();
+    }
+
+    [ContextMenu("Show Grid State")]
+    public void ShowGridState()
+    {
+        Debug.Log("=== 전체 그리드 상태 ===");
+        for (int y = height - 1; y >= 0; y--)
+        {
+            string row = $"Y={y}: ";
+            for (int x = 0; x < width; x++)
+            {
+                GameObject block = gridArray[x, y];
+                if (block == null)
+                {
+                    row += "□ ";
+                }
+                else if (block.CompareTag("UselessBlock"))
+                {
+                    row += "U "; // UselessBlock
+                }
+                else
+                {
+                    row += "■ "; // 일반 블록
+                }
+            }
+            Debug.Log(row);
+        }
+
+        Debug.Log($"활성 UselessBlock: {GetUselessBlockCount()}개");
+    }
+
     public void Update()
     {
         Test();
+    }
+
+    private void OnDestroy()
+    {
+        // 모든 UselessBlock 정리
+        RemoveAllUselessBlocks();
     }
 }

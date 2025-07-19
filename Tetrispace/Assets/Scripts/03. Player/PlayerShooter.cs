@@ -7,9 +7,15 @@ public class PlayerShooter : MonoBehaviour
 {
     private PlayerStat stat;
     private InputAction shootAction;
+    private InputAction CCWAction;
+    private InputAction CWAction;
     private const string ShootActionName = "Attack";
+    private const string CCWActionName = "RotationAttackCCW";
+    private const string CWActionName = "RotationAttackCW";
     
     [SerializeField] private Bullet bulletPrefab;
+    //[SerializeField] private CCWBullet CCWPrefab;
+    //[SerializeField] private CWBullet CWPrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float attackCooldown = 0.3f;
     [SerializeField] private BulletData bulletData;
@@ -21,6 +27,8 @@ public class PlayerShooter : MonoBehaviour
     {
         stat = GetComponent<PlayerStat>();
         shootAction = InputSystem.actions.FindAction(ShootActionName);
+        CCWAction = InputSystem.actions.FindAction(CCWActionName);
+        CWAction = InputSystem.actions.FindAction(CWActionName);
         PoolManager.Instance.CreatePool(bulletPrefab);
     }
 
@@ -30,6 +38,16 @@ public class PlayerShooter : MonoBehaviour
         shootAction.started += OnAttack;
         shootAction.performed += OnAttack;
         shootAction.canceled += OnAttack;
+
+        CCWAction.Enable();
+        CCWAction.started += OnAttack;
+        CCWAction.performed += OnAttack;
+        CCWAction.canceled += OnAttack;
+
+        CWAction.Enable();
+        CWAction.started += OnAttack;
+        CWAction.performed += OnAttack;
+        CWAction.canceled += OnAttack;
 
         attackTimer = 0f;
     }
