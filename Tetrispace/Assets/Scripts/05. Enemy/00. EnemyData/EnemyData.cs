@@ -8,7 +8,7 @@ public class EnemyData : ScriptableObject
     public float speed;
     public float attackSpeed;
     public BulletData bulletData;
-    public Texture2D enemySprite;
+    public Sprite enemySprite;
     public bool isEnforced;
     public GameObject BlockPrefab;
 }
