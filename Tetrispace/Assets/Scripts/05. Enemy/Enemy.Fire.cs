@@ -48,7 +48,7 @@ public partial class Enemy
         {
             Bullet bullet = PoolManager.Instance.Get(bulletPrefab);
             bullet.transform.position = transform.position;
-            bullet.Setup(data.bulletData);
+            bullet.Setup(data.bulletData, data.damage);
             bullet.Fire(dir, "Player");
         }
     }

@@ -7,16 +7,18 @@ public class Bullet : MonoBehaviour
     public BulletData Data { get; private set; }
     private bool isSetup = false;
     private string targetTag;
+    private float damage;
     
     /// <summary>
     /// Bullet 생성 후 BulletData를 전달해 새로운 Bullet을 만드는 메서드
     /// </summary>
     /// <param name="bulletData">Bullet에 대한 정보가 담긴 ScriptableObject</param>
-    public void Setup(BulletData bulletData)
+    public void Setup(BulletData bulletData, float bulletDamage)
     {
         isSetup = true;
         Data = bulletData;
         logic = BulletLogicFactory.Create(Data.logicType);
+        damage = bulletDamage;
     }
 
     /// <summary>
@@ -47,7 +49,7 @@ public class Bullet : MonoBehaviour
 
         print("Bullet Hit with " + other.name);
         IEntity entity = other.GetComponent<IEntity>();
-        entity?.OnHit(other.ClosestPoint(transform.position));
+        entity?.OnHit(damage, other.ClosestPoint(transform.position));
         OnDeath();
     }
 

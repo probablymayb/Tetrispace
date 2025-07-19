@@ -17,6 +17,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Bounds spawnBounds;
 
     private int currentPhase;
+    private int aliveEnemies;
     
     private void Awake()
     {
@@ -45,10 +46,17 @@ public class EnemySpawner : MonoBehaviour
 
     private void StartNextPhase()
     {
+        aliveEnemies = 0;
+        if (phaseDatas.Count <= currentPhase)
+        {
+            print($"{currentPhase} 페이즈 데이터가 존재하지 않음");
+            return;
+        }
         EnemyPhaseData phaseData = phaseDatas[currentPhase];
         List<Transform> spawnPoints = phaseSpawnPoints[currentPhase];
         
         SpawnEnemies(phaseData, spawnPoints);
+        currentPhase++;
     }
 
     private void SpawnEnemies(EnemyPhaseData phaseData, List<Transform> spawnPoints)
@@ -90,6 +98,17 @@ public class EnemySpawner : MonoBehaviour
             // 이 적이 블럭화 가능인지
             bool isTetris = tetrisIndices.Contains(i);
             enemy.Init(spawnPos, selectedType);
+            enemy.OnDeath += OnEnemyDeath;
+            aliveEnemies++;
+        }
+    }
+
+    private void OnEnemyDeath()
+    {
+        if (--aliveEnemies <= 0)
+        {
+            aliveEnemies = 0;
+            StartNextPhase();
         }
     }
 }

@@ -1,13 +1,16 @@
+using System;
 using UnityEngine;
 
-public partial class Enemy : MonoBehaviour
+public partial class Enemy : MonoBehaviour, IEntity
 {
+    public event Action OnDeath;
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private EnemyData data;
     [SerializeField] private EnemyType type;
+    private float hp;
     private IEnemyMovePattern movePattern;
-    private bool isInited = false;
-    private bool isStarted = false;
+    private bool isInited;
+    private bool isStarted;
     private Vector2 startPosition;
     
     private Rigidbody2D rigid;
@@ -66,6 +69,7 @@ public partial class Enemy : MonoBehaviour
         startPosition = startPos;
         type = enemyType;
         data = DataManager.Instance.GetEnemyData(enemyType);
+        hp = data.hp;
         movePattern = EnemyMovePatternFactory.Create(enemyType);
         movePattern.Init(startPos, data.speed, rigid);
         if (data.isEnforced) { ChangeEnforcedSprite(); }
@@ -74,5 +78,17 @@ public partial class Enemy : MonoBehaviour
     private void ChangeEnforcedSprite()
     {
         // 강화 적 스프라이트 바꾸는 로직
+    }
+
+    public void OnHit(float damage, Vector2 hitPosition)
+    {
+        if (!isInited) return;
+        
+        hp -= damage;
+        if (hp <= 0)
+        {
+            OnDeath?.Invoke();
+            PoolManager.Instance.Return(this);
+        }
     }
 }
