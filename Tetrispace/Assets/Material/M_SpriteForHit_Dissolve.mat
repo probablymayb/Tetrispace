@@ -100,7 +100,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Color_1: 0
-    - _Color_Switch: 0
+    - _Color_Switch: 1
     - _Dissolve: 0
     - _Dissolve_Sharpness: 1
     - _EnableExternalAlpha: 0
