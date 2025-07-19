@@ -7,13 +7,13 @@ public class NormalBulletLogic : IBulletLogic
     public IEnumerator Execute(Bullet bullet, Vector3 dir)
     {
         float timer = 0f;
-        while (timer < bullet.Data.lifeTime)
+        while (timer < bullet.LifeTime)
         {
-            bullet.transform.position += dir * (bullet.Data.speed * Time.deltaTime);
+            bullet.transform.position += dir * (bullet.Speed * Time.deltaTime);
             timer += Time.deltaTime;
             yield return null;
         }
 
-        bullet.OnDeath();
+        bullet.Die();
     }
 }

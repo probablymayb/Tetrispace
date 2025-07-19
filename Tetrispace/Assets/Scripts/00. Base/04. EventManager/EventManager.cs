@@ -2,32 +2,35 @@ using System;
 using UnityEngine;
 
 /// <summary>
-///  ÀÌº¥Æ® ¸Å´ÏÀú: °ÔÀÓ ³» ¸ğµç ÀÌº¥Æ®¸¦ Áß¾Ó¿¡¼­ °ü¸®ÇÏ´Â ½Ã½ºÅÛ
+
 /// 
-/// »ç¿ë¹ı:
-/// 1. ÀÌº¥Æ® ±¸µ¶: EventManager.Instance.onPlayerHpChanged += ¸Ş¼­µå¸í;
-/// 2. ÀÌº¥Æ® ¹ß»ı: EventManager.Instance.PlayerHpChanged(°ª);
-/// 3. ±¸µ¶ ÇØÁ¦: EventManager.Instance.onPlayerHpChanged -= ¸Ş¼­µå¸í; (OnDestroy¿¡¼­ ÇÊ¼ö!)
+/// ì‚¬ìš©ë²•:
+/// 1. ì´ë²¤íŠ¸ êµ¬ë…: EventManager.Instance.onPlayerHpChanged += ë©”ì„œë“œëª…;
+/// 2. ì´ë²¤íŠ¸ ë°œìƒ: EventManager.Instance.PlayerHpChanged(ê°’);
+/// 3. êµ¬ë… í•´ì œ: EventManager.Instance.onPlayerHpChanged -= ë©”ì„œë“œëª…; (OnDestroyì—ì„œ í•„ìˆ˜!)
 /// 
-/// ÀåÁ¡: UI, »ç¿îµå, ÀÌÆåÆ® µîÀÌ ¼­·Î µ¶¸³ÀûÀ¸·Î ¹İÀÀ °¡´É
-/// ÁÖÀÇ: ¹İµå½Ã OnDestroy¿¡¼­ ±¸µ¶ ÇØÁ¦ÇÏ±â! (¸Ş¸ğ¸® ´©¼ö ¹æÁö)
+
+/// ì¥ì : UI, ì‚¬ìš´ë“œ, ì´í™íŠ¸ ë“±ì´ ì„œë¡œ ë…ë¦½ì ìœ¼ë¡œ ë°˜ì‘ ê°€ëŠ¥
+///  ì£¼ì˜: ë°˜ë“œì‹œ OnDestroyì—ì„œ êµ¬ë… í•´ì œí•˜ê¸°! (ë©”ëª¨ë¦¬ ëˆ„ìˆ˜ ë°©ì§€)
 /// </summary>
 public class EventManager : Singleton<EventManager>
 {
-    #region === ÇÃ·¹ÀÌ¾î °ü·Ã ÀÌº¥Æ® ===
+    #region í”Œë ˆì´ì–´ ê´€ë ¨ ì´ë²¤íŠ¸
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î HP°¡ º¯°æµÉ ¶§ ¹ß»ıÇÏ´Â ÀÌº¥Æ®
+    /// í”Œë ˆì´ì–´ HPê°€ ë³€ê²½ë  ë•Œ ë°œìƒí•˜ëŠ” ì´ë²¤íŠ¸
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - HP UI ¾÷µ¥ÀÌÆ®
-    /// - Ã¼·Â ³·À» ¶§ È­¸é »¡°²°Ô
-    /// - Ã¼·Â È¸º¹ ÀÌÆåÆ®
+
+    ///ì‚¬ìš© ì˜ˆì‹œ:
+    /// - HP UI ì—…ë°ì´íŠ¸
+    /// - ì²´ë ¥ ë‚®ì„ ë•Œ í™”ë©´ ë¹¨ê°›ê²Œ
+    /// - ì²´ë ¥ íšŒë³µ ì´í™íŠ¸
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    ///  êµ¬ë… ë°©ë²•:
     /// EventManager.Instance.onPlayerHpChanged += UpdateHPUI;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
+    ///  ë°œìƒ ë°©ë²•:
+
     /// EventManager.Instance.PlayerHpChanged(newHpValue);
     /// </summary>
     public event Action<int> onPlayerHpChanged;
@@ -35,12 +38,23 @@ public class EventManager : Singleton<EventManager>
     public event Action<float> onPlayerBlockHit;
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î HP º¯°æ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ°´Â ¸Ş¼­µå
+    /// í”Œë ˆì´ì–´ HP ë³€ê²½ ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ë©”ì„œë“œ
     /// </summary>
-    /// <param name="newHp">»õ·Î¿î HP °ª</param>
+    /// <param name="newHp">ìƒˆë¡œìš´ HP ê°’</param>
     public void PlayerHpChanged(int newHp)
     {
         onPlayerHpChanged?.Invoke(newHp);
+    }
+    
+    public event Action<PlayerEnforcement> onPlayerEnforcementLevelUp;
+
+    /// <summary>
+    /// í”Œë ˆì´ì–´ ê°•í™” ë ˆë²¨ì—… ë©”ì„œë“œ
+    /// </summary>
+    /// <param name="enforcement">ê°•í™”ì‹œí‚¬ ì¹´í…Œê³ ë¦¬</param>
+    public void PlayerEnforcementLevelUp(PlayerEnforcement enforcement)
+    {
+        onPlayerEnforcementLevelUp?.Invoke(enforcement);
     }
 
     public void PlayerMove(Transform trans)
@@ -55,424 +69,409 @@ public class EventManager : Singleton<EventManager>
     #endregion
 
 
-
-    #region ===  Å×Æ®¸®½º ¹Ì´Ï°ÔÀÓ ÀÌº¥Æ® ===
+    #region ë³´ìŠ¤ ê´€ë ¨ ì´ë²¤íŠ¸
 
     /// <summary>
-    /// Å×Æ®¸®¹Ì³ë°¡ »ı¼ºµÉ ¶§ ¹ß»ıÇÏ´Â ÀÌº¥Æ®
+    /// ë³´ìŠ¤ì˜ ë²ˆê°œ QTE ì´ë²¤íŠ¸ê°€ ì‹œì‘ë  ë•Œ ë°œìƒ
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - »ı¼º È¿°úÀ½ Àç»ı
-    /// - ´ÙÀ½ ºí·Ï UI ¾÷µ¥ÀÌÆ®
-    /// - ÆÄÆ¼Å¬ ÀÌÆåÆ®
+    /// ì‚¬ìš© ì˜ˆì‹œ:
+    /// - QTE UI í‘œì‹œ
+    /// - ì¹´ë©”ë¼ ì…°ì´í‚¹
+    /// - ê¸´ë°•í•œ ìŒì•… ì¬ìƒ
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
-    /// EventManager.Instance.onTetrominoSpawned += OnBlockSpawned;
+    /// êµ¬ë… ë°©ë²•:
+    /// EventManager.Instance.onBossLightningQTE += StartQTE;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
-    /// EventManager.Instance.TetrominoSpawned(tetrominoType);
+    /// ë°œìƒ ë°©ë²•:
+    /// EventManager.Instance.BossLightningQTE(2.0f); // 2ì´ˆ ì œí•œ
+
     /// </summary>
     public event Action<Tetrimino.TetrominoType> onTetrominoSpawned;
-
     /// <summary>
-    /// Å×Æ®¸®¹Ì³ë »ı¼º ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="tetrominoType">»ı¼ºµÈ Å×Æ®¸®¹Ì³ë Å¸ÀÔ</param>
+    /// <param name="tetrominoType">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ Å¸ï¿½ï¿½</param>
     public void TetrominoSpawned(Tetrimino.TetrominoType tetrominoType)
+
+    /// ë³´ìŠ¤ ë²ˆê°œ QTE ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ë©”ì„œë“œ
+    /// </summary>
+    /// <param name="duration">QTE ì œí•œ ì‹œê°„ (ì´ˆ)</param>
+    public void BossLightningQTE(float duration)
     {
         //onTetrominoSpawned?.Invoke(tetrominoType);
-        //Debug.Log($"[Event] Å×Æ®¸®¹Ì³ë »ı¼º: {tetrominoType}");
+        //Debug.Log($"[Event] ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½: {tetrominoType}");
     }
 
     /// <summary>
-    /// Å×Æ®¸®¹Ì³ë°¡ ÂøÁö(°íÁ¤)µÉ ¶§ ¹ß»ıÇÏ´Â ÀÌº¥Æ®
+
+
+    /// QTE ì™„ë£Œ ì‹œ ë°œìƒí•˜ëŠ” ì´ë²¤íŠ¸ (ì„±ê³µ/ì‹¤íŒ¨ ê²°ê³¼ í¬í•¨)
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ÂøÁö È¿°úÀ½ Àç»ı
-    /// - È­¸é Áøµ¿
-    /// - ´ÙÀ½ ºí·Ï ÁØºñ
+    /// ì‚¬ìš© ì˜ˆì‹œ:
+    /// - ì„±ê³µì‹œ: ë³´ìŠ¤ ìŠ¤í„´, ì¶”ê°€ ì ìˆ˜
+    /// - ì‹¤íŒ¨ì‹œ: í”Œë ˆì´ì–´ ë°ë¯¸ì§€, ë³´ìŠ¤ ê°•í™”
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
-    /// EventManager.Instance.onTetrominoLocked += OnBlockLocked;
+    /// êµ¬ë… ë°©ë²•:
+    /// EventManager.Instance.onQTECompleted += OnQTEResult;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
-    /// EventManager.Instance.TetrominoLocked(tetrominoType, position);
+    /// ë°œìƒ ë°©ë²•:
+    /// EventManager.Instance.QTECompleted(true);  // ì„±ê³µ
+    /// EventManager.Instance.QTECompleted(false); // ì‹¤íŒ¨
+
     /// </summary>
     public event Action<Tetrimino.TetrominoType, Vector2Int> onTetrominoLocked;
 
     /// <summary>
-    /// Å×Æ®¸®¹Ì³ë ÂøÁö ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="tetrominoType">ÂøÁöµÈ Å×Æ®¸®¹Ì³ë Å¸ÀÔ</param>
-    /// <param name="position">ÂøÁö À§Ä¡</param>
+    /// <param name="tetrominoType">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ Å¸ï¿½ï¿½</param>
+    /// <param name="position">ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡</param>
     public void TetrominoLocked(Tetrimino.TetrominoType tetrominoType, Vector2Int position)
+
     {
         //onTetrominoLocked?.Invoke(tetrominoType, position);
-        //Debug.Log($"[Event] Å×Æ®¸®¹Ì³ë ÂøÁö: {tetrominoType} at {position}");
+        //Debug.Log($"[Event] ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½: {tetrominoType} at {position}");
     }
 
     /// <summary>
-    /// ¶óÀÎ Å¬¸®¾î ÀÌº¥Æ® (Å¬¸®¾îµÈ ¶óÀÎ ¼ö¿Í À§Ä¡ Á¤º¸)
+    /// ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® (Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½)
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ¶óÀÎ Å¬¸®¾î È¿°úÀ½ Àç»ı
-    /// - Á¡¼ö Áõ°¡ ¾Ö´Ï¸ŞÀÌ¼Ç
-    /// - ÆÄÆ¼Å¬ ÀÌÆåÆ®
-    /// - ÄŞº¸ ½Ã½ºÅÛ
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
+    /// - ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ï¿½Æ®
+    /// - ï¿½Şºï¿½ ï¿½Ã½ï¿½ï¿½ï¿½
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.onLinesCleared += OnLinesCleared;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
+    /// ï¿½ß»ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.LinesCleared(2, new int[]{0, 1});
     /// </summary>
     public event Action<int, int[]> onLinesCleared;
 
     /// <summary>
-    /// ¶óÀÎ Å¬¸®¾î ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="lineCount">Å¬¸®¾îµÈ ¶óÀÎ ¼ö</param>
-    /// <param name="clearedLines">Å¬¸®¾îµÈ ¶óÀÎ ¹øÈ£ ¹è¿­</param>
+    /// <param name="lineCount">Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½</param>
+    /// <param name="clearedLines">Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ ï¿½è¿­</param>
     public void LinesCleared(int lineCount, int[] clearedLines)
     {
         onLinesCleared?.Invoke(lineCount, clearedLines);
-        Debug.Log($"[Event] ¶óÀÎ Å¬¸®¾î: {lineCount}°³ ¶óÀÎ ({string.Join(", ", clearedLines)})");
+        Debug.Log($"[Event] ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½: {lineCount}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ({string.Join(", ", clearedLines)})");
     }
 
     /// <summary>
-    /// Å×Æ®¸®½º ·¹º§¾÷ ÀÌº¥Æ®
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ·¹º§¾÷ È¿°úÀ½ Àç»ı
-    /// - ·¹º§ UI ¾÷µ¥ÀÌÆ®
-    /// - ¼Óµµ Áõ°¡ ¾Ë¸²
-    /// - ÃàÇÏ ÀÌÆåÆ®
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½ï¿½ UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    /// - ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¸ï¿½
+    /// - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.onTetrisLevelUp += OnLevelUp;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
+    /// ï¿½ß»ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.TetrisLevelUp(3, 1.5f);
     /// </summary>
     public event Action<int, float> onTetrisLevelUp;
 
     /// <summary>
-    /// Å×Æ®¸®½º ·¹º§¾÷ ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="newLevel">»õ·Î¿î ·¹º§</param>
-    /// <param name="newSpeed">»õ·Î¿î ¼Óµµ</param>
+    /// <param name="newLevel">ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="newSpeed">ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½Óµï¿½</param>
     public void TetrisLevelUp(int newLevel, float newSpeed)
     {
         onTetrisLevelUp?.Invoke(newLevel, newSpeed);
-        Debug.Log($"[Event] Å×Æ®¸®½º ·¹º§¾÷: Level {newLevel}, Speed {newSpeed}");
+        Debug.Log($"[Event] ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: Level {newLevel}, Speed {newSpeed}");
     }
 
     /// <summary>
-    /// Å×Æ®¸®½º °ÔÀÓ ¿À¹ö ÀÌº¥Æ®
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - °ÔÀÓ ¿À¹ö »ç¿îµå Àç»ı
-    /// - °á°ú È­¸é Ç¥½Ã
-    /// - ÃÖ°í Á¡¼ö È®ÀÎ
-    /// - Àç½ÃÀÛ ¹öÆ° È°¼ºÈ­
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½ È­ï¿½ï¿½ Ç¥ï¿½ï¿½
+    /// - ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° È°ï¿½ï¿½È­
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.onTetrisGameOver += OnGameOver;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
+    /// ï¿½ß»ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.TetrisGameOver(1500, 7, 25);
     /// </summary>
     public event Action<int, int, int> onTetrisGameOver;
 
     /// <summary>
-    /// Å×Æ®¸®½º °ÔÀÓ ¿À¹ö ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="finalScore">ÃÖÁ¾ Á¡¼ö</param>
-    /// <param name="finalLevel">ÃÖÁ¾ ·¹º§</param>
-    /// <param name="linesCleared">ÃÑ Å¬¸®¾îÇÑ ¶óÀÎ ¼ö</param>
+    /// <param name="finalScore">ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="finalLevel">ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="linesCleared">ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½</param>
     public void TetrisGameOver(int finalScore, int finalLevel, int linesCleared)
     {
         onTetrisGameOver?.Invoke(finalScore, finalLevel, linesCleared);
-        Debug.Log($"[Event] Å×Æ®¸®½º °ÔÀÓ ¿À¹ö: Score {finalScore}, Level {finalLevel}, Lines {linesCleared}");
+        Debug.Log($"[Event] ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: Score {finalScore}, Level {finalLevel}, Lines {linesCleared}");
     }
 
     /// <summary>
-    /// Å×Æ®¸®½º °ÔÀÓ ½ÃÀÛ ÀÌº¥Æ®
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - °ÔÀÓ BGM Àç»ı
-    /// - UI ÃÊ±âÈ­
-    /// - Å¸ÀÌ¸Ó ½ÃÀÛ
-    /// - Ä«¸Ş¶ó ¼³Á¤
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½ï¿½ï¿½ BGM ï¿½ï¿½ï¿½
+    /// - UI ï¿½Ê±ï¿½È­
+    /// - Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+    /// - Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.onTetrisGameStart += OnGameStart;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
+    /// ï¿½ß»ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.TetrisGameStart();
     /// </summary>
     public event Action onTetrisGameStart;
 
     /// <summary>
-    /// Å×Æ®¸®½º °ÔÀÓ ½ÃÀÛ ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
     public void TetrisGameStart()
     {
         onTetrisGameStart?.Invoke();
-        Debug.Log("[Event] Å×Æ®¸®½º °ÔÀÓ ½ÃÀÛ");
+        Debug.Log("[Event] ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     /// <summary>
-    /// Å×Æ®¸®½º ÄŞº¸ ÀÌº¥Æ® (¿¬¼Ó ¶óÀÎ Å¬¸®¾î)
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Şºï¿½ ï¿½Ìºï¿½Æ® (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½)
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ÄŞº¸ È¿°úÀ½ Àç»ı
-    /// - ÄŞº¸ UI Ç¥½Ã
-    /// - Ãß°¡ Á¡¼ö ºÎ¿©
-    /// - È­¸é ÀÌÆåÆ®
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½Şºï¿½ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+    /// - ï¿½Şºï¿½ UI Ç¥ï¿½ï¿½
+    /// - ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î¿ï¿½
+    /// - È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
     /// 
-    /// ±¸µ¶ ¹æ¹ı:
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.onTetrisCombo += OnCombo;
     /// 
-    /// ¹ß»ı ¹æ¹ı:
+    /// ï¿½ß»ï¿½ ï¿½ï¿½ï¿½:
     /// EventManager.Instance.TetrisCombo(3, 500);
     /// </summary>
     public event Action<int, int> onTetrisCombo;
 
     /// <summary>
-    /// Å×Æ®¸®½º ÄŞº¸ ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Şºï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="comboCount">ÄŞº¸ ¼ö</param>
-    /// <param name="bonusScore">º¸³Ê½º Á¡¼ö</param>
+    /// <param name="comboCount">ï¿½Şºï¿½ ï¿½ï¿½</param>
+    /// <param name="bonusScore">ï¿½ï¿½ï¿½Ê½ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
     public void TetrisCombo(int comboCount, int bonusScore)
     {
         onTetrisCombo?.Invoke(comboCount, bonusScore);
-        Debug.Log($"[Event] Å×Æ®¸®½º ÄŞº¸: {comboCount}ÄŞº¸, º¸³Ê½º {bonusScore}Á¡");
+        Debug.Log($"[Event] ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Şºï¿½: {comboCount}ï¿½Şºï¿½, ï¿½ï¿½ï¿½Ê½ï¿½ {bonusScore}ï¿½ï¿½");
     }
 
     #endregion
 
-    #region === °ÔÀÓÀë¿ë ¹ü¿ë ÀÌº¥Æ® ===
+
+    #region ê²Œì„ì¼ìš© ì¶”ê°€ ì´ë²¤íŠ¸ (í•„ìš”ì‹œ ì£¼ì„ í•´ì œí•˜ê³  ì‚¬ìš©)
 
     /// <summary>
-    /// Á¡¼ö º¯°æ ÀÌº¥Æ® - Á¡¼ö UI ¾÷µ¥ÀÌÆ®¿ë
-    /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - Á¡¼ö UI ¾÷µ¥ÀÌÆ®
-    /// - Á¡¼ö Áõ°¡ ¾Ö´Ï¸ŞÀÌ¼Ç
-    /// - ÃÖ°í Á¡¼ö Ã¼Å©
+
+    /// ì ìˆ˜ ë³€ê²½ ì´ë²¤íŠ¸ - ì ìˆ˜ UI ì—…ë°ì´íŠ¸ìš©
     /// </summary>
     public event Action<int> onScoreChanged;
 
     /// <summary>
-    /// Á¡¼ö º¯°æ ÀÌº¥Æ® ¹ß»ı
+    /// ì  ì²˜ì¹˜ ì´ë²¤íŠ¸ - í‚¬ ì¹´ìš´íŠ¸, ì½¤ë³´ ì‹œìŠ¤í…œìš©
     /// </summary>
-    /// <param name="newScore">»õ·Î¿î Á¡¼ö</param>
+    /// <param name="newScore">ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
     public void ScoreChanged(int newScore)
     {
         onScoreChanged?.Invoke(newScore);
-        Debug.Log($"[Event] Á¡¼ö º¯°æ: {newScore}");
+        Debug.Log($"[Event] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {newScore}");
     }
 
     /// <summary>
-    /// °ÔÀÓ ½ÃÀÛ ÀÌº¥Æ® - BGM Àç»ı, UI ÃÊ±âÈ­¿ë
-    /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - °ÔÀÓ BGM Àç»ı
-    /// - UI ÃÊ±âÈ­
-    /// - Å¸ÀÌ¸Ó ½ÃÀÛ
+
+    /// ê²Œì„ ì‹œì‘ ì´ë²¤íŠ¸ - BGM ì¬ìƒ, UI ì´ˆê¸°í™”ìš©
     /// </summary>
     public event Action onGameStart;
 
     /// <summary>
-    /// °ÔÀÓ ½ÃÀÛ ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
     public void GameStart()
     {
         onGameStart?.Invoke();
-        Debug.Log("[Event] °ÔÀÓ ½ÃÀÛ");
+        Debug.Log("[Event] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     /// <summary>
-    /// °ÔÀÓ ¿À¹ö ÀÌº¥Æ® - °á°ú È­¸é, Á¡¼ö ÀúÀå¿ë
-    /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - °ÔÀÓ ¿À¹ö »ç¿îµå Àç»ı
-    /// - °á°ú È­¸é Ç¥½Ã
-    /// - Á¡¼ö ÀúÀå
+
+    /// ê²Œì„ ì˜¤ë²„ ì´ë²¤íŠ¸ - ê²°ê³¼ í™”ë©´, ì ìˆ˜ ì €ì¥ìš©
     /// </summary>
     public event Action onGameOver;
 
     /// <summary>
-    /// °ÔÀÓ ¿À¹ö ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
     public void GameOver()
     {
         onGameOver?.Invoke();
-        Debug.Log("[Event] °ÔÀÓ ¿À¹ö");
+        Debug.Log("[Event] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
-    /// <summary>
-    /// °ÔÀÓ ÀÏ½ÃÁ¤Áö ÀÌº¥Æ®
-    /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ÀÏ½ÃÁ¤Áö UI Ç¥½Ã
-    /// - BGM ÀÏ½ÃÁ¤Áö
-    /// - Å¸ÀÌ¸Ó Á¤Áö
-    /// </summary>
     public event Action<bool> onGamePaused;
 
     /// <summary>
-    /// °ÔÀÓ ÀÏ½ÃÁ¤Áö ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="isPaused">ÀÏ½ÃÁ¤Áö »óÅÂ</param>
+    /// <param name="isPaused">ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</param>
     public void GamePaused(bool isPaused)
     {
         onGamePaused?.Invoke(isPaused);
-        Debug.Log($"[Event] °ÔÀÓ ÀÏ½ÃÁ¤Áö: {isPaused}");
+        Debug.Log($"[Event] ï¿½ï¿½ï¿½ï¿½ ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½: {isPaused}");
     }
 
     /// <summary>
-    /// ¾ÆÀÌÅÛ ¼öÁı ÀÌº¥Æ® - ÀÎº¥Åä¸®, È¿°úÀ½¿ë
-    /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ¾ÆÀÌÅÛ ¼öÁı È¿°úÀ½
-    /// - ÀÎº¥Åä¸® UI ¾÷µ¥ÀÌÆ®
-    /// - ¾ÆÀÌÅÛ È¿°ú Àû¿ë
+    /// ì•„ì´í…œ ìˆ˜ì§‘ ì´ë²¤íŠ¸ - ì¸ë²¤í† ë¦¬, íš¨ê³¼ìŒìš©
+
     /// </summary>
     public event Action<string, int> onItemCollected;
 
     /// <summary>
-    /// ¾ÆÀÌÅÛ ¼öÁı ÀÌº¥Æ® ¹ß»ı
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="itemName">¾ÆÀÌÅÛ ÀÌ¸§</param>
-    /// <param name="amount">¼ö·®</param>
+    /// <param name="itemName">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½</param>
+    /// <param name="amount">ï¿½ï¿½ï¿½ï¿½</param>
     public void ItemCollected(string itemName, int amount = 1)
     {
         onItemCollected?.Invoke(itemName, amount);
-        Debug.Log($"[Event] ¾ÆÀÌÅÛ ¼öÁı: {itemName} x{amount}");
+        Debug.Log($"[Event] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {itemName} x{amount}");
     }
 
     #endregion
 
-    #region === ¿Àµğ¿À ÀÌº¥Æ® ===
+    #region === ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ===
 
     /// <summary>
-    /// È¿°úÀ½ Àç»ı ÀÌº¥Æ®
+    /// È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ¹öÆ° Å¬¸¯À½
-    /// - ¾×¼Ç È¿°úÀ½
-    /// - ¾Ë¸²À½
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½Æ° Å¬ï¿½ï¿½ï¿½ï¿½
+    /// - ï¿½×¼ï¿½ È¿ï¿½ï¿½ï¿½ï¿½
+    /// - ï¿½Ë¸ï¿½ï¿½ï¿½
     /// </summary>
     public event Action<string> onPlaySFX;
 
     /// <summary>
-    /// È¿°úÀ½ Àç»ı ÀÌº¥Æ® ¹ß»ı
+    /// È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="sfxName">È¿°úÀ½ ÀÌ¸§</param>
+    /// <param name="sfxName">È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½</param>
     public void PlaySFX(string sfxName)
     {
         onPlaySFX?.Invoke(sfxName);
-        Debug.Log($"[Event] È¿°úÀ½ Àç»ı: {sfxName}");
+        Debug.Log($"[Event] È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½: {sfxName}");
     }
 
     /// <summary>
-    /// BGM º¯°æ ÀÌº¥Æ®
+    /// BGM ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - ¸ŞÀÎ BGM Àç»ı
-    /// - º¸½º BGM Àç»ı
-    /// - °á°ú È­¸é BGM Àç»ı
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - ï¿½ï¿½ï¿½ï¿½ BGM ï¿½ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½ï¿½ BGM ï¿½ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½ È­ï¿½ï¿½ BGM ï¿½ï¿½ï¿½
     /// </summary>
     public event Action<string> onChangeBGM;
 
     /// <summary>
-    /// BGM º¯°æ ÀÌº¥Æ® ¹ß»ı
+    /// BGM ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="bgmName">BGM ÀÌ¸§</param>
+    /// <param name="bgmName">BGM ï¿½Ì¸ï¿½</param>
     public void ChangeBGM(string bgmName)
     {
         onChangeBGM?.Invoke(bgmName);
-        Debug.Log($"[Event] BGM º¯°æ: {bgmName}");
+        Debug.Log($"[Event] BGM ï¿½ï¿½ï¿½ï¿½: {bgmName}");
     }
 
     #endregion
 
-    #region ===  UI ÀÌº¥Æ® ===
+    #region ===  UI ï¿½Ìºï¿½Æ® ===
 
     /// <summary>
-    /// UI ¾÷µ¥ÀÌÆ® ÀÌº¥Æ®
+    /// UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - Ã¼·Â¹Ù ¾÷µ¥ÀÌÆ®
-    /// - Á¡¼ö UI ¾÷µ¥ÀÌÆ®
-    /// - ·¹º§ UI ¾÷µ¥ÀÌÆ®
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - Ã¼ï¿½Â¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    /// - ï¿½ï¿½ï¿½ï¿½ UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    /// - ï¿½ï¿½ï¿½ï¿½ UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
     /// </summary>
     public event Action<string, object> onUIUpdate;
 
     /// <summary>
-    /// UI ¾÷µ¥ÀÌÆ® ÀÌº¥Æ® ¹ß»ı
+    /// UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="uiElement">UI ¿ä¼Ò ÀÌ¸§</param>
-    /// <param name="value">»õ·Î¿î °ª</param>
+    /// <param name="uiElement">UI ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½</param>
+    /// <param name="value">ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½</param>
     public void UIUpdate(string uiElement, object value)
     {
         onUIUpdate?.Invoke(uiElement, value);
-        Debug.Log($"[Event] UI ¾÷µ¥ÀÌÆ®: {uiElement} = {value}");
+        Debug.Log($"[Event] UI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®: {uiElement} = {value}");
     }
 
     /// <summary>
-    /// È­¸é È¿°ú ÀÌº¥Æ®
+    /// È­ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     /// 
-    /// »ç¿ë ¿¹½Ã:
-    /// - È­¸é ¼ÎÀÌÅ·
-    /// - È­¸é ÇÃ·¡½Ã
-    /// - ÆäÀÌµå ÀÎ/¾Æ¿ô
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½:
+    /// - È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å·
+    /// - È­ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½
+    /// - ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½/ï¿½Æ¿ï¿½
     /// </summary>
     public event Action<string, float> onScreenEffect;
 
     /// <summary>
-    /// È­¸é È¿°ú ÀÌº¥Æ® ¹ß»ı
+    /// È­ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½
     /// </summary>
-    /// <param name="effectName">È¿°ú ÀÌ¸§</param>
-    /// <param name="intensity">°­µµ</param>
+    /// <param name="effectName">È¿ï¿½ï¿½ ï¿½Ì¸ï¿½</param>
+    /// <param name="intensity">ï¿½ï¿½ï¿½ï¿½</param>
     public void ScreenEffect(string effectName, float intensity)
     {
         onScreenEffect?.Invoke(effectName, intensity);
-        Debug.Log($"[Event] È­¸é È¿°ú: {effectName} (°­µµ: {intensity})");
+        Debug.Log($"[Event] È­ï¿½ï¿½ È¿ï¿½ï¿½: {effectName} (ï¿½ï¿½ï¿½ï¿½: {intensity})");
     }
 
     #endregion
 
-    #region === µğ¹ö±× ±â´É ===
+    #region === ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ===
 
     /// <summary>
-    /// ¸ğµç ÀÌº¥Æ® ±¸µ¶ÀÚ ¼ö Ãâ·Â (µğ¹ö±×¿ë)
+    /// ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½×¿ï¿½)
     /// </summary>
-    [ContextMenu("ÀÌº¥Æ® ±¸µ¶ÀÚ ¼ö Ãâ·Â")]
+    [ContextMenu("ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½")]
     public void PrintEventSubscribers()
     {
-        Debug.Log("=== EventManager ±¸µ¶ÀÚ ¼ö ===");
-        Debug.Log($"Å×Æ®¸®¹Ì³ë »ı¼º: {onTetrominoSpawned?.GetInvocationList().Length ?? 0}");
-        Debug.Log($"Å×Æ®¸®¹Ì³ë ÂøÁö: {onTetrominoLocked?.GetInvocationList().Length ?? 0}");
-        Debug.Log($"¶óÀÎ Å¬¸®¾î: {onLinesCleared?.GetInvocationList().Length ?? 0}");
-        Debug.Log($"·¹º§¾÷: {onTetrisLevelUp?.GetInvocationList().Length ?? 0}");
-        Debug.Log($"°ÔÀÓ ¿À¹ö: {onTetrisGameOver?.GetInvocationList().Length ?? 0}");
-        Debug.Log($"Á¡¼ö º¯°æ: {onScoreChanged?.GetInvocationList().Length ?? 0}");
+        Debug.Log("=== EventManager ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ===");
+        Debug.Log($"ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½: {onTetrominoSpawned?.GetInvocationList().Length ?? 0}");
+        Debug.Log($"ï¿½ï¿½Æ®ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½: {onTetrominoLocked?.GetInvocationList().Length ?? 0}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½: {onLinesCleared?.GetInvocationList().Length ?? 0}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {onTetrisLevelUp?.GetInvocationList().Length ?? 0}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {onTetrisGameOver?.GetInvocationList().Length ?? 0}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {onScoreChanged?.GetInvocationList().Length ?? 0}");
     }
 
     /// <summary>
-    /// Å×½ºÆ® ÀÌº¥Æ® ¹ß»ı (µğ¹ö±×¿ë)
+    /// ï¿½×½ï¿½Æ® ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½ (ï¿½ï¿½ï¿½ï¿½×¿ï¿½)
     /// </summary>
-    [ContextMenu("Å×½ºÆ® ÀÌº¥Æ® ¹ß»ı")]
+    [ContextMenu("ï¿½×½ï¿½Æ® ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½")]
     public void FireTestEvents()
     {
-        Debug.Log("=== Å×½ºÆ® ÀÌº¥Æ® ¹ß»ı ===");
+        Debug.Log("=== ï¿½×½ï¿½Æ® ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½ ===");
         TetrominoSpawned(Tetrimino.TetrominoType.T);
         ScoreChanged(1000);
         PlaySFX("TestSound");
-        Debug.Log("Å×½ºÆ® ÀÌº¥Æ® ¹ß»ı ¿Ï·á");
+        Debug.Log("ï¿½×½ï¿½Æ® ï¿½Ìºï¿½Æ® ï¿½ß»ï¿½ ï¿½Ï·ï¿½");
     }
 
     #endregion
