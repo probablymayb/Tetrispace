@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0abbb0bb014ce27419902ed702435301
+guid: 8f2441840eaec0345b31f6cf7d51c398
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5463668911714742808
-    second: noise1_1_0
+      213: 1278800050208781209
+    second: Tx_Dust_06_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,9 +40,9 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: noise1_1_0
+      name: Tx_Dust_06_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 512
-        height: 512
+        height: 256
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8edc5e292162d24b0800000000000000
-      internalID: -5463668911714742808
+      spriteID: 993327bced53fb110800000000000000
+      internalID: 1278800050208781209
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      noise1_1_0: -5463668911714742808
+      Tx_Dust_06_0: 1278800050208781209
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
