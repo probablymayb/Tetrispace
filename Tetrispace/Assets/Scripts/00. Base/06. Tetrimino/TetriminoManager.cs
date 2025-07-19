@@ -647,6 +647,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
         if (x < 0 || x >= width || y < 0 || y >= height)
         {
             Debug.LogWarning($"WorldToGrid: Position {worldPos} is outside grid bounds");
+            //게임오버?
         }
 
         x = Mathf.Clamp(x, 0, width - 1);
