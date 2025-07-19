@@ -465,7 +465,7 @@ Transform:
   m_GameObject: {fileID: 194745861}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -483,6 +483,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f1c1c984704912aece6b02d67383fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effects:
+  - {fileID: 5467560225891315529, guid: 1492490825f1b6443b53932da637068a, type: 3}
+  - {fileID: 4782767694976177075, guid: b4e3ceb9b09f6cc4095ed5d8fb453618, type: 3}
+  - {fileID: 7536811488315698305, guid: 7b513a9e0df74f149acd408fb9954bd8, type: 3}
 --- !u!58 &194745864
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -518,7 +522,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 5
+  m_Radius: 3.4
 --- !u!1 &222720023
 GameObject:
   m_ObjectHideFlags: 0
@@ -2972,6 +2976,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
+      propertyPath: bombHitEffects.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
       propertyPath: 'bulletDatas.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 7092a99a833741044be23089041d95f0, type: 2}
@@ -2987,6 +2995,18 @@ PrefabInstance:
       propertyPath: 'bulletDatas.Array.data[3]'
       value: 
       objectReference: {fileID: 11400000, guid: 88b93e2ea34f47a4a9fe5f2f92573b7e, type: 2}
+    - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
+      propertyPath: 'bombHitEffects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1133428540672336007, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
+    - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
+      propertyPath: 'bombHitEffects.Array.data[1]'
+      value: 
+      objectReference: {fileID: 3545443636360135790, guid: 7069254538213b249983730a6a0b71d5, type: 3}
+    - target: {fileID: 1256171392182006427, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
+      propertyPath: 'bombHitEffects.Array.data[2]'
+      value: 
+      objectReference: {fileID: 4220459049187981441, guid: eedf7eb1b5d8b504ea1473ecc560ee52, type: 3}
     - target: {fileID: 2930462690842931160, guid: 58c8e8e198c5caf4f86d870af7b0a17c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3247,14 +3267,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 6635951090713665813, guid: 761a55904de9f1e4395ae2415dbab977, type: 3}
-  CCWBulletPrefab: {fileID: 0}
-  CWBulletPrefab: {fileID: 0}
   firePoint: {fileID: 1969742557}
   attackCooldown: 0.3
   rotationAttackCooldown: 0.5
   bulletData: {fileID: 11400000, guid: cad128d8d73be074d9962bf378ebf1d6, type: 2}
-  CCWBulletData: {fileID: 0}
-  CWBulletData: {fileID: 0}
+  CCWBulletData: {fileID: 11400000, guid: a87d9f2cdbf2ca14983ec3d7bfb27af4, type: 2}
+  CWBulletData: {fileID: 11400000, guid: d23c9017163a93e499ed51f2deb0211e, type: 2}
 --- !u!114 &1969742555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4017,6 +4035,10 @@ PrefabInstance:
     - target: {fileID: 2614542357571933133, guid: 0e92cc2a3191eab448ec4a63aefa907a, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2621771895392933123, guid: 0e92cc2a3191eab448ec4a63aefa907a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2975937394103047468, guid: 0e92cc2a3191eab448ec4a63aefa907a, type: 3}
       propertyPath: m_IsActive

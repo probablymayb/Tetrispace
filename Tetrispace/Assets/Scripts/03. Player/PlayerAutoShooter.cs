@@ -9,6 +9,7 @@ public class PlayerAutoShooter : MonoBehaviour
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private List<BulletData> bulletDatas;
     [SerializeField] private BulletData bombData;
+    [SerializeField] private List<Transform> bombHitEffects;
     private List<List<Transform>> shootPositions = new();
     private float damage;
     private int ammo;
@@ -112,7 +113,7 @@ public class PlayerAutoShooter : MonoBehaviour
 
     private void Bomb(Transform bombTransform)
     {
-        print("Bomb");
+        Instantiate(bombHitEffects[playerStat.GetLevel(PlayerEnforcement.Bomb) - 1], bombTransform.position, bombTransform.rotation);
         Vector2 bombCenter = bombTransform.position;
         float bombRadius = playerStat.GetStat(PlayerEnforcement.Bomb)[1];
         Collider2D[] hits = Physics2D.OverlapCircleAll(bombCenter, bombRadius);

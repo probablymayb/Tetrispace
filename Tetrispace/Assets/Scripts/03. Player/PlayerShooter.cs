@@ -20,9 +20,7 @@ public class PlayerShooter : MonoBehaviour
     #region 프리팹 참조
     [Header("=== 총알 프리팹 ===")]
     [SerializeField] private Bullet bulletPrefab;
-    [SerializeField] private Bullet CCWBulletPrefab;    // 반시계방향 회전 총알
-    [SerializeField] private Bullet CWBulletPrefab;     // 시계방향 회전 총알
-
+    
     [Header("=== 발사 설정 ===")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private float attackCooldown = 0.3f;
@@ -64,12 +62,6 @@ public class PlayerShooter : MonoBehaviour
     {
         if (bulletPrefab != null)
             PoolManager.Instance.CreatePool(bulletPrefab, 20);
-
-        if (CCWBulletPrefab != null)
-            PoolManager.Instance.CreatePool(CCWBulletPrefab, 10);
-
-        if (CWBulletPrefab != null)
-            PoolManager.Instance.CreatePool(CWBulletPrefab, 10);
     }
     #endregion
 

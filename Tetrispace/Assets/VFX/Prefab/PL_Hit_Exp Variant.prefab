@@ -53,7 +53,7 @@ ParticleSystem:
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
-  autoRandomSeed: 0
+  autoRandomSeed: 1
   startDelay:
     serializedVersion: 2
     minMaxState: 0
@@ -110,7 +110,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
-  randomSeed: 1017
+  randomSeed: 0
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4977,19 +4977,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4693527021594925123, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: randomSeed
-      value: 2004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4693527021594925123, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: autoRandomSeed
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6220661464591677617, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: randomSeed
-      value: 2004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6220661464591677617, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: autoRandomSeed
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6220661464591677617, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: CustomDataModule.vector0_2.scalar
@@ -5021,11 +5021,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7933701802469334009, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: randomSeed
-      value: 2004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7933701802469334009, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: autoRandomSeed
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7933701802469334009, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -5065,11 +5065,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8228891049076466291, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: randomSeed
-      value: 2004
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8228891049076466291, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: autoRandomSeed
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8228891049076466291, guid: 80bd3fb3bb6cd574881165649136ccd4, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
