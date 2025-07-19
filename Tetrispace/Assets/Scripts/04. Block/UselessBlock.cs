@@ -145,27 +145,9 @@ public class UselessBlock : MonoBehaviour
 
     void Update()
     {
-        // �׽�Ʈ�� ȸ��
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            TurnLeft();
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            TurnRight();
-        }
-    }
+        
 
-    public void TurnLeft()
-    {
-        transform.Rotate(new Vector3(0f, 0f, 1f), -90);
     }
-
-    public void TurnRight()
-    {
-        transform.Rotate(new Vector3(0f, 0f, 1f), 90);
-    }
-
     void OnDestroy()
     {
         StopAllCoroutines();
