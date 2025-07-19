@@ -20,38 +20,26 @@ public class TetrisBlock : MonoBehaviour
     void Start()
     {
         // 블록 크기 설정
-        SetBlockSize();
+        //SetBlockSize();
 
         // 그리드 정보 출력 (한 번만)
         if (useStaticPosition)
         {
-            GridSystem.DebugGridInfo();
-            GridSystem.TestGridCalculation();
+            //GridSystem.DebugGridInfo();
+            //GridSystem.TestGridCalculation();
         }
     }
 
     void Update()
     {
-        //  PlayerController와 동일한 방식으로 위치 계산
-        Vector2Int gridPos;
-
-        if (useStaticPosition)
-        {
-            // 정적 GridMiddlePos 사용 (PlayerController의 GridPos와 연동)
-            gridPos = GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y);
-        }
-        else
-        {
-            // 커스텀 위치 사용
-            gridPos = GridSystem.GetGridMiddlePos(customGridX, customGridY);
-        }
-
-        //  PlayerController와 동일한 스크린-월드 변환
-        Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f);
+        //for test
+        Vector2Int gridPos = GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y);
+        Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f); // Z는 카메라와의 거리
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        worldPos.z = 0;
+        worldPos.z = 0; // 2D 게임용
 
         transform.position = worldPos;
+
     }
 
     /// <summary>

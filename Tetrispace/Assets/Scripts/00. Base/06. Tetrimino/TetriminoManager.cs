@@ -20,10 +20,17 @@ public class TetriminoManager : Singleton<TetriminoManager>
     private GameObject[,] gridArray;
     Vector3 lastPlayerPosition = Vector3.zero;
 
+    [SerializeField] private Transform gridOriginTransform;
+    private Vector3 gridOrigin;
+
+    [SerializeField] private float cellSize = 1f;  // 셀 하나 너비/높이
+
+
     protected override void Awake()
     {
         base.Awake();
         gridArray = new GameObject[width, height];
+        gridOrigin = gridOriginTransform.position;
         EventManager.Instance.onPlayerMove += OnPlayerMove;
     }
 
@@ -31,10 +38,20 @@ public class TetriminoManager : Singleton<TetriminoManager>
     {
         if (IsInsideGrid(gridPos))
         {
+            Debug.Log(" Now Registered" + block);
             gridArray[gridPos.x, gridPos.y] = block;
         }
     }
 
+    public bool IsLocked(int x, int y)
+    {
+        if (x < 0 || x > width - 1 || y < 0 || y > height - 1)
+        {
+            return true;
+        }
+
+        return gridArray[x, y] != null;
+    }
     public void CheckAndClearLines()
     {
         for (int y = 0; y < height; y++)
@@ -78,7 +95,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 {
                     gridArray[x, y - 1] = block;
                     gridArray[x, y] = null;
-                    block.transform.position += Vector3.down;
+                    block.transform.position += Vector3.down * cellSize;
                 }
             }
         }
@@ -113,18 +130,33 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
     private bool IsInsideGrid(Vector2Int pos)
     {
+        //Debug.Log("is Inside Grid ??" + pos);
         return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height;
     }
 
     public Vector2Int WorldToGrid(Vector3 worldPos)
     {
-        int x = Mathf.RoundToInt(worldPos.x);
-        int y = Mathf.RoundToInt(worldPos.y);
-        return new Vector2Int(x + width / 2, y);  // 필요 시 x 좌표 오프셋 조절
+            // 1) 그리드 원점
+            Vector3 origin = gridOriginTransform.position;
+
+            // 2) 월드위치 → 원점 기준로컬 위치
+            Vector3 local = worldPos - origin;
+
+            // 3) 셀 크기로 나누고 Floor
+            int x = Mathf.FloorToInt(local.x / cellSize);
+            int y = Mathf.FloorToInt(local.y / cellSize);
+
+            // 4) 범위 보정
+            x = Mathf.Clamp(x, 0, width - 1);
+            y = Mathf.Clamp(y, 0, height - 1);
+
+            return new Vector2Int(x, y);
     }
+
 
     private void OnPlayerMove(Transform playerTransform)
     {
+        Debug.Log("OnPlayerMove on TetriminoManager");
         if (lastPlayerPosition == Vector3.zero)
         {
             lastPlayerPosition = playerTransform.position;
@@ -135,5 +167,27 @@ public class TetriminoManager : Singleton<TetriminoManager>
         lastPlayerPosition = playerTransform.position;
         Debug.Log("플레이어 포지션 차이값"+delta);
         MoveEntireGrid(delta);
+    }
+
+    private void test()
+    {
+        int count = 0;
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            foreach (GameObject a in gridArray)
+            {
+                if (a != null)
+                {
+                    count += 1;
+                }
+            }
+            Debug.Log("LOcked 그리드 개수!!!@@ " +count);
+        }
+       
+    }
+
+    public void Update()
+    {
+        test();
     }
 }
