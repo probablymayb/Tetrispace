@@ -2,10 +2,13 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerStat))]
 public class PlayerController : MonoBehaviour
 {
-    private PlayerInputActions inputActions;
-    
+    private PlayerStat stat;
+    private InputAction moveAction;
+    private const string MoveActionName = "Move";
+
     [SerializeField] private float moveSpeed = 3f;        // 연속 이동 속도
     [SerializeField] private float tileSize = 1f;         // 한 칸 크기 (스냅 기준)
     private Vector2 moveInput = Vector2.zero;
@@ -13,33 +16,45 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        inputActions = new PlayerInputActions();
+        stat = GetComponent<PlayerStat>();
+        moveAction = InputSystem.actions.FindAction(MoveActionName);
     }
     
     private void OnEnable()
     {
-        inputActions.PlayerActions.Enable();
-        inputActions.PlayerActions.Move.performed += OnMove;
-        inputActions.PlayerActions.Move.started += OnMove;
-        inputActions.PlayerActions.Move.canceled += OnMove;
+        moveAction.Enable();
+        moveAction.performed += OnMove;
+        moveAction.started += OnMove;
+        moveAction.canceled += OnMove;
     }
 
     private void OnDisable()
     {
-        inputActions.PlayerActions.Move.performed -= OnMove;
-        inputActions.PlayerActions.Move.started -= OnMove;
-        inputActions.PlayerActions.Move.canceled -= OnMove;
-        inputActions.PlayerActions.Disable();
+        moveAction.performed -= OnMove;
+        moveAction.started -= OnMove;
+        moveAction.canceled -= OnMove;
+        moveAction.Disable();
     }
 
     private void Update()
     {
-        if (isInputHeld)
-        {
-            // 좌우 연속 이동
-            Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (moveSpeed * Time.deltaTime);
-            transform.position += move;
-        }
+        //for test
+        Vector2Int gridPos = GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y);
+        Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f); // Z는 카메라와의 거리
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        worldPos.z = 0; // 2D 게임용
+
+        transform.position = worldPos;
+        EventManager.Instance.PlayerMove(this.transform);
+
+
+    //  if (isInputHeld)
+    //     {
+    //         // 좌우 연속 이동
+    //         Vector3 move = new Vector3(moveInput.x, 0f, 0f) * (stat.GetStat(PlayerEnforcement.Speed) * Time.deltaTime);
+    //         transform.position += move;
+    //     }
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -57,6 +72,9 @@ public class PlayerController : MonoBehaviour
             moveInput = Vector2.zero;
             SnapToNearestTile();
         }
+
+        //이동
+        EventManager.Instance.PlayerMove(this.transform);
     }
 
     private void SnapToNearestTile()

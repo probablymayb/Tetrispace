@@ -1,41 +1,44 @@
-using UnityEngine;
 using System.Collections.Generic;
-public class ObjectPool
+using UnityEngine;
+
+public class ObjectPool<T> : IObjectPool where T : Component
 {
-    private GameObject prefab;
-    private Queue<GameObject> pool;
+    private T prefab;
+    private Queue<T> pool;
     private Transform poolParent;
 
-    public ObjectPool(GameObject prefab, int initialSize = 10)
+    public ObjectPool(T prefab, int initialSize = 10)
     {
         this.prefab = prefab;
-        pool = new Queue<GameObject>(initialSize);
+        pool = new Queue<T>(initialSize);
 
-        // 풀의 부모 오브젝트 생성
         GameObject poolObj = new GameObject($"{prefab.name}Pool");
         poolParent = poolObj.transform;
 
-        // 초기 오브젝트 생성
         for (int i = 0; i < initialSize; i++)
         {
-            GameObject obj = Object.Instantiate(prefab, poolParent);
-            obj.SetActive(false);
+            T obj = Object.Instantiate(prefab, poolParent);
+            obj.gameObject.SetActive(false);
             pool.Enqueue(obj);
         }
     }
 
-    public GameObject GetObject()
+    public T GetObject()
     {
-        GameObject obj = pool.Count > 0 ? pool.Dequeue() : Object.Instantiate(prefab, poolParent);
+        T obj = pool.Count > 0 ? pool.Dequeue() : Object.Instantiate(prefab, poolParent);
         obj.transform.SetParent(null);
-        obj.SetActive(true);
+        obj.gameObject.SetActive(true);
         return obj;
     }
 
-    public void ReturnObject(GameObject obj)
+    public void ReturnObject(T obj)
     {
-        obj.SetActive(false);
+        obj.gameObject.SetActive(false);
         obj.transform.SetParent(poolParent);
         pool.Enqueue(obj);
     }
+    
+    // IObjectPool Interface
+    Component IObjectPool.GetObject() => GetObject();
+    void IObjectPool.ReturnObject(Component obj) => ReturnObject(obj as T);
 }
