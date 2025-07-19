@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public partial class Enemy : MonoBehaviour, IEntity
@@ -7,6 +8,8 @@ public partial class Enemy : MonoBehaviour, IEntity
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private EnemyData data;
     [SerializeField] private EnemyType type;
+    [SerializeField] private Transform dieEffectPrefab;
+    private Transform dieEffect;
     private float hp;
     private IEnemyMovePattern movePattern;
     private bool isInited;
@@ -14,10 +17,17 @@ public partial class Enemy : MonoBehaviour, IEntity
     private Vector2 startPosition;
     
     private Rigidbody2D rigid;
+    private SpriteRenderer sprite;
+    private CapsuleCollider2D capsule;
+    [SerializeField] private float deathBlinkDuration = 1f;
+    [SerializeField] private float deathBlinkInterval = 0.1f;
+
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
+        capsule = GetComponent<CapsuleCollider2D>();
     }
 
     private void FixedUpdate()
@@ -55,6 +65,11 @@ public partial class Enemy : MonoBehaviour, IEntity
         }
     }
 
+    private void OnEnable()
+    {
+        capsule.enabled = true;
+    }
+
     private void OnDisable()
     {
         isInited = false;
@@ -87,8 +102,44 @@ public partial class Enemy : MonoBehaviour, IEntity
         hp -= damage;
         if (hp <= 0)
         {
-            OnDeath?.Invoke();
-            PoolManager.Instance.Return(this);
+            OnHpZero();
         }
+    }
+
+    private void OnHpZero()
+    {
+        isInited = false;
+        PoolManager.Instance.CreatePool(dieEffectPrefab);
+        dieEffect = PoolManager.Instance.Get(dieEffectPrefab);
+        dieEffect.SetParent(transform);
+        dieEffect.localPosition = Vector3.zero;
+
+        capsule.enabled = false;
+        StartCoroutine(BlinkThenDie());
+    }
+    
+    private IEnumerator BlinkThenDie()
+    {
+        float elapsed = 0f;
+        bool visible = true;
+
+        while (elapsed < deathBlinkDuration)
+        {
+            visible = !visible;
+            sprite.enabled = visible;
+
+            yield return new WaitForSeconds(deathBlinkInterval);
+            elapsed += deathBlinkInterval;
+        }
+        sprite.enabled = true; // 마지막엔 켜진 상태로
+        Die();
+    }
+
+    private void Die()
+    {
+        OnDeath?.Invoke();
+        dieEffect.SetParent(null);
+        PoolManager.Instance.Return(dieEffect);
+        PoolManager.Instance.Return(this);
     }
 }

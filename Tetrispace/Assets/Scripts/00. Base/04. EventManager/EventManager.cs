@@ -15,9 +15,6 @@ using UnityEngine;
 public class EventManager : Singleton<EventManager>
 {
     #region 플레이어 관련 이벤트
-    /// <summary>
-    /// 플레이어 HP가 변경될 때 발생하는 이벤트
-    /// 
     ///사용 예시:
     /// - HP UI 업데이트
     /// - 체력 낮을 때 화면 빨갛게
@@ -64,6 +61,7 @@ public class EventManager : Singleton<EventManager>
     }
     #endregion
 
+
     #region 보스 관련 이벤트
 
     /// <summary>
@@ -79,26 +77,27 @@ public class EventManager : Singleton<EventManager>
     /// 
     /// 발생 방법:
     /// EventManager.Instance.BossLightningQTE(2.0f); // 2초 제한
+
+
     /// </summary>
-    public event Action<Tetrimino.TetrominoType> onTetrominoSpawned;
+    /// <summary>
+    /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
+    /// </summary>
+    /// <param name="tetrominoType">������ ��Ʈ���̳� Ÿ��</param>
+    //public void TetrominoSpawned(Tetrimino.TetrominoType tetrominoType);
 
-    public event Action<Tetrimino.TetrominoType, Vector2Int> onTetrominoLocked;
-
+    /// 보스 번개 QTE 이벤트를 발생시키는 메서드
+    /// </summary>
+    /// <param name="duration">QTE 제한 시간 (초)</param>
+    public void BossLightningQTE(float duration)
+    {
+        //onTetrominoSpawned?.Invoke(tetrominoType);
+        //Debug.Log($"[Event] ��Ʈ���̳� ����: {tetrominoType}");
+    }
 
     /// <summary>
 
-    /// ��Ʈ���̳밡 ����(����)�� �� �߻��ϴ� �̺�Ʈ
-    /// 
-    /// ��� ����:
-    /// - ���� ȿ���� ���
-    /// - ȭ�� ����
-    /// - ���� ���� �غ�
-    /// 
-    /// ���� ���:
-    //EventManager.Instance.onTetrominoLocked += OnBlockLocked;
-    ///// 
-    ///// �߻� ���:
-    // EventManager.Instance.TetrominoLocked(tetrominoType, position);
+
     /// QTE 완료 시 발생하는 이벤트 (성공/실패 결과 포함)
     /// 
     /// 사용 예시:
@@ -111,20 +110,9 @@ public class EventManager : Singleton<EventManager>
     /// 발생 방법:
     /// EventManager.Instance.QTECompleted(true);  // 성공
     /// EventManager.Instance.QTECompleted(false); // 실패
-    /// </summary>
 
-    /// <summary>
-    /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
-    /// </summary>
-    /// <param name="tetrominoType">������ ��Ʈ���̳� Ÿ��</param>
-    /// <param name="position">���� ��ġ</param>
-    public void TetrominoLocked(Tetrimino.TetrominoType tetrominoType, Vector2Int position)
-    {
-        onTetrominoLocked?.Invoke(tetrominoType, position);
-        Debug.Log($"[Event] ��Ʈ���̳� ����: {tetrominoType} at {position}");
-    }
 
-    /// <summary>
+
     /// ���� Ŭ���� �̺�Ʈ (Ŭ����� ���� ���� ��ġ ����)
     /// 
     /// ��� ����:
@@ -266,16 +254,18 @@ public class EventManager : Singleton<EventManager>
     #endregion
 
 
-    #region === ������� ���� �̺�Ʈ ===
 
     #region 게임잼용 추가 이벤트 (필요시 주석 해제하고 사용)
 
-
     /// <summary>
 
+    /// 점수 변경 이벤트 - 점수 UI 업데이트용
     /// </summary>
     public event Action<int> onScoreChanged;
 
+    /// <summary>
+    /// 적 처치 이벤트 - 킬 카운트, 콤보 시스템용
+    /// </summary>
 
     /// <param name="newScore">���ο� ����</param>
     public void ScoreChanged(int newScore)
@@ -286,6 +276,7 @@ public class EventManager : Singleton<EventManager>
 
     /// <summary>
 
+    /// 게임 시작 이벤트 - BGM 재생, UI 초기화용
     /// </summary>
     public event Action onGameStart;
 
@@ -299,6 +290,9 @@ public class EventManager : Singleton<EventManager>
     }
 
     /// <summary>
+
+
+    /// 게임 오버 이벤트 - 결과 화면, 점수 저장용
     /// </summary>
     public event Action onGameOver;
 
@@ -332,6 +326,9 @@ public class EventManager : Singleton<EventManager>
     }
 
     /// <summary>
+
+    /// 아이템 수집 이벤트 - 인벤토리, 효과음용
+
     /// </summary>
     public event Action<string, int> onItemCollected;
 
@@ -449,6 +446,7 @@ public class EventManager : Singleton<EventManager>
         Debug.Log("=== EventManager ������ �� ===");
         Debug.Log($"��Ʈ���̳� ����: {onTetrominoSpawned?.GetInvocationList().Length ?? 0}");
         Debug.Log($"��Ʈ���̳� ����: {onTetrominoLocked?.GetInvocationList().Length ?? 0}");
+
         Debug.Log($"���� Ŭ����: {onLinesCleared?.GetInvocationList().Length ?? 0}");
         Debug.Log($"������: {onTetrisLevelUp?.GetInvocationList().Length ?? 0}");
         Debug.Log($"���� ����: {onTetrisGameOver?.GetInvocationList().Length ?? 0}");
@@ -463,11 +461,15 @@ public class EventManager : Singleton<EventManager>
     {
         Debug.Log("=== �׽�Ʈ �̺�Ʈ �߻� ===");
         //TetrominoSpawned(Tetrimino.TetrominoType.T);
+
+       // TetrominoSpawned(Tetrimino.TetrominoType.T);
+
         ScoreChanged(1000);
         PlaySFX("TestSound");
         Debug.Log("�׽�Ʈ �̺�Ʈ �߻� �Ϸ�");
     }
 
     #endregion
+    
     #endregion
 }

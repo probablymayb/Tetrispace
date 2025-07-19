@@ -37,31 +37,10 @@ public class MainCamera : MonoBehaviour
             Debug.Log(GridSystem.GridMiddlePos);
             Debug.Log(GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y));
         }
+        else if (Input.GetKeyDown(KeyCode.K))
+        { 
+            TetriminoManager.Instance.SpawnUselessBlock();
+        }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            GridSystem.GridPos.x += 1;
-            Debug.Log(GridSystem.GridPos);
-            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
-
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            GridSystem.GridPos.x -= 1;
-            Debug.Log(GridSystem.GridPos);
-            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            GridSystem.GridPos.y += 1;
-            Debug.Log(GridSystem.GridPos);
-            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            GridSystem.GridPos.y -= 1;
-            Debug.Log(GridSystem.GridPos);
-            Debug.Log(GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y));
-        }
     }
 }

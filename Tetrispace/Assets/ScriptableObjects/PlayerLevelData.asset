@@ -27,10 +27,10 @@ MonoBehaviour:
     - 4
   - enforcement: 2
     valueByLevel:
-    - 3
-    - 4
-    - 5
+    - 8
     - 10
+    - 12
+    - 14
   - enforcement: 3
     valueByLevel:
     - 0

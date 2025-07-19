@@ -12,8 +12,8 @@ public class ZMovePattern : IEnemyMovePattern
         rigid = rigidBody;
         moveSpeed = speed;
 
-        float dx = 7f;
-        float dy = 5f;
+        float dx = GridSystem.WorldUnitsPerGridX * 7f;
+        float dy = GridSystem.WorldUnitsPerGridY * 3f;
 
         // 시작 지점 중심으로 평행사변형 형태 경로 정의
         points = new Vector2[]
