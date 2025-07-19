@@ -2404,8 +2404,8 @@
     "m_ObjectId": "5092879ff4a6484b9b44f407a721b090",
     "m_Title": "ALpha",
     "m_Position": {
-        "x": 897.0,
-        "y": 314.0
+        "x": 896.9998168945313,
+        "y": 314.0000915527344
     }
 }
 
@@ -2664,7 +2664,7 @@
     "m_ObjectId": "5ec071d1f9cf4d748d92628677c20b3e",
     "m_Title": "noise_scroll",
     "m_Position": {
-        "x": -1385.0,
+        "x": -1385.0001220703125,
         "y": -231.0
     }
 }
@@ -2833,7 +2833,7 @@
     "m_ObjectId": "64053a861aac499c9d557c6c14c35b39",
     "m_Title": "Second_color'",
     "m_Position": {
-        "x": 321.0,
+        "x": 320.9998474121094,
         "y": -392.0
     }
 }
@@ -3677,7 +3677,7 @@
     "m_ObjectId": "8ee1fce923be426aa82ac99b92ea78b7",
     "m_Title": "Emissive_Power",
     "m_Position": {
-        "x": 1409.0,
+        "x": 1408.999755859375,
         "y": -127.0
     }
 }
@@ -4113,7 +4113,7 @@
     "m_Title": "nnoise_mask",
     "m_Position": {
         "x": -970.0000610351563,
-        "y": 216.0
+        "y": 216.0000457763672
     }
 }
 
@@ -4958,7 +4958,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "c6c44f062cf1400bb3de8f9ab3c12ba4",
     "m_Id": 0,
-    "m_DisplayName": "Noise_Mask_int",
+    "m_DisplayName": "Noise_int",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
