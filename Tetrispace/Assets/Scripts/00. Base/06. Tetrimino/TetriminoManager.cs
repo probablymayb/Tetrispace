@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections;
 
 /// <summary>
-/// Å×Æ®¸®¹Ì³ë ¸Å´ÏÀú °£´Ü ¹öÀü (UselessBlock ±×¸®µå µî·Ï, ¶óÀÎ Å¬¸®¾î¸¸ Á¦¿Ü)
+/// í…ŒíŠ¸ë¦¬ë¯¸ë…¸ ë§¤ë‹ˆì € ê°„ë‹¨ ë²„ì „ (UselessBlock ê·¸ë¦¬ë“œ ë“±ë¡, ë¼ì¸ í´ë¦¬ì–´ë§Œ ì œì™¸)
 /// 
-/// ÁÖ¿ä ±â´É:
-/// 1. UselessBlockµµ ±×¸®µå¿¡ Á¤»ó µî·Ï
-/// 2. ¶óÀÎ Å¬¸®¾î Ã¼Å©¿¡¼­¸¸ UselessBlock Á¦¿Ü
-/// 3. ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ¿¡ ÀÚµ¿À¸·Î µû¶ó´Ù´Ô
-/// 4. 10ÃÊ ÈÄ ÀÚµ¿ »èÁ¦
+/// ì£¼ìš” ê¸°ëŠ¥:
+/// 1. UselessBlockë„ ê·¸ë¦¬ë“œì— ì •ìƒ ë“±ë¡
+/// 2. ë¼ì¸ í´ë¦¬ì–´ ì²´í¬ì—ì„œë§Œ UselessBlock ì œì™¸
+/// 3. í”Œë ˆì´ì–´ ì›€ì§ì„ì— ìë™ìœ¼ë¡œ ë”°ë¼ë‹¤ë‹˜
+/// 4. 10ì´ˆ í›„ ìë™ ì‚­ì œ
 /// </summary>
 public class TetriminoManager : Singleton<TetriminoManager>
 {
@@ -23,15 +23,15 @@ public class TetriminoManager : Singleton<TetriminoManager>
     private Vector3 gridOrigin;
     [SerializeField] private float cellSize = 1f;
 
-    // ±×¸®µå ÀÌµ¿ Áß Æ®¸®°Å ÀÌº¥Æ® ¹«½Ã¸¦ À§ÇÑ ÇÃ·¡±×
+    // ê·¸ë¦¬ë“œ ì´ë™ ì¤‘ íŠ¸ë¦¬ê±° ì´ë²¤íŠ¸ ë¬´ì‹œë¥¼ ìœ„í•œ í”Œë˜ê·¸
     public bool IsGridMoving { get; private set; } = false;
 
-    // ÆÄ±« ¿¹Á¤ ºí·ÏµéÀ» ÃßÀû (Áßº¹ ÆÄ±« ¹®Á¦ ÇØ°á)
+    // íŒŒê´´ ì˜ˆì • ë¸”ë¡ë“¤ì„ ì¶”ì  (ì¤‘ë³µ íŒŒê´´ ë¬¸ì œ í•´ê²°)
     private HashSet<GameObject> pendingDestroy = new HashSet<GameObject>();
-    // UselessBlock À§Ä¡ ÃßÀû ¹è¿­ Ãß°¡
+    // UselessBlock ìœ„ì¹˜ ì¶”ì  ë°°ì—´ ì¶”ê°€
     private bool[,] uselessBlockPositions = new bool[4, 5];
 
-    // Àü¿ª °ÔÀÓ¿À¹ö »óÅÂ °ü¸®
+    // ì „ì—­ ê²Œì„ì˜¤ë²„ ìƒíƒœ ê´€ë¦¬
     private bool _globalGameOver = false;
     public bool IsGameOver
     {
@@ -41,7 +41,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
             if (_globalGameOver != value)
             {
                 _globalGameOver = value;
-                Debug.Log($"Àü¿ª °ÔÀÓ¿À¹ö »óÅÂ º¯°æ: {value}");
+                Debug.Log($"ì „ì—­ ê²Œì„ì˜¤ë²„ ìƒíƒœ ë³€ê²½: {value}");
 
                 if (value)
                 {
@@ -51,12 +51,12 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
     }
 
-    [Header("=== UselessBlock ½Ã½ºÅÛ ===")]
-    [SerializeField] private GameObject uselessBlockPrefab; // IÀÚÇü UselessBlock ÇÁ¸®ÆÕ
+    [Header("=== UselessBlock ì‹œìŠ¤í…œ ===")]
+    [SerializeField] private GameObject uselessBlockPrefab; // Iìí˜• UselessBlock í”„ë¦¬íŒ¹
     [SerializeField] private float uselessBlockLifetime = 10f;
     [SerializeField] private bool showUselessBlockWarning = true;
 
-    // UselessBlock °ü¸® (°£´ÜÇÏ°Ô)
+    // UselessBlock ê´€ë¦¬ (ê°„ë‹¨í•˜ê²Œ)
     private List<UselessBlock> activeUselessBlocks = new List<UselessBlock>();
 
     protected override void Awake()
@@ -68,40 +68,40 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ºí·ÏÀ» ±×¸®µå¿¡ µî·Ï (UselessBlockµµ Æ÷ÇÔ)
+    /// ë¸”ë¡ì„ ê·¸ë¦¬ë“œì— ë“±ë¡ (UselessBlockë„ í¬í•¨)
     /// </summary>
     public void RegisterBlock(Vector2Int gridPos, GameObject block)
     {
         if (IsInsideGrid(gridPos) && !pendingDestroy.Contains(block))
         {
-            // ±âÁ¸ ºí·ÏÀÌ ÀÖ´Ù¸é °æ°í Ãâ·Â
+            // ê¸°ì¡´ ë¸”ë¡ì´ ìˆë‹¤ë©´ ê²½ê³  ì¶œë ¥
             if (gridArray[gridPos.x, gridPos.y] != null)
             {
                 Debug.LogWarning($"Grid position {gridPos} already occupied! Replacing...");
             }
 
-            Debug.Log($"Registering block at {gridPos}: {block.name} (ÅÂ±×: {block.tag})");
+            Debug.Log($"Registering block at {gridPos}: {block.name} (íƒœê·¸: {block.tag})");
             gridArray[gridPos.x, gridPos.y] = block;
 
-            // ºí·Ï »óÅÂ ¼³Á¤ (UselessBlockÀÌµç ÀÏ¹İ ºí·ÏÀÌµç µ¿ÀÏÇÏ°Ô)
+            // ë¸”ë¡ ìƒíƒœ ì„¤ì • (UselessBlockì´ë“  ì¼ë°˜ ë¸”ë¡ì´ë“  ë™ì¼í•˜ê²Œ)
             if (block.CompareTag("UselessBlock"))
             {
-                // UselessBlockÀº ÅÂ±× À¯Áö
-                Debug.Log($"UselessBlock ±×¸®µå µî·Ï: {block.name}");
+                // UselessBlockì€ íƒœê·¸ ìœ ì§€
+                Debug.Log($"UselessBlock ê·¸ë¦¬ë“œ ë“±ë¡: {block.name}");
             }
             else
             {
                 block.tag = "LockedBlock";
             }
 
-            // Äİ¶óÀÌ´õ È°¼ºÈ­
+            // ì½œë¼ì´ë” í™œì„±í™”
             Collider2D collider = block.GetComponent<Collider2D>();
             if (collider != null)
             {
                 collider.enabled = true;
             }
 
-            // ¸Ç À§Ä­¿¡ ºí·ÏÀÌ µî·ÏµÇ¸é °ÔÀÓ¿À¹ö »óÅÂ Ã¼Å©
+            // ë§¨ ìœ„ì¹¸ì— ë¸”ë¡ì´ ë“±ë¡ë˜ë©´ ê²Œì„ì˜¤ë²„ ìƒíƒœ ì²´í¬
             if (gridPos.y == height - 1)
             {
                 CheckAndUpdateGameOverState();
@@ -110,47 +110,47 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// °ÔÀÓ¿À¹ö »óÅÂ Ã¼Å© ¹× ¾÷µ¥ÀÌÆ®
+    /// ê²Œì„ì˜¤ë²„ ìƒíƒœ ì²´í¬ ë° ì—…ë°ì´íŠ¸
     /// </summary>
     private void CheckAndUpdateGameOverState()
     {
         bool hasTopRowBlocks = false;
 
-        // ¸Ç À§Ä­¿¡ ºí·ÏÀÌ ÀÖ´ÂÁö È®ÀÎ (UselessBlockµµ Æ÷ÇÔ)
+        // ë§¨ ìœ„ì¹¸ì— ë¸”ë¡ì´ ìˆëŠ”ì§€ í™•ì¸ (UselessBlockë„ í¬í•¨)
         for (int x = 0; x < width; x++)
         {
             if (IsLocked(x, height - 1))
             {
                 hasTopRowBlocks = true;
-                Debug.Log($"¸Ç À§Ä­ Grid({x}, {height - 1})¿¡ ºí·Ï ¹ß°ß");
+                Debug.Log($"ë§¨ ìœ„ì¹¸ Grid({x}, {height - 1})ì— ë¸”ë¡ ë°œê²¬");
                 break;
             }
         }
 
-        // °ÔÀÓ¿À¹ö »óÅÂ ¾÷µ¥ÀÌÆ®
+        // ê²Œì„ì˜¤ë²„ ìƒíƒœ ì—…ë°ì´íŠ¸
         IsGameOver = hasTopRowBlocks;
 
         if (hasTopRowBlocks)
         {
-            Debug.Log("¸Ç À§Ä­¿¡ ºí·ÏÀÌ ÀÖÀ½ - °ÔÀÓ¿À¹ö Á¶°Ç È°¼ºÈ­");
+            Debug.Log("ë§¨ ìœ„ì¹¸ì— ë¸”ë¡ì´ ìˆìŒ - ê²Œì„ì˜¤ë²„ ì¡°ê±´ í™œì„±í™”");
         }
         else
         {
-            Debug.Log("¸Ç À§Ä­ ºñ¾îÀÖÀ½ - °ÔÀÓ¿À¹ö Á¶°Ç ÇØÁ¦");
+            Debug.Log("ë§¨ ìœ„ì¹¸ ë¹„ì–´ìˆìŒ - ê²Œì„ì˜¤ë²„ ì¡°ê±´ í•´ì œ");
         }
     }
 
     /// <summary>
-    /// °ÔÀÓ¿À¹ö ¹ß»ı ½Ã Ã³¸®
+    /// ê²Œì„ì˜¤ë²„ ë°œìƒ ì‹œ ì²˜ë¦¬
     /// </summary>
     private void OnGameOver()
     {
-        Debug.Log("=== °ÔÀÓ¿À¹ö ¹ß»ı ===");
-        // Ãß°¡ °ÔÀÓ¿À¹ö Ã³¸® ·ÎÁ÷ ¿©±â¿¡ ±¸Çö
+        Debug.Log("=== ê²Œì„ì˜¤ë²„ ë°œìƒ ===");
+        // ì¶”ê°€ ê²Œì„ì˜¤ë²„ ì²˜ë¦¬ ë¡œì§ ì—¬ê¸°ì— êµ¬í˜„
     }
 
     /// <summary>
-    /// ÇØ´ç À§Ä¡°¡ Àá°ÜÀÖ´ÂÁö È®ÀÎ (UselessBlockµµ Àá±ä °ÍÀ¸·Î ÀÎ½Ä)
+    /// í•´ë‹¹ ìœ„ì¹˜ê°€ ì ê²¨ìˆëŠ”ì§€ í™•ì¸ (UselessBlockë„ ì ê¸´ ê²ƒìœ¼ë¡œ ì¸ì‹)
     /// </summary>
     public bool IsLocked(int x, int y)
     {
@@ -164,14 +164,14 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ¶óÀÎ Å¬¸®¾î¿ë Àá±è Ã¼Å© (UselessBlock Á¦¿Ü)
+    /// ë¼ì¸ í´ë¦¬ì–´ìš© ì ê¹€ ì²´í¬ (UselessBlock ì œì™¸)
     /// </summary>
     private bool IsLockedForLineClear(int x, int y)
     {
         if (x < 0 || x > width - 1 || y < 0 || y > height - 1)
             return true;
 
-        // ÇØ´ç À§Ä¡¿¡ UselessBlockÀÌ ÀÖÀ¸¸é ¶óÀÎ Å¬¸®¾î Á¦¿Ü
+        // í•´ë‹¹ ìœ„ì¹˜ì— UselessBlockì´ ìˆìœ¼ë©´ ë¼ì¸ í´ë¦¬ì–´ ì œì™¸
         if (uselessBlockPositions[x, y])
         {
             return false;
@@ -182,16 +182,16 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ¶óÀÎ Ã¼Å© ¹× Á¦°Å (UselessBlock Á¦¿Ü)
+    /// ë¼ì¸ ì²´í¬ ë° ì œê±° (UselessBlock ì œì™¸)
     /// </summary>
     public void CheckAndClearLines()
     {
-        // ±×¸®µå ÀÌµ¿ Áß¿¡´Â ¶óÀÎ Ã¼Å©ÇÏÁö ¾ÊÀ½
+        // ê·¸ë¦¬ë“œ ì´ë™ ì¤‘ì—ëŠ” ë¼ì¸ ì²´í¬í•˜ì§€ ì•ŠìŒ
         if (IsGridMoving) return;
 
         List<int> linesToClear = new List<int>();
 
-        // ¸ğµç Á¦°ÅÇÒ ¶óÀÎµéÀ» ¸ÕÀú Ã£±â (UselessBlock Á¦¿Ü)
+        // ëª¨ë“  ì œê±°í•  ë¼ì¸ë“¤ì„ ë¨¼ì € ì°¾ê¸° (UselessBlock ì œì™¸)
         for (int y = 0; y < height; y++)
         {
             bool isLineFull = true;
@@ -210,17 +210,17 @@ public class TetriminoManager : Singleton<TetriminoManager>
             }
         }
 
-        // ¶óÀÎ Á¦°Å ½ÇÇà
+        // ë¼ì¸ ì œê±° ì‹¤í–‰
         if (linesToClear.Count > 0)
         {
-            Debug.Log($"¶óÀÎ Å¬¸®¾î ¹ß»ı: {linesToClear.Count}ÁÙ (UselessBlock Á¦¿Ü)");
+            Debug.Log($"ë¼ì¸ í´ë¦¬ì–´ ë°œìƒ: {linesToClear.Count}ì¤„ (UselessBlock ì œì™¸)");
             StartCoroutine(ClearLinesCoroutine(linesToClear));
         }
     }
 
     public void ClearLine(int i)
     {
-        // ±×¸®µå ÀÌµ¿ Áß¿¡´Â ¶óÀÎ Ã¼Å©ÇÏÁö ¾ÊÀ½
+        // ê·¸ë¦¬ë“œ ì´ë™ ì¤‘ì—ëŠ” ë¼ì¸ ì²´í¬í•˜ì§€ ì•ŠìŒ
         if (IsGridMoving) return;
 
         List<int> linesToClear = new List<int>();
@@ -231,13 +231,13 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ¶óÀÎ Á¦°Å¸¦ ÄÚ·çÆ¾À¸·Î Ã³¸® (UselessBlock Á¦¿Ü)
+    /// ë¼ì¸ ì œê±°ë¥¼ ì½”ë£¨í‹´ìœ¼ë¡œ ì²˜ë¦¬ (UselessBlock ì œì™¸)
     /// </summary>
     private IEnumerator ClearLinesCoroutine(List<int> linesToClear)
     {
-        Debug.Log("=== ¶óÀÎ Å¬¸®¾î ½ÃÀÛ ===");
+        Debug.Log("=== ë¼ì¸ í´ë¦¬ì–´ ì‹œì‘ ===");
 
-        // Á¦°ÅÇÒ ºí·ÏµéÀ» ¸ÕÀú ºñÈ°¼ºÈ­ (UselessBlock Á¦¿Ü)
+        // ì œê±°í•  ë¸”ë¡ë“¤ì„ ë¨¼ì € ë¹„í™œì„±í™” (UselessBlock ì œì™¸)
         foreach (int y in linesToClear)
         {
             for (int x = 0; x < width; x++)
@@ -248,19 +248,19 @@ public class TetriminoManager : Singleton<TetriminoManager>
                     pendingDestroy.Add(block);
                     block.SetActive(false);
                     gridArray[x, y] = null;
-                    Debug.Log($"¶óÀÎ Å¬¸®¾î: Grid({x}, {y}) ºí·Ï Á¦°Å");
+                    Debug.Log($"ë¼ì¸ í´ë¦¬ì–´: Grid({x}, {y}) ë¸”ë¡ ì œê±°");
                 }
                 else if (block != null && block.CompareTag("UselessBlock"))
                 {
-                    Debug.Log($"UselessBlock À¯Áö: Grid({x}, {y}) - {block.name}");
+                    Debug.Log($"UselessBlock ìœ ì§€: Grid({x}, {y}) - {block.name}");
                 }
             }
         }
 
-        // ÇÑ ÇÁ·¹ÀÓ ´ë±â
+        // í•œ í”„ë ˆì„ ëŒ€ê¸°
         yield return null;
 
-        // ÆÄ±« ¿¹Á¤ ºí·Ïµé Á¤¸®
+        // íŒŒê´´ ì˜ˆì • ë¸”ë¡ë“¤ ì •ë¦¬
         foreach (GameObject block in pendingDestroy)
         {
             if (block != null)
@@ -270,20 +270,20 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
         pendingDestroy.Clear();
 
-        // À§ÂÊ ¶óÀÎµé µå·Ó (UselessBlockµµ ÇÔ²²)
+        // ìœ„ìª½ ë¼ì¸ë“¤ ë“œë¡­ (UselessBlockë„ í•¨ê»˜)
         foreach (int clearedY in linesToClear)
         {
             DropLinesAbove(clearedY);
         }
 
-        Debug.Log("=== ¶óÀÎ Å¬¸®¾î ¿Ï·á (UselessBlockÀº ¿µÇâ ¾øÀ½) ===");
+        Debug.Log("=== ë¼ì¸ í´ë¦¬ì–´ ì™„ë£Œ (UselessBlockì€ ì˜í–¥ ì—†ìŒ) ===");
 
-        // ¶óÀÎ Å¬¸®¾î ÈÄ °ÔÀÓ¿À¹ö »óÅÂ ÀçÃ¼Å©
+        // ë¼ì¸ í´ë¦¬ì–´ í›„ ê²Œì„ì˜¤ë²„ ìƒíƒœ ì¬ì²´í¬
         CheckAndUpdateGameOverState();
     }
 
     /// <summary>
-    /// À§ÂÊ ¶óÀÎµéÀ» ¾Æ·¡·Î ¶³¾î¶ß¸®±â (UselessBlockµµ ÇÔ²²)
+    /// ìœ„ìª½ ë¼ì¸ë“¤ì„ ì•„ë˜ë¡œ ë–¨ì–´ëœ¨ë¦¬ê¸° (UselessBlockë„ í•¨ê»˜)
     /// </summary>
     private void DropLinesAbove(int clearedY)
     {
@@ -294,19 +294,19 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 GameObject block = gridArray[x, y];
                 if (block != null && !pendingDestroy.Contains(block))
                 {
-                    // ±×¸®µå ¹è¿­ ¾÷µ¥ÀÌÆ®
+                    // ê·¸ë¦¬ë“œ ë°°ì—´ ì—…ë°ì´íŠ¸
                     gridArray[x, y - 1] = block;
                     gridArray[x, y] = null;
 
-                    // À§Ä¡ ÀÌµ¿
+                    // ìœ„ì¹˜ ì´ë™
                     block.transform.position += Vector3.down * cellSize;
 
-                    // ºí·Ï »óÅÂ ÀçÈ®ÀÎ ¹× ¾÷µ¥ÀÌÆ®
+                    // ë¸”ë¡ ìƒíƒœ ì¬í™•ì¸ ë° ì—…ë°ì´íŠ¸
                     UpdateBlockState(block);
 
                     if (block.CompareTag("UselessBlock"))
                     {
-                        Debug.Log($"UselessBlock µå·Ó: {block.name} to Grid({x}, {y - 1})");
+                        Debug.Log($"UselessBlock ë“œë¡­: {block.name} to Grid({x}, {y - 1})");
                     }
                 }
             }
@@ -314,19 +314,19 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ºí·Ï »óÅÂ ¾÷µ¥ÀÌÆ® (ÅÂ±×, Äİ¶óÀÌ´õ µî)
+    /// ë¸”ë¡ ìƒíƒœ ì—…ë°ì´íŠ¸ (íƒœê·¸, ì½œë¼ì´ë” ë“±)
     /// </summary>
     private void UpdateBlockState(GameObject block)
     {
         if (block != null)
         {
-            // UselessBlockÀÌ ¾Æ´Ñ °æ¿ì¸¸ ÅÂ±× º¯°æ
+            // UselessBlockì´ ì•„ë‹Œ ê²½ìš°ë§Œ íƒœê·¸ ë³€ê²½
             if (!block.CompareTag("UselessBlock"))
             {
                 block.tag = "LockedBlock";
             }
 
-            // Äİ¶óÀÌ´õ ÀçÈ°¼ºÈ­
+            // ì½œë¼ì´ë” ì¬í™œì„±í™”
             Collider2D collider = block.GetComponent<Collider2D>();
             if (collider != null)
             {
@@ -336,16 +336,16 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ÀüÃ¼ ±×¸®µå ÀÌµ¿ (UselessBlockµµ ÀÚµ¿À¸·Î ÇÔ²² ÀÌµ¿)
+    /// ì „ì²´ ê·¸ë¦¬ë“œ ì´ë™ (UselessBlockë„ ìë™ìœ¼ë¡œ í•¨ê»˜ ì´ë™)
     /// </summary>
     public void MoveEntireGrid(Vector3 moveDelta)
     {
         IsGridMoving = true;
 
-        // ÀÌ¹Ì ÀÌµ¿ÇÑ ¿ÀºêÁ§Æ® ÃßÀû
+        // ì´ë¯¸ ì´ë™í•œ ì˜¤ë¸Œì íŠ¸ ì¶”ì 
         HashSet<GameObject> movedObjects = new HashSet<GameObject>();
 
-        // 1. ±×¸®µå ¹è¿­ÀÇ ºí·Ïµé ÀÌµ¿
+        // 1. ê·¸ë¦¬ë“œ ë°°ì—´ì˜ ë¸”ë¡ë“¤ ì´ë™
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -362,7 +362,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ±×¸®µå ÀÌµ¿ ÇÃ·¡±× ¸®¼Â
+    /// ê·¸ë¦¬ë“œ ì´ë™ í”Œë˜ê·¸ ë¦¬ì…‹
     /// </summary>
     private IEnumerator ResetGridMovingFlag()
     {
@@ -371,22 +371,22 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// UselessBlock ¼ÒÈ¯ (IÀÚÇü, ¸Ç ¾Æ·¡ÁÙ)
+    /// UselessBlock ì†Œí™˜ (Iìí˜•, ë§¨ ì•„ë˜ì¤„)
     /// </summary>
     public void SpawnUselessBlock()
     {
         if (uselessBlockPrefab == null)
         {
-            Debug.LogError("uselessBlockPrefabÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù!");
+            Debug.LogError("uselessBlockPrefabì´ ì„¤ì •ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤!");
             return;
         }
         if (IsGridMoving)
         {
-            Debug.LogWarning("±×¸®µå ÀÌµ¿ Áß¿¡´Â UselessBlockÀ» »ı¼ºÇÒ ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogWarning("ê·¸ë¦¬ë“œ ì´ë™ ì¤‘ì—ëŠ” UselessBlockì„ ìƒì„±í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             return;
         }
 
-        // ¸Ç ¾Æ·¡ÁÙÀÌ ºñ¾îÀÖ´ÂÁö È®ÀÎ
+        // ë§¨ ì•„ë˜ì¤„ì´ ë¹„ì–´ìˆëŠ”ì§€ í™•ì¸
         bool canSpawn = true;
         for (int x = 0; x < width; x++)
         {
@@ -399,24 +399,24 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         if (!canSpawn)
         {
-            Debug.Log("¸Ç ¾Æ·¡ÁÙÀÌ Â÷¼­ ±âÁ¸ ¶óÀÎµéÀ» À§·Î ¿Ã¸³´Ï´Ù!");
+            Debug.Log("ë§¨ ì•„ë˜ì¤„ì´ ì°¨ì„œ ê¸°ì¡´ ë¼ì¸ë“¤ì„ ìœ„ë¡œ ì˜¬ë¦½ë‹ˆë‹¤!");
             StartCoroutine(PushUpAndSpawnUselessBlockCoroutine());
         }
         else
         {
-            Debug.Log("=== UselessBlock ¼ÒÈ¯ ½ÃÀÛ ===");
+            Debug.Log("=== UselessBlock ì†Œí™˜ ì‹œì‘ ===");
             StartCoroutine(SpawnUselessBlockCoroutine());
         }
     }
 
     /// <summary>
-    /// ±âÁ¸ ¶óÀÎµéÀ» À§·Î ¿Ã¸®°í UselessBlock ¼ÒÈ¯
+    /// ê¸°ì¡´ ë¼ì¸ë“¤ì„ ìœ„ë¡œ ì˜¬ë¦¬ê³  UselessBlock ì†Œí™˜
     /// </summary>
     private IEnumerator PushUpAndSpawnUselessBlockCoroutine()
     {
-        Debug.Log("=== ¶óÀÎ À§·Î ¿Ã¸®±â ½ÃÀÛ ===");
+        Debug.Log("=== ë¼ì¸ ìœ„ë¡œ ì˜¬ë¦¬ê¸° ì‹œì‘ ===");
 
-        // ¸Ç À§ÁÙ Ã¼Å© (°ÔÀÓ¿À¹ö ¹æÁö)
+        // ë§¨ ìœ„ì¤„ ì²´í¬ (ê²Œì„ì˜¤ë²„ ë°©ì§€)
         bool topRowHasBlocks = false;
         for (int x = 0; x < width; x++)
         {
@@ -429,92 +429,92 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         if (topRowHasBlocks)
         {
-            Debug.LogWarning("¸Ç À§ÁÙ¿¡ ºí·ÏÀÌ ÀÖ¾î¼­ ´õ ÀÌ»ó ¿Ã¸± ¼ö ¾ø½À´Ï´Ù! °ÔÀÓ¿À¹ö!");
-            // °ÔÀÓ¿À¹ö Ã³¸®
+            Debug.LogWarning("ë§¨ ìœ„ì¤„ì— ë¸”ë¡ì´ ìˆì–´ì„œ ë” ì´ìƒ ì˜¬ë¦´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤! ê²Œì„ì˜¤ë²„!");
+            // ê²Œì„ì˜¤ë²„ ì²˜ë¦¬
             CheckAndUpdateGameOverState();
             yield break;
         }
 
-        // À§¿¡¼­ºÎÅÍ ¾Æ·¡·Î ¸ğµç ¶óÀÎÀ» ÇÑ Ä­¾¿ À§·Î ÀÌµ¿
-        for (int y = height - 1; y >= 1; y--) // ¸Ç À§(height-1)ºÎÅÍ Y=1±îÁö
+        // ìœ„ì—ì„œë¶€í„° ì•„ë˜ë¡œ ëª¨ë“  ë¼ì¸ì„ í•œ ì¹¸ì”© ìœ„ë¡œ ì´ë™
+        for (int y = height - 1; y >= 1; y--) // ë§¨ ìœ„(height-1)ë¶€í„° Y=1ê¹Œì§€
         {
             for (int x = 0; x < width; x++)
             {
-                GameObject blockBelow = gridArray[x, y - 1]; // ¾Æ·¡ÂÊ ºí·Ï
+                GameObject blockBelow = gridArray[x, y - 1]; // ì•„ë˜ìª½ ë¸”ë¡
 
                 if (blockBelow != null && !pendingDestroy.Contains(blockBelow))
                 {
-                    // ±×¸®µå ¹è¿­ ¾÷µ¥ÀÌÆ®
+                    // ê·¸ë¦¬ë“œ ë°°ì—´ ì—…ë°ì´íŠ¸
                     gridArray[x, y] = blockBelow;
                     gridArray[x, y - 1] = null;
 
-                    // ½ÇÁ¦ À§Ä¡ ÀÌµ¿
+                    // ì‹¤ì œ ìœ„ì¹˜ ì´ë™
                     blockBelow.transform.position += Vector3.up * cellSize;
 
-                    // UselessBlock À§Ä¡ ¸¶Å·µµ ÇÔ²² ÀÌµ¿
+                    // UselessBlock ìœ„ì¹˜ ë§ˆí‚¹ë„ í•¨ê»˜ ì´ë™
                     if (uselessBlockPositions[x, y - 1])
                     {
                         uselessBlockPositions[x, y] = true;
                         uselessBlockPositions[x, y - 1] = false;
                     }
 
-                    Debug.Log($"ºí·Ï À§·Î ÀÌµ¿: {blockBelow.name} from Grid({x}, {y - 1}) to Grid({x}, {y})");
+                    Debug.Log($"ë¸”ë¡ ìœ„ë¡œ ì´ë™: {blockBelow.name} from Grid({x}, {y - 1}) to Grid({x}, {y})");
                 }
                 else
                 {
-                    // ºó °ø°£Àº ±×´ë·Î ºó °ø°£À¸·Î
+                    // ë¹ˆ ê³µê°„ì€ ê·¸ëŒ€ë¡œ ë¹ˆ ê³µê°„ìœ¼ë¡œ
                     gridArray[x, y] = null;
                     uselessBlockPositions[x, y] = false;
                 }
             }
         }
 
-        // ¸Ç ¾Æ·¡ÁÙ(Y=0) ¿ÏÀüÈ÷ ºñ¿ì±â
+        // ë§¨ ì•„ë˜ì¤„(Y=0) ì™„ì „íˆ ë¹„ìš°ê¸°
         for (int x = 0; x < width; x++)
         {
             gridArray[x, 0] = null;
             uselessBlockPositions[x, 0] = false;
         }
 
-        Debug.Log("=== ¶óÀÎ À§·Î ¿Ã¸®±â ¿Ï·á ===");
+        Debug.Log("=== ë¼ì¸ ìœ„ë¡œ ì˜¬ë¦¬ê¸° ì™„ë£Œ ===");
 
-        // ÇÑ ÇÁ·¹ÀÓ ´ë±â
+        // í•œ í”„ë ˆì„ ëŒ€ê¸°
         yield return null;
 
-        // ÀÌÁ¦ ¸Ç ¾Æ·¡ÁÙÀÌ ºñ¾úÀ¸¹Ç·Î UselessBlock ¼ÒÈ¯
-        Debug.Log("=== UselessBlock ¼ÒÈ¯ ½ÃÀÛ (¶óÀÎ ¿Ã¸®±â ÈÄ) ===");
+        // ì´ì œ ë§¨ ì•„ë˜ì¤„ì´ ë¹„ì—ˆìœ¼ë¯€ë¡œ UselessBlock ì†Œí™˜
+        Debug.Log("=== UselessBlock ì†Œí™˜ ì‹œì‘ (ë¼ì¸ ì˜¬ë¦¬ê¸° í›„) ===");
         yield return StartCoroutine(SpawnUselessBlockCoroutine());
     }
 
     /// <summary>
-    /// UselessBlock ¼ÒÈ¯ ÄÚ·çÆ¾ (±âÁ¸°ú µ¿ÀÏ)
+    /// UselessBlock ì†Œí™˜ ì½”ë£¨í‹´ (ê¸°ì¡´ê³¼ ë™ì¼)
     /// </summary>
     private IEnumerator SpawnUselessBlockCoroutine()
     {
         if (showUselessBlockWarning)
         {
-            Debug.Log("UselessBlockÀÌ ¼ÒÈ¯µË´Ï´Ù!");
+            Debug.Log("UselessBlockì´ ì†Œí™˜ë©ë‹ˆë‹¤!");
             yield return new WaitForSeconds(0.5f);
         }
 
         gridOrigin = gridOriginTransform.position;
 
-        // IÀÚÇü ºí·Ï Á¤È®ÇÑ Áß¾Ó À§Ä¡
+        // Iìí˜• ë¸”ë¡ ì •í™•í•œ ì¤‘ì•™ ìœ„ì¹˜
         Vector3 spawnPosition = gridOrigin + new Vector3(2f * cellSize, 0.5f * cellSize, 0f);
-        Debug.Log("UselessBlock Æ÷Áö¼Ç " + spawnPosition);
+        Debug.Log("UselessBlock í¬ì§€ì…˜ " + spawnPosition);
 
-        // UselessBlock »ı¼º
+        // UselessBlock ìƒì„±
         GameObject uselessBlockObj = Instantiate(uselessBlockPrefab, spawnPosition, Quaternion.identity);
         uselessBlockObj.name = $"UselessBlock_I_{Time.time:F1}";
 
-        // UselessBlock ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+        // UselessBlock ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
         UselessBlock uselessBlockComponent = uselessBlockObj.GetComponent<UselessBlock>();
         if (uselessBlockComponent == null)
         {
             uselessBlockComponent = uselessBlockObj.AddComponent<UselessBlock>();
         }
 
-        // Áï½Ã ±×¸®µå µî·Ï ¿Ï·á
+        // ì¦‰ì‹œ ê·¸ë¦¬ë“œ ë“±ë¡ ì™„ë£Œ
         for (int x = 0; x < width; x++)
         {
             Vector2Int gridPos = new Vector2Int(x, 0);
@@ -522,28 +522,28 @@ public class TetriminoManager : Singleton<TetriminoManager>
             uselessBlockPositions[x, 0] = true;
         }
 
-        // ±×¸®µå µî·Ï ¿Ï·á ÈÄ °ü¸® ¸ñ·Ï¿¡ Ãß°¡
+        // ê·¸ë¦¬ë“œ ë“±ë¡ ì™„ë£Œ í›„ ê´€ë¦¬ ëª©ë¡ì— ì¶”ê°€
         activeUselessBlocks.Add(uselessBlockComponent);
 
-        // ÇÑ ÇÁ·¹ÀÓ ´ë±â·Î È®½ÇÇÑ µî·Ï º¸Àå
+        // í•œ í”„ë ˆì„ ëŒ€ê¸°ë¡œ í™•ì‹¤í•œ ë“±ë¡ ë³´ì¥
         yield return null;
 
-        Debug.Log($"UselessBlock »ı¼º ¹× ±×¸®µå µî·Ï ¿Ï·á: {uselessBlockObj.name}");
-        Debug.Log("=== UselessBlock ¼ÒÈ¯ ¿Ï·á ===");
+        Debug.Log($"UselessBlock ìƒì„± ë° ê·¸ë¦¬ë“œ ë“±ë¡ ì™„ë£Œ: {uselessBlockObj.name}");
+        Debug.Log("=== UselessBlock ì†Œí™˜ ì™„ë£Œ ===");
 
-        // ¶óÀÎ ¿Ã¸®±â ÈÄ °ÔÀÓ¿À¹ö »óÅÂ Ã¼Å©
+        // ë¼ì¸ ì˜¬ë¦¬ê¸° í›„ ê²Œì„ì˜¤ë²„ ìƒíƒœ ì²´í¬
         CheckAndUpdateGameOverState();
     }
 
     /// <summary>
-    /// UselessBlock ¼ÒÈ¯ ÄÚ·çÆ¾
+    /// UselessBlock ì†Œí™˜ ì½”ë£¨í‹´
     /// </summary>
     /// <summary>
-    /// UselessBlock ¼ÒÈ¯ ÄÚ·çÆ¾ (Áï½Ã ¿Ï·á º¸Àå)
+    /// UselessBlock ì†Œí™˜ ì½”ë£¨í‹´ (ì¦‰ì‹œ ì™„ë£Œ ë³´ì¥)
     /// </summary>
 
     /// <summary>
-    /// UselessBlockÀÌ »èÁ¦µÉ ¶§ ±×¸®µå¿¡¼­ Á¦°Å
+    /// UselessBlockì´ ì‚­ì œë  ë•Œ ê·¸ë¦¬ë“œì—ì„œ ì œê±°
     /// </summary>
     public void RemoveUselessBlockFromGrid(UselessBlock uselessBlock)
     {
@@ -551,7 +551,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         GameObject uselessBlockObj = uselessBlock.gameObject;
 
-        // UselessBlock À§Ä¡ ÇØÁ¦
+        // UselessBlock ìœ„ì¹˜ í•´ì œ
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -559,29 +559,29 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 if (gridArray[x, y] == uselessBlockObj)
                 {
                     gridArray[x, y] = null;
-                    uselessBlockPositions[x, y] = false; // À§Ä¡ ¸¶Å· ÇØÁ¦
+                    uselessBlockPositions[x, y] = false; // ìœ„ì¹˜ ë§ˆí‚¹ í•´ì œ
                 }
             }
         }
 
-        // °ü¸® ¸ñ·Ï¿¡¼­ Á¦°Å
+        // ê´€ë¦¬ ëª©ë¡ì—ì„œ ì œê±°
         activeUselessBlocks.Remove(uselessBlock);
 
-        Debug.Log($"UselessBlock ¿ÏÀü Á¦°Å: {uselessBlock.name}");
+        Debug.Log($"UselessBlock ì™„ì „ ì œê±°: {uselessBlock.name}");
 
-        // ¶óÀÎ Å¬¸®¾î Ã¼Å© (ºó °ø°£ÀÌ »ı°åÀ» ¼ö ÀÖÀ½)
+        // ë¼ì¸ í´ë¦¬ì–´ ì²´í¬ (ë¹ˆ ê³µê°„ì´ ìƒê²¼ì„ ìˆ˜ ìˆìŒ)
         CheckAndClearLines();
 
-        // °ÔÀÓ¿À¹ö »óÅÂ ÀçÃ¼Å©
+        // ê²Œì„ì˜¤ë²„ ìƒíƒœ ì¬ì²´í¬
         CheckAndUpdateGameOverState();
     }
 
     /// <summary>
-    /// ¸ğµç UselessBlock Áï½Ã Á¦°Å
+    /// ëª¨ë“  UselessBlock ì¦‰ì‹œ ì œê±°
     /// </summary>
     public void RemoveAllUselessBlocks()
     {
-        Debug.Log("=== ¸ğµç UselessBlock Áï½Ã Á¦°Å ===");
+        Debug.Log("=== ëª¨ë“  UselessBlock ì¦‰ì‹œ ì œê±° ===");
 
         List<UselessBlock> blocksToRemove = new List<UselessBlock>(activeUselessBlocks);
         foreach (UselessBlock uselessBlock in blocksToRemove)
@@ -596,7 +596,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// È°¼º UselessBlock °³¼ö ¹İÈ¯
+    /// í™œì„± UselessBlock ê°œìˆ˜ ë°˜í™˜
     /// </summary>
     public int GetUselessBlockCount()
     {
@@ -604,14 +604,14 @@ public class TetriminoManager : Singleton<TetriminoManager>
     }
 
     /// <summary>
-    /// ¸ğµç ºí·Ï Á¦°Å
+    /// ëª¨ë“  ë¸”ë¡ ì œê±°
     /// </summary>
     public void ClearAll()
     {
-        // UselessBlock ¸ÕÀú Á¤¸®
+        // UselessBlock ë¨¼ì € ì •ë¦¬
         RemoveAllUselessBlocks();
 
-        // ¸ğµç ±×¸®µå ºí·Ï Á¦°Å
+        // ëª¨ë“  ê·¸ë¦¬ë“œ ë¸”ë¡ ì œê±°
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -626,9 +626,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
         pendingDestroy.Clear();
 
-        // °ÔÀÓ¿À¹ö »óÅÂ ¸®¼Â
+        // ê²Œì„ì˜¤ë²„ ìƒíƒœ ë¦¬ì…‹
         IsGameOver = false;
-        Debug.Log("¸ğµç ºí·Ï Á¦°Å - °ÔÀÓ »óÅÂ ¿ÏÀü ¸®¼Â");
+        Debug.Log("ëª¨ë“  ë¸”ë¡ ì œê±° - ê²Œì„ ìƒíƒœ ì™„ì „ ë¦¬ì…‹");
     }
 
     private bool IsInsideGrid(Vector2Int pos)
@@ -666,12 +666,12 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         Vector3 delta = playerTransform.position - lastPlayerPosition;
         lastPlayerPosition = playerTransform.position;
-        Debug.Log($"ÇÃ·¹ÀÌ¾î À§Ä¡ º¯È­: {delta}");
+        Debug.Log($"í”Œë ˆì´ì–´ ìœ„ì¹˜ ë³€í™”: {delta}");
         MoveEntireGrid(delta);
     }
 
     /// <summary>
-    /// µğ¹ö±× Å×½ºÆ® ¸Ş¼­µåµé
+    /// ë””ë²„ê·¸ í…ŒìŠ¤íŠ¸ ë©”ì„œë“œë“¤
     /// </summary>
     private void Test()
     {
@@ -695,31 +695,31 @@ public class TetriminoManager : Singleton<TetriminoManager>
                     }
                 }
             }
-            Debug.Log($"ÀüÃ¼ Locked ºí·Ï: {totalCount}°³ (UselessBlock: {uselessCount}°³)");
+            Debug.Log($"ì „ì²´ Locked ë¸”ë¡: {totalCount}ê°œ (UselessBlock: {uselessCount}ê°œ)");
         }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            Debug.Log("=== ¼öµ¿ °ÔÀÓ¿À¹ö »óÅÂ Ã¼Å© ===");
+            Debug.Log("=== ìˆ˜ë™ ê²Œì„ì˜¤ë²„ ìƒíƒœ ì²´í¬ ===");
             CheckAndUpdateGameOverState();
         }
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            Debug.Log("=== ¼öµ¿ UselessBlock ¼ÒÈ¯ ===");
+            Debug.Log("=== ìˆ˜ë™ UselessBlock ì†Œí™˜ ===");
             SpawnUselessBlock();
         }
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            Debug.Log("=== ¼öµ¿ UselessBlock Á¦°Å ===");
+            Debug.Log("=== ìˆ˜ë™ UselessBlock ì œê±° ===");
             RemoveAllUselessBlocks();
         }
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            Debug.Log($"=== UselessBlock »óÅÂ ===");
-            Debug.Log($"È°¼º UselessBlock: {GetUselessBlockCount()}°³");
+            Debug.Log($"=== UselessBlock ìƒíƒœ ===");
+            Debug.Log($"í™œì„± UselessBlock: {GetUselessBlockCount()}ê°œ");
 
             foreach (UselessBlock uselessBlock in activeUselessBlocks)
             {
@@ -735,7 +735,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     [ContextMenu("Log Top Row Status")]
     public void LogTopRowStatus()
     {
-        Debug.Log("=== ¸Ç À§Ä­ »óÅÂ ===");
+        Debug.Log("=== ë§¨ ìœ„ì¹¸ ìƒíƒœ ===");
         for (int x = 0; x < width; x++)
         {
             bool isLocked = IsLocked(x, height - 1);
@@ -747,9 +747,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 blockType = " (UselessBlock)";
             }
 
-            Debug.Log($"Grid({x}, {height - 1}): {(isLocked ? "¡á" : "¡à")}{blockType}");
+            Debug.Log($"Grid({x}, {height - 1}): {(isLocked ? "â– " : "â–¡")}{blockType}");
         }
-        Debug.Log($"ÇöÀç Àü¿ª °ÔÀÓ¿À¹ö »óÅÂ: {IsGameOver}");
+        Debug.Log($"í˜„ì¬ ì „ì—­ ê²Œì„ì˜¤ë²„ ìƒíƒœ: {IsGameOver}");
     }
 
     [ContextMenu("Force Check Game Over")]
@@ -773,7 +773,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     [ContextMenu("Show Grid State")]
     public void ShowGridState()
     {
-        Debug.Log("=== ÀüÃ¼ ±×¸®µå »óÅÂ ===");
+        Debug.Log("=== ì „ì²´ ê·¸ë¦¬ë“œ ìƒíƒœ ===");
         for (int y = height - 1; y >= 0; y--)
         {
             string row = $"Y={y}: ";
@@ -782,7 +782,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 GameObject block = gridArray[x, y];
                 if (block == null)
                 {
-                    row += "¡à ";
+                    row += "â–¡ ";
                 }
                 else if (block.CompareTag("UselessBlock"))
                 {
@@ -790,13 +790,13 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 }
                 else
                 {
-                    row += "¡á "; // ÀÏ¹İ ºí·Ï
+                    row += "â–  "; // ì¼ë°˜ ë¸”ë¡
                 }
             }
             Debug.Log(row);
         }
 
-        Debug.Log($"È°¼º UselessBlock: {GetUselessBlockCount()}°³");
+        Debug.Log($"í™œì„± UselessBlock: {GetUselessBlockCount()}ê°œ");
     }
 
     public void Update()
@@ -806,7 +806,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
     private void OnDestroy()
     {
-        // ¸ğµç UselessBlock Á¤¸®
+        // ëª¨ë“  UselessBlock ì •ë¦¬
         RemoveAllUselessBlocks();
     }
 }
