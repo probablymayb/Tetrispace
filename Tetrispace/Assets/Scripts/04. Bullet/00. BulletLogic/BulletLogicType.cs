@@ -3,5 +3,5 @@ public enum BulletLogicType
 {
     Normal,
     CCW,
-    CW,
+    CW
 }

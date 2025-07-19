@@ -17,6 +17,9 @@ public class TetriminoController : MonoBehaviour
     [SerializeField] private int customGridX = 0;           // 커스텀 그리드 X
     [SerializeField] private int customGridY = 0;           // 커스텀 그리드 Y
     [SerializeField] private float fSpeed = 0.5f;           // 커스텀 그리드 Y
+    [SerializeField] private float fMultiplier = 1f;    
+
+    private bool isSpeedUp = false;
 
     void Start()
     {
@@ -33,12 +36,21 @@ public class TetriminoController : MonoBehaviour
 
     void Update()
     {
+        if (isSpeedUp)
+        {
+        }
+        else 
+        {
 
-        transform.position += Vector3.down * fSpeed * Time.deltaTime;
+        }
+        transform.position += Vector3.down * fSpeed * fMultiplier * Time.deltaTime;
         // 또는
         Vector3 pos = transform.position;
         pos.y -= fSpeed * Time.deltaTime;
         transform.position = pos;
+
+
+        
         //if(Input.GetKeyDown(KeyCode.Q))
         //{
         //    TurnLeft();
@@ -62,5 +74,29 @@ public class TetriminoController : MonoBehaviour
 
 
     }
+
+    public void SpeedUp(float fMulti)
+    {
+        fSpeed = fMulti;
+
+
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Lazer"))
+        {
+            fMultiplier = 10f;
+        }
+    }
+    private void OnTriggerOut2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Lazer"))
+        {
+            fMultiplier = 1f;
+        }
+    }
+
+
 
 }

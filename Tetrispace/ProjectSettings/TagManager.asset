@@ -11,6 +11,7 @@ TagManager:
   - SlowArea
   - UselessBlock
   - TetriminoBlock
+  - Lazer
   layers:
   - Default
   - TransparentFX

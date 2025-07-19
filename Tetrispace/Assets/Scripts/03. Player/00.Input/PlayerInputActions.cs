@@ -127,6 +127,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MagnetAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""d296964e-6f80-48ac-a989-7acf28d7da25"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -272,6 +281,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""RotationAttackCW"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""23ba3702-6639-4d2b-b271-fde675c63799"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MagnetAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -376,6 +396,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerActions_Attack = m_PlayerActions.FindAction("Attack", throwIfNotFound: true);
         m_PlayerActions_RotationAttackCCW = m_PlayerActions.FindAction("RotationAttackCCW", throwIfNotFound: true);
         m_PlayerActions_RotationAttackCW = m_PlayerActions.FindAction("RotationAttackCW", throwIfNotFound: true);
+        m_PlayerActions_MagnetAttack = m_PlayerActions.FindAction("MagnetAttack", throwIfNotFound: true);
         // UIActions
         m_UIActions = asset.FindActionMap("UIActions", throwIfNotFound: true);
         m_UIActions_CardMove = m_UIActions.FindAction("CardMove", throwIfNotFound: true);
@@ -465,6 +486,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerActions_Attack;
     private readonly InputAction m_PlayerActions_RotationAttackCCW;
     private readonly InputAction m_PlayerActions_RotationAttackCW;
+    private readonly InputAction m_PlayerActions_MagnetAttack;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerActions".
     /// </summary>
@@ -492,6 +514,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerActions/RotationAttackCW".
         /// </summary>
         public InputAction @RotationAttackCW => m_Wrapper.m_PlayerActions_RotationAttackCW;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerActions/MagnetAttack".
+        /// </summary>
+        public InputAction @MagnetAttack => m_Wrapper.m_PlayerActions_MagnetAttack;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -530,6 +556,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RotationAttackCW.started += instance.OnRotationAttackCW;
             @RotationAttackCW.performed += instance.OnRotationAttackCW;
             @RotationAttackCW.canceled += instance.OnRotationAttackCW;
+            @MagnetAttack.started += instance.OnMagnetAttack;
+            @MagnetAttack.performed += instance.OnMagnetAttack;
+            @MagnetAttack.canceled += instance.OnMagnetAttack;
         }
 
         /// <summary>
@@ -553,6 +582,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RotationAttackCW.started -= instance.OnRotationAttackCW;
             @RotationAttackCW.performed -= instance.OnRotationAttackCW;
             @RotationAttackCW.canceled -= instance.OnRotationAttackCW;
+            @MagnetAttack.started -= instance.OnMagnetAttack;
+            @MagnetAttack.performed -= instance.OnMagnetAttack;
+            @MagnetAttack.canceled -= instance.OnMagnetAttack;
         }
 
         /// <summary>
@@ -728,6 +760,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRotationAttackCW(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MagnetAttack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMagnetAttack(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UIActions" which allows adding and removing callbacks.
