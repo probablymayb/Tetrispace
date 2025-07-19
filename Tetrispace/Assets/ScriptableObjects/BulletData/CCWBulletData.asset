@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4f8891d670a45318934bd0e3234d052, type: 3}
   m_Name: CCWBulletData
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 16
   lifeTime: 5
   logicType: 1
   effectPrefabTransform: {fileID: 2881296377276303837, guid: 8e2fe7382ecf55f418071d7953b0c471, type: 3}

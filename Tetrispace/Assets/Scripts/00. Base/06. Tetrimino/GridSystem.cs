@@ -115,6 +115,25 @@ public class GridSystem
         return ScreenToWorld(screenPos);
     }
 
+    public static Vector3 GetGridBlockWorldPosition(Vector3 pos)
+    {
+        // 기준점과 간격 설정
+        const float baseOffset = 0.14f;  // 기준점
+        const float gridSpacing = 0.28f; // 간격
+
+        // 단계 1: 입력 X에서 기준점 빼기
+        float offsetX = pos.x - baseOffset;
+
+        // 단계 2: 간격으로 나누고 반올림해서 N 구하기
+        int N = Mathf.RoundToInt(offsetX / gridSpacing);
+
+        // 단계 3: 공식 적용 - 0.14 + 0.28 * N
+        float snappedX = baseOffset + (gridSpacing * N);
+
+        // 단계 4: Y, Z는 원본 유지하며 새 Vector3 반환
+        return new Vector3(snappedX, pos.y, pos.z);
+    }
+
     /// <summary>
     /// 스크린 좌표를 월드 좌표로 변환
     /// </summary>
@@ -125,6 +144,7 @@ public class GridSystem
         worldPos.z = 0;
         return worldPos;
     }
+
 
     /// <summary>
     /// 스크린 좌표를 그리드 인덱스로 변환

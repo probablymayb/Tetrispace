@@ -55,6 +55,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.5
 --- !u!50 &5422869007413842325
 Rigidbody2D:
   serializedVersion: 5
@@ -63,7 +64,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516356324441038549}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -248,6 +249,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &7433535099928150698
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -399,6 +401,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &6349328391043261174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -550,6 +553,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &4686413992834624538
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -701,6 +705,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &4989975742821321828
 BoxCollider2D:
   m_ObjectHideFlags: 0

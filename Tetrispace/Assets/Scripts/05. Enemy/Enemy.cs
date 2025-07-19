@@ -139,10 +139,9 @@ public partial class Enemy : MonoBehaviour, IEntity
     {
         OnDeath?.Invoke();
         dieEffect.SetParent(null);
-        Vector2Int adjGrid = GridSystem.WorldToGridIndex(transform.position);
-        Vector3 spawnPos = GridSystem.GetGridMiddleWorldPosition(adjGrid.x, adjGrid.y);
-        spawnPos.y = transform.position.y;
-        Instantiate(data.BlockPrefab, spawnPos, Quaternion.identity);
+        Vector3 spawnPos = GridSystem.GetGridBlockWorldPosition(transform.position);
+        //spawnPos.y = transform.position.y;
+        Instantiate(data.BlockPrefab, transform.position, Quaternion.identity);
         PoolManager.Instance.Return(dieEffect);
         PoolManager.Instance.Return(this);
     }

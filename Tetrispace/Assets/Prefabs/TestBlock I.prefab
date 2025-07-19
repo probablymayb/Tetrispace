@@ -55,6 +55,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.5
 --- !u!61 &6840265309667336010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -89,7 +90,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.14, y: 0}
+  m_Offset: {x: 0.064313084, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -99,7 +100,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.12, y: 0.28}
+  m_Size: {x: 0.99611586, y: 0.28}
   m_EdgeRadius: 0
 --- !u!50 &5422869007413842325
 Rigidbody2D:
@@ -109,7 +110,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516356324441038549}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -171,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 4600612449037945458}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.28, y: 0, z: 0}
+  m_LocalPosition: {x: -0.45599997, y: 0.003, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -248,6 +249,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &7433535099928150698
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -292,7 +294,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.28, y: 0.28}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0
 --- !u!1 &4823181088903669500
 GameObject:
@@ -322,7 +324,7 @@ Transform:
   m_GameObject: {fileID: 4823181088903669500}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.28, y: 0, z: 0}
+  m_LocalPosition: {x: 0.104, y: 0.003, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -399,6 +401,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &6349328391043261174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -443,7 +446,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.28, y: 0.28}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0
 --- !u!1 &6274593743001068179
 GameObject:
@@ -473,7 +476,7 @@ Transform:
   m_GameObject: {fileID: 6274593743001068179}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.56, y: 0, z: 0}
+  m_LocalPosition: {x: 0.38399994, y: 0.003, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -550,6 +553,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &4686413992834624538
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -594,7 +598,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.28, y: 0.28}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0
 --- !u!1 &7535302929571504459
 GameObject:
@@ -624,7 +628,7 @@ Transform:
   m_GameObject: {fileID: 7535302929571504459}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.17600001, y: 0.003, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -701,6 +705,7 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
+  fSpeed: 0.1
 --- !u!61 &4989975742821321828
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -745,5 +750,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.28, y: 0.28}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0

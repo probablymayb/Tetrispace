@@ -16,6 +16,7 @@ public class TetriminoController : MonoBehaviour
     [SerializeField] private bool useStaticPosition = true;  // 정적 위치 사용 여부
     [SerializeField] private int customGridX = 0;           // 커스텀 그리드 X
     [SerializeField] private int customGridY = 0;           // 커스텀 그리드 Y
+    [SerializeField] private float fSpeed = 0.5f;           // 커스텀 그리드 Y
 
     void Start()
     {
@@ -32,6 +33,12 @@ public class TetriminoController : MonoBehaviour
 
     void Update()
     {
+
+        transform.position += Vector3.down * fSpeed * Time.deltaTime;
+        // 또는
+        Vector3 pos = transform.position;
+        pos.y -= fSpeed * Time.deltaTime;
+        transform.position = pos;
         //if(Input.GetKeyDown(KeyCode.Q))
         //{
         //    TurnLeft();
@@ -46,13 +53,13 @@ public class TetriminoController : MonoBehaviour
 
     public void TurnLeft()
     {
-        this.transform.Rotate(new Vector3(0f, 0f, 1f), -90);
-
+        this.transform.Rotate(new Vector3(0f, 0f, 1f), 90);
     }
 
     public void TurnRight()
     {
-        this.transform.Rotate(new Vector3(0f, 0f, 1f), 90);
+        this.transform.Rotate(new Vector3(0f, 0f, 1f), -90);
+
 
     }
 

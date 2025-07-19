@@ -11,7 +11,7 @@ using System.Collections;
 /// 3. 플레이어 움직임에 자동으로 따라다님
 /// 4. 10초 후 자동 삭제
 /// </summary>
-public class TetriminoManager : Singleton<TetriminoManager>
+public class TetriminoManager : Singleton<TetriminoManager> 
 {
     private int width = 4;
     private int height = 5;
@@ -187,7 +187,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     public void CheckAndClearLines()
     {
         // 그리드 이동 중에는 라인 체크하지 않음
-        if (IsGridMoving) return;
+        //if (IsGridMoving) return;
 
         List<int> linesToClear = new List<int>();
 
@@ -221,7 +221,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     public void ClearLine(int i)
     {
         // 그리드 이동 중에는 라인 체크하지 않음
-        if (IsGridMoving) return;
+        //if (IsGridMoving) return;
 
         List<int> linesToClear = new List<int>();
     
@@ -647,7 +647,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
         if (x < 0 || x >= width || y < 0 || y >= height)
         {
             Debug.LogWarning($"WorldToGrid: Position {worldPos} is outside grid bounds");
-            //게임오버?
+            //게임오버
+            //게임오버
+            //게임오버
         }
 
         x = Mathf.Clamp(x, 0, width - 1);
@@ -701,8 +703,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            Debug.Log("=== 수동 게임오버 상태 체크 ===");
-            CheckAndUpdateGameOverState();
+            CheckAndClearLines();
         }
 
         if (Input.GetKeyDown(KeyCode.U))
