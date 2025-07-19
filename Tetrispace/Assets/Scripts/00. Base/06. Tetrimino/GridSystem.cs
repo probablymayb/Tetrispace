@@ -37,6 +37,8 @@ public class GridSystem
     /// </summary>
     public static Vector2Int GetGridPos(int gridX, int gridY)
     {
+        gridX = Mathf.Clamp(gridX, 0, GridSettings.ActualGridWidth - 1);
+        gridY = Mathf.Clamp(gridY, 0, GridSettings.ActualGridHeight - 1);
         // 범위 체크
         if (gridX < 0 || gridX >= GridSettings.ActualGridWidth ||
             gridY < 0 || gridY >= GridSettings.ActualGridHeight)
@@ -156,7 +158,6 @@ public class GridSystem
     public static Vector2Int WorldToGridIndex(Vector3 worldPos)
     {
         Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-        screenPos.y = Screen.height - screenPos.y;
         return ScreenToGridIndex(new Vector2(screenPos.x, screenPos.y));
     }
 

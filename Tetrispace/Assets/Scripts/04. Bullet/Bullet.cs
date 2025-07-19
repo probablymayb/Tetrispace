@@ -64,11 +64,6 @@ public class Bullet : MonoBehaviour
     {
         isSetup = false;
         OnDeath = null;
-        if (effectTransform)
-        {
-            effectTransform.SetParent(null);
-            PoolManager.Instance.Return(effectTransform);
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -100,6 +95,11 @@ public class Bullet : MonoBehaviour
     {
         OnDeath?.Invoke();
         StopAllCoroutines();
+        if (effectTransform)
+        {
+            effectTransform.SetParent(null);
+            PoolManager.Instance.Return(effectTransform);
+        }
         PoolManager.Instance.Return(this);
     }
 }
