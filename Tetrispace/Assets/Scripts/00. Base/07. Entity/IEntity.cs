@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IEntity
 {
-    void OnHit(Vector2 hitPosition);
+    void OnHit(float Damage, Vector2 hitPosition);
 }

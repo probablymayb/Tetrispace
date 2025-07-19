@@ -8,6 +8,8 @@ TagManager:
   - Floor
   - LockedBlock
   - Wall
+  - SlowArea
+
   layers:
   - Default
   - TransparentFX

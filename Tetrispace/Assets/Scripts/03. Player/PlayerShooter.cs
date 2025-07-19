@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerStat))]
 public class PlayerShooter : MonoBehaviour
 {
+    private PlayerStat stat;
     private InputAction shootAction;
     private const string ShootActionName = "Attack";
     
@@ -17,6 +19,7 @@ public class PlayerShooter : MonoBehaviour
     
     private void Awake()
     {
+        stat = GetComponent<PlayerStat>();
         shootAction = InputSystem.actions.FindAction(ShootActionName);
         PoolManager.Instance.CreatePool(bulletPrefab);
     }
@@ -27,6 +30,8 @@ public class PlayerShooter : MonoBehaviour
         shootAction.started += OnAttack;
         shootAction.performed += OnAttack;
         shootAction.canceled += OnAttack;
+
+        attackTimer = 0f;
     }
 
     private void OnDisable()
@@ -74,7 +79,7 @@ public class PlayerShooter : MonoBehaviour
         pooledBullet.transform.position = firePoint.position;
         pooledBullet.transform.rotation = Quaternion.identity;
 
-        pooledBullet.Setup(bulletData);
-        pooledBullet.Fire(Vector2.up, "Enemy");
+        pooledBullet.Setup(bulletData, stat.GetStat(PlayerEnforcement.AutoDamage));
+        pooledBullet.Fire(Vector2.up, true);
     }
 }
