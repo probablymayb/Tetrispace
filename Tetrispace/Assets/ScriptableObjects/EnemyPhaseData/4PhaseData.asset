@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4f8891d670a45318934bd0e3234d052, type: 3}
-  m_Name: PL_Fire4
+  m_Script: {fileID: 11500000, guid: 2d9fa58c87734f888e070fedba3753f8, type: 3}
+  m_Name: 4PhaseData
   m_EditorClassIdentifier: 
-  speed: 12
-  lifeTime: 4
-  logicType: 0
-  effectPrefabTransform: {fileID: 4627425732572659312, guid: 37ce8b8d475164245a1ba8fb79a4eb88, type: 3}
-  capsuleSize: {x: 0.2, y: 0.2}
+  enemyCount: 6
+  enemyTypes: 0000000001000000020000000300000001000000
+  isTetrisEnemyCountFixed: 1
+  tetrisCount: 3

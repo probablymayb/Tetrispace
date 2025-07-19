@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4f8891d670a45318934bd0e3234d052, type: 3}
   m_Name: PL_Fire2
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 12
   lifeTime: 4
   logicType: 0
   effectPrefabTransform: {fileID: 3494298146808417584, guid: 24c6b47902fd682448cd3c83fb1e6c88, type: 3}

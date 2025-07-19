@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 5
   damage: 10
-  speed: 6
-  attackSpeed: 3
+  speed: 3
+  attackSpeed: 2
   bulletData: {fileID: 11400000, guid: 520f637e8f2671341b3cd57f7c935c5b, type: 2}
   enemySprite: {fileID: 0}
   isEnforced: 0
