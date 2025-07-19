@@ -91,7 +91,7 @@ public class EventManager : Singleton<EventManager>
     /// ��Ʈ���̳� ���� �̺�Ʈ �߻�
     /// </summary>
     /// <param name="tetrominoType">������ ��Ʈ���̳� Ÿ��</param>
-    public void TetrominoSpawned(Tetrimino.TetrominoType tetrominoType)
+    //public void TetrominoSpawned(Tetrimino.TetrominoType tetrominoType);
 
     /// 보스 번개 QTE 이벤트를 발생시키는 메서드
     /// </summary>
@@ -468,7 +468,7 @@ public class EventManager : Singleton<EventManager>
     public void FireTestEvents()
     {
         Debug.Log("=== �׽�Ʈ �̺�Ʈ �߻� ===");
-        TetrominoSpawned(Tetrimino.TetrominoType.T);
+       // TetrominoSpawned(Tetrimino.TetrominoType.T);
         ScoreChanged(1000);
         PlaySFX("TestSound");
         Debug.Log("�׽�Ʈ �̺�Ʈ �߻� �Ϸ�");
