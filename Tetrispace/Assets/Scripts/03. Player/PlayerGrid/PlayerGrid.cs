@@ -287,7 +287,7 @@ public class PlayerGrid : MonoBehaviour
         DropLinesAbove();
 
         // 이벤트 발생
-        EventManager.Instance.LinesCleared(clearedCount, linesToClear.ToArray());
+        //EventManager.Instance.LinesCleared(clearedCount, linesToClear.ToArray());
 
         // 테트리미노 매니저에 알림
         if (TetriminoManager.Instance != null)

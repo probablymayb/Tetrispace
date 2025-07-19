@@ -7,7 +7,7 @@ using UnityEngine;
 /// - PlayerController: GetGridPos() 사용 (그리드 모서리)
 /// - TetrisBlock: GetGridMiddlePos() 사용 (그리드 중심)
 /// </summary>
-public class TetrisBlock : MonoBehaviour
+public class TetriminoController : MonoBehaviour
 {
     [Header("=== 블록 설정 ===")]
     [SerializeField] private float blockPixelSize = 28f;  // 블록 크기
@@ -32,92 +32,29 @@ public class TetrisBlock : MonoBehaviour
 
     void Update()
     {
-        //for test
-        Vector2Int gridPos = GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y);
-        Vector3 screenPos = new Vector3(gridPos.x, gridPos.y, 10f); // Z는 카메라와의 거리
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-        worldPos.z = 0; // 2D 게임용
-
-        transform.position = worldPos;
-
-    }
-
-    /// <summary>
-    /// 블록 크기 설정
-    /// </summary>
-    void SetBlockSize()
-    {
-        // 그리드 크기와 블록 크기 비율 계산
-        float scaleRatio = blockPixelSize / GridSystem.GridSettings.GRID_SIZE;
-        transform.localScale = Vector3.one * scaleRatio;
-
-        Debug.Log($"블록 크기 설정: {GridSystem.GridSettings.GRID_SIZE}px → {blockPixelSize}px (비율: {scaleRatio:F2})");
-    }
-
-    /// <summary>
-    /// 특정 그리드 위치로 이동
-    /// </summary>
-    public void SetGridPosition(int gridX, int gridY)
-    {
-        if (GridSystem.IsValidGridIndex(gridX, gridY))
+        if(Input.GetKeyDown(KeyCode.Q))
         {
-            customGridX = gridX;
-            customGridY = gridY;
-            useStaticPosition = false;
-
-            Debug.Log($"블록 위치 설정: [{gridX}][{gridY}]");
+            TurnLeft();
         }
-        else
+
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.LogWarning($"유효하지 않은 그리드 위치: [{gridX}][{gridY}]");
+
+            TurnRight();
         }
+
     }
 
-    /// <summary>
-    /// 정적 위치 사용으로 변경
-    /// </summary>
-    public void UseStaticPosition()
+    public void TurnLeft()
     {
-        useStaticPosition = true;
-        Debug.Log("정적 위치 사용 모드로 변경");
+        this.transform.Rotate(new Vector3(0f, 0f, 1f), -90);
+
     }
 
-    /// <summary>
-    /// 현재 위치 정보 출력
-    /// </summary>
-    [ContextMenu("현재 위치 출력")]
-    public void PrintCurrentPosition()
+    public void TurnRight()
     {
-        Vector3 worldPos = transform.position;
-        Vector2Int gridIndex = GridSystem.WorldToGridIndex(worldPos);
+        this.transform.Rotate(new Vector3(0f, 0f, 1f), 90);
 
-        Debug.Log($"=== TetrisBlock 위치 정보 ===");
-        Debug.Log($"월드 좌표: {worldPos}");
-        Debug.Log($"그리드 인덱스: [{gridIndex.x}][{gridIndex.y}]");
-        Debug.Log($"사용 중인 그리드 위치: [{(useStaticPosition ? GridSystem.GridMiddlePos.x : customGridX)}][{(useStaticPosition ? GridSystem.GridMiddlePos.y : customGridY)}]");
-        Debug.Log($"모드: {(useStaticPosition ? "정적 위치" : "커스텀 위치")}");
     }
 
-    /// <summary>
-    /// 그리드 정렬 테스트
-    /// </summary>
-    [ContextMenu("정렬 테스트")]
-    public void TestAlignment()
-    {
-        Debug.Log("=== 정렬 테스트 ===");
-
-        // 여러 위치에서 테스트
-        int[] testPositions = { 0, 1, 17, 35 };
-
-        foreach (int pos in testPositions)
-        {
-            if (GridSystem.IsValidGridIndex(pos, 0))
-            {
-                Vector2Int playerPos = GridSystem.GetGridPos(pos, 0);
-                Vector2Int blockPos = GridSystem.GetGridMiddlePos(pos, 0);
-
-                Debug.Log($"위치 [{pos}][0] - Player: {playerPos}, Block: {blockPos}, 차이: {blockPos.x - playerPos.x}px");
-            }
-        }
-    }
 }

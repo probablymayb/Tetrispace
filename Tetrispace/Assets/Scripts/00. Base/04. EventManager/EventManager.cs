@@ -32,6 +32,7 @@ public class EventManager : Singleton<EventManager>
     /// </summary>
     public event Action<int> onPlayerHpChanged;
     public event Action<Transform> onPlayerMove;
+    public event Action<float> onPlayerBlockHit;
 
     /// <summary>
     /// 플레이어 HP 변경 이벤트를 발생시키는 메서드
@@ -46,7 +47,13 @@ public class EventManager : Singleton<EventManager>
     {
         onPlayerMove?.Invoke(trans);
     }
+
+    public void PlayerBlockHit(float time)
+    {
+        onPlayerBlockHit?.Invoke(time);
+    }
     #endregion
+
 
 
     #region ===  테트리스 미니게임 이벤트 ===
