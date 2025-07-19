@@ -71,7 +71,7 @@ Material:
     - _Cutoff: 0.5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _Emission: 11
+    - _Emission: 14
     - _EnableExternalAlpha: 0
     - _Fade: 1
     - _QueueControl: 0
@@ -83,7 +83,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.6084906, g: 1, b: 0.9355161, a: 1}
+    - _Color: {r: 0.4292453, g: 1, b: 0.9086792, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

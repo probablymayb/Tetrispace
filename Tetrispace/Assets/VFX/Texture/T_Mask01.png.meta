@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 72862ed924326be43b568b6890ecd2f2
+guid: dac037ae62840c24097f5674fc38922e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5313860328985904666
-    second: noise01_0
+      213: -7269146536318008254
+    second: T_Mask01_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,9 +40,9 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: noise01_0
+      name: T_Mask01_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 1024
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e931c05f206146b0800000000000000
-      internalID: -5313860328985904666
+      spriteID: 24401822dbdce1b90800000000000000
+      internalID: -7269146536318008254
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      noise01_0: -5313860328985904666
+      T_Mask01_0: -7269146536318008254
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
