@@ -169,3 +169,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 6635951090713665813, guid: 761a55904de9f1e4395ae2415dbab977, type: 3}
   data: {fileID: 0}
   type: 0
+  dieEffectPrefab: {fileID: 6412439330536265488, guid: 80d307688dea6fe47b37631a994451e1, type: 3}
+  deathBlinkDuration: 1
+  deathBlinkInterval: 0.1

@@ -1,19 +1,26 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(CapsuleCollider2D))]
 public class Bullet : MonoBehaviour
 {
     private IBulletLogic logic;
     private BulletData data;
+    private Transform effectTransform;
     private string targetTag;
     private bool isSetup = false;
     private float damage;
     public float Speed { private set; get; }
     public float LifeTime { private set; get; }
     public event Action OnDeath;
-
+    private CapsuleCollider2D capsule;
     private const string EnemyTag = "Enemy";
     private const string PlayerTag = "Player";
+
+    private void Awake()
+    {
+        capsule = GetComponent<CapsuleCollider2D>();
+    }
 
     /// <summary>
     /// Bullet 생성 후 BulletData를 전달해 새로운 Bullet을 만드는 메서드
@@ -26,8 +33,13 @@ public class Bullet : MonoBehaviour
         data = bulletData;
         logic = BulletLogicFactory.Create(data.logicType);
         damage = bulletDamage;
-        Speed = bulletData.speed;
-        LifeTime = bulletData.lifeTime;
+        Speed = data.speed;
+        LifeTime = data.lifeTime;
+        PoolManager.Instance.CreatePool(data.effectPrefabTransform);
+        effectTransform = PoolManager.Instance.Get(data.effectPrefabTransform);
+        effectTransform.SetParent(transform);
+        effectTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        capsule.size = data.capsuleSize;
     }
 
     /// <summary>
@@ -42,7 +54,8 @@ public class Bullet : MonoBehaviour
             print("Bullet이 Setup되지 않은채로 Fire 시도");
             return;
         }
-
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
         targetTag = isTargetEnemy ? EnemyTag : PlayerTag;
         StartCoroutine(logic.Execute(this, dir));
     }
@@ -51,6 +64,11 @@ public class Bullet : MonoBehaviour
     {
         isSetup = false;
         OnDeath = null;
+        if (effectTransform)
+        {
+            effectTransform.SetParent(null);
+            PoolManager.Instance.Return(effectTransform);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

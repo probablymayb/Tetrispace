@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4f8891d670a45318934bd0e3234d052, type: 3}
-  m_Name: NormalBulletData
+  m_Name: En_Fire
   m_EditorClassIdentifier: 
   speed: 8
   lifeTime: 5
   logicType: 0
-  effectPrefabTransform: {fileID: 1450068298354783971, guid: 0daa520f46587d34dbcb889560175da2, type: 3}
+  effectPrefabTransform: {fileID: 3895604258080949520, guid: e325caf07edff81489ae054bfe85bd11, type: 3}
   capsuleSize: {x: 0.2, y: 0.2}

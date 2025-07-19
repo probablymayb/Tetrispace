@@ -340,6 +340,22 @@ PrefabInstance:
       propertyPath: bombRadius
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6000015426470724136, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: 'bulletDatas.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 7092a99a833741044be23089041d95f0, type: 2}
+    - target: {fileID: 6000015426470724136, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: 'bulletDatas.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 14dc53f6f67d5f04798aa14a0f08c0d4, type: 2}
+    - target: {fileID: 6000015426470724136, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: 'bulletDatas.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a7bcd4e2fc8b9dd47acff3e7f5e3a7b2, type: 2}
+    - target: {fileID: 6000015426470724136, guid: f66925deb54cf0141948872b0eac556f, type: 3}
+      propertyPath: 'bulletDatas.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 88b93e2ea34f47a4a9fe5f2f92573b7e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
