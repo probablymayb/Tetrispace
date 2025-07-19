@@ -9,7 +9,6 @@ TagManager:
   - LockedBlock
   - Wall
   - SlowArea
-
   layers:
   - Default
   - TransparentFX
