@@ -2,11 +2,11 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// °£´ÜÇÑ UselessBlock - ±×¸®µå¿¡ µî·ÏµÇÁö¸¸ ¶óÀÎ Å¬¸®¾î¿¡¼­¸¸ Á¦¿Ü
+/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UselessBlock - ï¿½×¸ï¿½ï¿½å¿¡ ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½î¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 /// </summary>
 public class UselessBlock : MonoBehaviour
 {
-    [Header("=== UselessBlock ¼³Á¤ ===")]
+    [Header("=== UselessBlock ï¿½ï¿½ï¿½ï¿½ ===")]
     [SerializeField] private float lifetime = 10f;
     [SerializeField] private bool enableDebug = false;
 
@@ -15,43 +15,43 @@ public class UselessBlock : MonoBehaviour
     void Start()
     {
 
-        //// ÇÃ·¹ÀÌ¾î¸¦ ºÎ¸ð·Î ¼³Á¤ (ÇÃ·¹ÀÌ¾î Transform Ã£±â)
-        //Transform playerTransform = FindObjectOfType<PlayerController>().transform; // ¶Ç´Â ´Ù¸¥ ¹æ¹ýÀ¸·Î ÇÃ·¹ÀÌ¾î ÂüÁ¶
+        //// ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½Î¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Transform Ã£ï¿½ï¿½)
+        //Transform playerTransform = FindObjectOfType<PlayerController>().transform; // ï¿½Ç´ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
         //this.transform.SetParent(playerTransform);
 
-        //// ·ÎÄÃ À§Ä¡·Î ¼³Á¤ (ºÎ¸ð ±âÁØ »ó´ë À§Ä¡)
+        //// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡)
         //this.transform.localPosition = new Vector3(1.5f * 0.28f, 0.5f * 0.28f, 0f);
 
-        // UselessBlock ÅÂ±× ¼³Á¤ (¶óÀÎ Å¬¸®¾î Á¦¿Ü¿ë)
+        // UselessBlock ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ü¿ï¿½)
         gameObject.tag = "UselessBlock";
 
-        // ÀÚ½Ä ºí·Ïµéµµ UselessBlock ÅÂ±× ¼³Á¤
+        // ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½Ïµéµµ UselessBlock ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
         SetupBlockParts();
 
-        // ÀÚµ¿ »èÁ¦ Å¸ÀÌ¸Ó ½ÃÀÛ
+        // ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         StartCoroutine(LifetimeCoroutine());
 
         if (enableDebug)
         {
-            Debug.Log($"UselessBlock »ý¼º: {name} - {lifetime}ÃÊ ÈÄ »èÁ¦ ¿¹Á¤");
+            Debug.Log($"UselessBlock ï¿½ï¿½ï¿½ï¿½: {name} - {lifetime}ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
     }
 
     /// <summary>
-    /// IÀÚÇü ºí·Ï ±¸¼º ¿ä¼Ò ¼³Á¤
+    /// Iï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     void SetupBlockParts()
     {
-        // ÀÚ½Ä ¿ÀºêÁ§Æ®µéµµ UselessBlock ÅÂ±× ¼³Á¤
+        // ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½éµµ UselessBlock ï¿½Â±ï¿½ ï¿½ï¿½ï¿½ï¿½
         Transform[] children = GetComponentsInChildren<Transform>();
 
         foreach (Transform child in children)
         {
-            if (child != transform) // ÀÚ±â ÀÚ½Å Á¦¿Ü
+            if (child != transform) // ï¿½Ú±ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½
             {
                 child.tag = "UselessBlock";
 
-                // ÄÝ¶óÀÌ´õ ¼³Á¤
+                // ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½
                 Collider2D collider = child.GetComponent<Collider2D>();
                 if (collider != null)
                 {
@@ -62,12 +62,12 @@ public class UselessBlock : MonoBehaviour
 
         if (enableDebug)
         {
-            Debug.Log($"UselessBlock ÀÚ½Ä ºí·Ïµé ¼³Á¤ ¿Ï·á");
+            Debug.Log($"UselessBlock ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½");
         }
     }
 
     /// <summary>
-    /// ¼ö¸í °ü¸® ÄÚ·çÆ¾
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾
     /// </summary>
     private IEnumerator LifetimeCoroutine()
     {
@@ -77,20 +77,20 @@ public class UselessBlock : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // 2ÃÊ¸¶´Ù ³²Àº ½Ã°£ ·Î±×
+            // 2ï¿½Ê¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Î±ï¿½
             if (enableDebug && Mathf.FloorToInt(timer) % 2 == 0 && timer >= 2f)
             {
                 float remainingTime = lifetime - timer;
                 if (remainingTime > 0)
                 {
-                    Debug.Log($"UselessBlock {name} - ³²Àº ½Ã°£: {remainingTime:F1}ÃÊ");
+                    Debug.Log($"UselessBlock {name} - ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½: {remainingTime:F1}ï¿½ï¿½");
                 }
             }
 
             yield return null;
         }
 
-        // ½Ã°£ ¸¸·á ½Ã »èÁ¦
+        // ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!isDestroying)
         {
             DestroyUselessBlock();
@@ -98,7 +98,7 @@ public class UselessBlock : MonoBehaviour
     }
 
     /// <summary>
-    /// UselessBlock »èÁ¦ Ã³¸®
+    /// UselessBlock ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     /// </summary>
     public void DestroyUselessBlock()
     {
@@ -107,28 +107,28 @@ public class UselessBlock : MonoBehaviour
 
         if (enableDebug)
         {
-            Debug.Log($"UselessBlock {name} »èÁ¦ ½ÃÀÛ");
+            Debug.Log($"UselessBlock {name} ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
 
-        // TetriminoManager¿¡¼­ ±×¸®µå Á¤¸®
+        // TetriminoManagerï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (TetriminoManager.Instance != null)
         {
             TetriminoManager.Instance.RemoveUselessBlockFromGrid(this);
         }
 
         TetriminoManager.Instance.ClearLine(0);
-        // ¿ÀºêÁ§Æ® ÆÄ±«
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ä±ï¿½
         Destroy(gameObject);
     }
 
     /// <summary>
-    /// Áï½Ã »èÁ¦ (¿ÜºÎ¿¡¼­ È£Ãâ °¡´É)
+    /// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     /// </summary>
     public void ForceDestroy()
     {
         if (enableDebug)
         {
-            Debug.Log($"UselessBlock {name} °­Á¦ »èÁ¦");
+            Debug.Log($"UselessBlock {name} ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
 
         StopAllCoroutines();
@@ -136,16 +136,16 @@ public class UselessBlock : MonoBehaviour
     }
 
     /// <summary>
-    /// ³²Àº ¼ö¸í ¹ÝÈ¯
+    /// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     /// </summary>
     public float GetRemainingLifetime()
     {
-        return Mathf.Max(0f, lifetime - (Time.time - Time.time)); // Á¤È®ÇÑ °è»ê ÇÊ¿ä½Ã ¼öÁ¤
+        return Mathf.Max(0f, lifetime - (Time.time - Time.time)); // ï¿½ï¿½È®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     void Update()
     {
-        // Å×½ºÆ®¿ë È¸Àü
+        // ï¿½×½ï¿½Æ®ï¿½ï¿½ È¸ï¿½ï¿½
         if (Input.GetKeyDown(KeyCode.Q))
         {
             TurnLeft();

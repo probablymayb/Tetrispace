@@ -69,7 +69,7 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!isSetup) return;
-        if (other.CompareTag(PlayerSlowArea.Tag))
+        if (targetTag == "Player" && other.CompareTag(PlayerSlowArea.Tag))
         {
             Speed = data.speed * 0.5f;
             return;
@@ -103,7 +103,7 @@ public class Bullet : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!isSetup) return;
-        if (other.CompareTag(PlayerSlowArea.Tag))
+        if (targetTag == "Player" && other.CompareTag(PlayerSlowArea.Tag))
         {
             Speed = data.speed;
         }

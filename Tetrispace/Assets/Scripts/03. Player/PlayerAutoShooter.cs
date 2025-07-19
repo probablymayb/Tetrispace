@@ -9,7 +9,6 @@ public class PlayerAutoShooter : MonoBehaviour
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private List<BulletData> bulletDatas;
     [SerializeField] private BulletData bombData;
-    [SerializeField] private float bombRadius;
     private List<List<Transform>> shootPositions = new();
     private float damage;
     private int ammo;
@@ -36,9 +35,9 @@ public class PlayerAutoShooter : MonoBehaviour
     public void Init(PlayerStat stat)
     {
         playerStat = stat;
-        ammo = (int)playerStat.GetStat(PlayerEnforcement.AutoAmmo);
-        damage = playerStat.GetStat(PlayerEnforcement.AutoDamage);
-        bombCoolTime = playerStat.GetStat(PlayerEnforcement.Bomb);
+        ammo = (int)playerStat.GetStat(PlayerEnforcement.AutoAmmo)[0];
+        damage = playerStat.GetStat(PlayerEnforcement.AutoDamage)[0];
+        bombCoolTime = playerStat.GetStat(PlayerEnforcement.Bomb)[0];
         
         playerStat.OnLevelUp -= OnAutoDamageLevelUp;
         playerStat.OnLevelUp += OnAutoDamageLevelUp;
@@ -52,24 +51,25 @@ public class PlayerAutoShooter : MonoBehaviour
     private void OnAutoDamageLevelUp(PlayerEnforcement enforcement)
     {
         if (enforcement != PlayerEnforcement.AutoDamage) return;
-        damage = playerStat.GetStat(PlayerEnforcement.AutoDamage);
+        damage = playerStat.GetStat(PlayerEnforcement.AutoDamage)[0];
     }
 
     private void OnAutoAmmoLevelUp(PlayerEnforcement enforcement)
     {
         if (enforcement != PlayerEnforcement.AutoAmmo) return;
-        ammo = (int)playerStat.GetStat(PlayerEnforcement.AutoAmmo);
+        ammo = (int)playerStat.GetStat(PlayerEnforcement.AutoAmmo)[0];
     }
 
     private void OnBombLevelUp(PlayerEnforcement enforcement)
     {
         if (enforcement != PlayerEnforcement.Bomb) return;
-        bombCoolTime = playerStat.GetStat(PlayerEnforcement.Bomb);
+        bombCoolTime = playerStat.GetStat(PlayerEnforcement.Bomb)[0];
         if (playerStat.GetLevel(PlayerEnforcement.Bomb) == 1) StartCoroutine(AutoBomb());
     }
 
     private IEnumerator AutoFire()
     {
+        print("AutoFire");
         float fireInterval = 1f / attackSpeed;
 
         while (true)
@@ -86,7 +86,7 @@ public class PlayerAutoShooter : MonoBehaviour
             Vector2 direction = Vector2.up;
             Bullet bullet = PoolManager.Instance.Get(bulletPrefab);
             bullet.transform.position = shootPositions[ammo-1][i].position;
-            bullet.Setup(bulletDatas[i], damage);
+            bullet.Setup(bulletDatas[ammo-1], damage);
             bullet.Fire(direction, "Enemy");
         }
     }
@@ -114,6 +114,7 @@ public class PlayerAutoShooter : MonoBehaviour
     {
         print("Bomb");
         Vector2 bombCenter = bombTransform.position;
+        float bombRadius = playerStat.GetStat(PlayerEnforcement.Bomb)[1];
         Collider2D[] hits = Physics2D.OverlapCircleAll(bombCenter, bombRadius);
         foreach (var hit in hits)
         {

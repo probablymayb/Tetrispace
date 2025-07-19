@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class UI_Enforcement : UI_Base
     }
     
     private Dictionary<PlayerEnforcement, int> levels = new Dictionary<PlayerEnforcement, int>();
-    private List<PlayerEnforcement> levelUpHistory = new();
+    private List<PlayerEnforcement> earnedEnforcement = new();
     private Dictionary<PlayerEnforcement, bool> isEnforcementShown = new();
     [SerializeField] private List<EnforcementCardData> cardDatas = new();
     [SerializeField] private float blinkSpeed = 1.5f;
@@ -39,7 +40,7 @@ public class UI_Enforcement : UI_Base
     {
         cardMoveAction = InputSystem.actions.FindAction(CardMoveActionName);
         cardSelectAction = InputSystem.actions.FindAction(CardSelectActionName);
-        levelUpHistory = new();
+        earnedEnforcement = new();
         foreach (PlayerEnforcement playerEnforcement in Enum.GetValues(typeof(PlayerEnforcement)))
         {
             levels.Add(playerEnforcement, 0);
@@ -60,17 +61,27 @@ public class UI_Enforcement : UI_Base
 
     public void OnEnable()
     {
+        if (!CanEnforcement())
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         GameManager.Instance.ChangeState(EGameState.Paused);
         InputSystem.actions.FindActionMap(PlayerActionMap)?.Disable();
         InputSystem.actions.FindActionMap(UIActionMap)?.Enable();
         
         cardMoveAction.started += OnMove;
         cardSelectAction.started += OnSelect;
-        Get<UI_EnforcementIcon>((int)IconGroups.EnforcementIconGroup).ShowIcons(levelUpHistory);
+        Get<UI_EnforcementIcon>((int)IconGroups.EnforcementIconGroup).ShowIcons(earnedEnforcement);
         Get<UI_EnforcementCardList>((int)CardLists.EnforcementCardList).ShowCards(GetRandomCardInfos());
         StartBlinking();
     }
 
+    private bool CanEnforcement()
+    {
+        return levels.Values.Any(level => level < 3);
+    }
+    
     private void OnMove(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
@@ -82,7 +93,7 @@ public class UI_Enforcement : UI_Base
     {
         PlayerEnforcement enforcement = Get<UI_EnforcementCardList>((int)CardLists.EnforcementCardList).SelectNowHovered();
         levels[enforcement]++;
-        levelUpHistory.Add(enforcement);
+        if(!earnedEnforcement.Contains(enforcement)) earnedEnforcement.Add(enforcement);
         gameObject.SetActive(false);
     }
 

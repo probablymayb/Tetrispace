@@ -12,35 +12,5 @@ public class MainCamera : MonoBehaviour
     private void LateUpdate()
     {
 
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            GridSystem.GridMiddlePos.x += 1;
-            Debug.Log(GridSystem.GridMiddlePos);
-            Debug.Log(GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y));
-
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            GridSystem.GridMiddlePos.x -= 1;
-            Debug.Log(GridSystem.GridMiddlePos);
-            Debug.Log(GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y));
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            GridSystem.GridMiddlePos.y += 1;
-            Debug.Log(GridSystem.GridMiddlePos);
-            Debug.Log(GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y));
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            GridSystem.GridMiddlePos.y -= 1;
-            Debug.Log(GridSystem.GridMiddlePos);
-            Debug.Log(GridSystem.GetGridMiddlePos(GridSystem.GridMiddlePos.x, GridSystem.GridMiddlePos.y));
-        }
-        else if (Input.GetKeyDown(KeyCode.K))
-        { 
-            TetriminoManager.Instance.SpawnUselessBlock();
-        }
-
     }
 }

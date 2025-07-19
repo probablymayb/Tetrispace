@@ -10,12 +10,17 @@ public enum PlayerEnforcement
     Bomb,
     Area,
 }
+[System.Serializable]
+public class EnforcementValue
+{
+    public List<float> innerList;
+}
 
 [System.Serializable]
 public class EnforcementData
 {
     public PlayerEnforcement enforcement;
-    public List<float> valueByLevel;
+    public List<EnforcementValue> valuesByLevel;
 }
 
 [CreateAssetMenu(menuName = "Player/PlayerLevelData")]

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UI_EnforcementCardList : UI_Base
 {
     private int nowSelect;
+    private int maxCardIdx;
     [SerializeField] private List<Sprite> cardPanels = new();
     enum Cards
     {
@@ -36,17 +37,29 @@ public class UI_EnforcementCardList : UI_Base
 
     public void ShowCards(List<EnforcementCardInfo> cardInfos)
     {
-        Get<UI_EnforcementCard>((int)Cards.CardOne).ShowCard(cardInfos[0]);
-        Get<UI_EnforcementCard>((int)Cards.CardTwo).ShowCard(cardInfos[1]);
-        Get<UI_EnforcementCard>((int)Cards.CardThree).ShowCard(cardInfos[2]);
+        if (cardInfos.Count == 0) return;
+        nowSelect = Mathf.Min(cardInfos.Count - 1, 1);
+        maxCardIdx = cardInfos.Count - 1;
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (i >= cardInfos.Count)
+            {
+                Get<UI_EnforcementCard>((int)Cards.CardOne+i).gameObject.SetActive(false);
+            }
+            else
+            {
+                Get<UI_EnforcementCard>((int)Cards.CardOne+i).gameObject.SetActive(true);
+                Get<UI_EnforcementCard>((int)Cards.CardOne+i).ShowCard(cardInfos[i]);
+            }
+        }
         
-        nowSelect = 1;
         HoverCard(nowSelect);
     }
 
     public void MoveHover(int dir)
     {
-        nowSelect = Mathf.Clamp(nowSelect + dir, 0, 2);
+        nowSelect = Mathf.Clamp(nowSelect + dir, 0, maxCardIdx);
         HoverCard(nowSelect);
     }
 

@@ -14,38 +14,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enforcements:
   - enforcement: 0
-    valueByLevel:
-    - 1
-    - 2
-    - 3
-    - 4
+    valuesByLevel:
+    - innerList:
+      - 1
+    - innerList:
+      - 2
+    - innerList:
+      - 3
+    - innerList:
+      - 4
   - enforcement: 1
-    valueByLevel:
-    - 1
-    - 2
-    - 3
-    - 4
+    valuesByLevel:
+    - innerList:
+      - 1
+    - innerList:
+      - 2
+    - innerList:
+      - 3
+    - innerList:
+      - 4
   - enforcement: 2
-    valueByLevel:
-    - 8
-    - 10
-    - 12
-    - 14
+    valuesByLevel:
+    - innerList:
+      - 8
+    - innerList:
+      - 10
+    - innerList:
+      - 12
+    - innerList:
+      - 14
   - enforcement: 3
-    valueByLevel:
-    - 0
-    - 1
-    - 2
-    - 3
+    valuesByLevel:
+    - innerList:
+      - 0
+    - innerList:
+      - 1
+    - innerList:
+      - 2
+    - innerList:
+      - 3
   - enforcement: 4
-    valueByLevel:
-    - 0
-    - 3
-    - 2
-    - 1
+    valuesByLevel:
+    - innerList:
+      - 0
+      - 0
+    - innerList:
+      - 4
+      - 2
+    - innerList:
+      - 3
+      - 3
+    - innerList:
+      - 2
+      - 4
   - enforcement: 5
-    valueByLevel:
-    - 15
-    - 5
-    - 15
-    - 15
+    valuesByLevel:
+    - innerList:
+      - 0
+    - innerList:
+      - 6
+    - innerList:
+      - 8
+    - innerList:
+      - 10

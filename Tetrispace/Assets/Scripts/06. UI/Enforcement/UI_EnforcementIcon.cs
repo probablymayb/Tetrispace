@@ -40,11 +40,11 @@ public class UI_EnforcementIcon : UI_Base
         Bind<Image>(typeof(Images));
     }
 
-    public void ShowIcons(List<PlayerEnforcement> levelUpHistory)
+    public void ShowIcons(List<PlayerEnforcement> earnedEnforcement)
     {
         for (int i = 0; i < 6; i++)
         {
-            if(i < levelUpHistory.Count) GetImage((int)Images.IconOne + i).sprite = spriteDict[levelUpHistory[i]];
+            if(i < earnedEnforcement.Count) GetImage((int)Images.IconOne + i).sprite = spriteDict[earnedEnforcement[i]];
             else GetImage((int)Images.IconOne + i).sprite = null;
         }
     }

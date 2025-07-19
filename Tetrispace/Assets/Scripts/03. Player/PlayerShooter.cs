@@ -5,60 +5,60 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerStat))]
 public class PlayerShooter : MonoBehaviour
 {
-    #region ÄÄÆ÷³ÍÆ® ¹× ¾×¼Ç ÂüÁ¶
+    #region ì»´í¬ë„ŒíŠ¸ ë° ì•¡ì…˜ ì°¸ì¡°
     private PlayerStat stat;
     private InputAction shootAction;
     private InputAction CCWAction;
     private InputAction CWAction;
 
-    // ¾×¼Ç ÀÌ¸§ »ó¼ö Á¤ÀÇ
+    // ì•¡ì…˜ ì´ë¦„ ìƒìˆ˜ ì •ì˜
     private const string ShootActionName = "Attack";
     private const string CCWActionName = "RotationAttackCCW";
     private const string CWActionName = "RotationAttackCW";
     #endregion
 
-    #region ÇÁ¸®ÆÕ ÂüÁ¶
-    [Header("=== ÃÑ¾Ë ÇÁ¸®ÆÕ ===")]
+    #region í”„ë¦¬íŒ¹ ì°¸ì¡°
+    [Header("=== ì´ì•Œ í”„ë¦¬íŒ¹ ===")]
     [SerializeField] private Bullet bulletPrefab;
-    [SerializeField] private Bullet CCWBulletPrefab;    // ¹İ½Ã°è¹æÇâ È¸Àü ÃÑ¾Ë
-    [SerializeField] private Bullet CWBulletPrefab;     // ½Ã°è¹æÇâ È¸Àü ÃÑ¾Ë
+    [SerializeField] private Bullet CCWBulletPrefab;    // ë°˜ì‹œê³„ë°©í–¥ íšŒì „ ì´ì•Œ
+    [SerializeField] private Bullet CWBulletPrefab;     // ì‹œê³„ë°©í–¥ íšŒì „ ì´ì•Œ
 
-    [Header("=== ¹ß»ç ¼³Á¤ ===")]
+    [Header("=== ë°œì‚¬ ì„¤ì • ===")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private float attackCooldown = 0.3f;
-    [SerializeField] private float rotationAttackCooldown = 0.5f;  // È¸Àü °ø°İÀº Á» ´õ ´À¸®°Ô
+    [SerializeField] private float rotationAttackCooldown = 0.5f;  // íšŒì „ ê³µê²©ì€ ì¢€ ë” ëŠë¦¬ê²Œ
     [SerializeField] private BulletData bulletData;
-    [SerializeField] private BulletData CCWBulletData;        // È¸Àü ÃÑ¾Ë¿ë µ¥ÀÌÅÍ
-    [SerializeField] private BulletData CWBulletData;        // È¸Àü ÃÑ¾Ë¿ë µ¥ÀÌÅÍ
+    [SerializeField] private BulletData CCWBulletData;        // íšŒì „ ì´ì•Œìš© ë°ì´í„°
+    [SerializeField] private BulletData CWBulletData;        // íšŒì „ ì´ì•Œìš© ë°ì´í„°
     #endregion
 
-    #region °ø°İ Å¸ÀÌ¸Ó ¹× »óÅÂ
+    #region ê³µê²© íƒ€ì´ë¨¸ ë° ìƒíƒœ
     private float attackTimer = 0f;
-    private float CCWAttackTimer = 0f;  // CCW °ø°İ Àü¿ë Å¸ÀÌ¸Ó
-    private float CWAttackTimer = 0f;   // CW °ø°İ Àü¿ë Å¸ÀÌ¸Ó
+    private float CCWAttackTimer = 0f;  // CCW ê³µê²© ì „ìš© íƒ€ì´ë¨¸
+    private float CWAttackTimer = 0f;   // CW ê³µê²© ì „ìš© íƒ€ì´ë¨¸
 
     private bool isAttackHeld = false;
     private bool isCCWAttackHeld = false;
     private bool isCWAttackHeld = false;
     #endregion
 
-    #region ÃÊ±âÈ­
+    #region ì´ˆê¸°í™”
     private void Awake()
     {
-        // ÄÄÆ÷³ÍÆ® ÂüÁ¶ È¹µæ
+        // ì»´í¬ë„ŒíŠ¸ ì°¸ì¡° íšë“
         stat = GetComponent<PlayerStat>();
 
-        // Input Action Ã£±â
+        // Input Action ì°¾ê¸°
         shootAction = InputSystem.actions.FindAction(ShootActionName);
         CCWAction = InputSystem.actions.FindAction(CCWActionName);
         CWAction = InputSystem.actions.FindAction(CWActionName);
 
-        // ¿ÀºêÁ§Æ® Ç® »ı¼º (°ÔÀÓÀë¿ë ºü¸¥ ±¸Çö)
+        // ì˜¤ë¸Œì íŠ¸ í’€ ìƒì„± (ê²Œì„ì¼ìš© ë¹ ë¥¸ êµ¬í˜„)
         CreateBulletPools();
     }
 
     /// <summary>
-    /// ÃÑ¾Ë ¿ÀºêÁ§Æ® Ç®µéÀ» »ı¼ºÇÕ´Ï´Ù
+    /// ì´ì•Œ ì˜¤ë¸Œì íŠ¸ í’€ë“¤ì„ ìƒì„±í•©ë‹ˆë‹¤
     /// </summary>
     private void CreateBulletPools()
     {
@@ -73,32 +73,32 @@ public class PlayerShooter : MonoBehaviour
     }
     #endregion
 
-    #region Enable/Disable ÀÌº¥Æ® µî·Ï
+    #region Enable/Disable ì´ë²¤íŠ¸ ë“±ë¡
     private void OnEnable()
     {
-        // ÀÏ¹İ °ø°İ ¾×¼Ç µî·Ï
+        // ì¼ë°˜ ê³µê²© ì•¡ì…˜ ë“±ë¡
         RegisterShootAction();
 
-        // CCW È¸Àü °ø°İ ¾×¼Ç µî·Ï  
+        // CCW íšŒì „ ê³µê²© ì•¡ì…˜ ë“±ë¡  
         RegisterCCWAction();
 
-        // CW È¸Àü °ø°İ ¾×¼Ç µî·Ï
+        // CW íšŒì „ ê³µê²© ì•¡ì…˜ ë“±ë¡
         RegisterCWAction();
 
-        // Å¸ÀÌ¸Ó ÃÊ±âÈ­
+        // íƒ€ì´ë¨¸ ì´ˆê¸°í™”
         ResetAllTimers();
     }
 
     private void OnDisable()
     {
-        // ¸ğµç ¾×¼Ç ÇØÁ¦
+        // ëª¨ë“  ì•¡ì…˜ í•´ì œ
         UnregisterShootAction();
         UnregisterCCWAction();
         UnregisterCWAction();
     }
 
     /// <summary>
-    /// ÀÏ¹İ °ø°İ ¾×¼Ç µî·Ï
+    /// ì¼ë°˜ ê³µê²© ì•¡ì…˜ ë“±ë¡
     /// </summary>
     private void RegisterShootAction()
     {
@@ -112,7 +112,7 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// CCW È¸Àü °ø°İ ¾×¼Ç µî·Ï
+    /// CCW íšŒì „ ê³µê²© ì•¡ì…˜ ë“±ë¡
     /// </summary>
     private void RegisterCCWAction()
     {
@@ -126,7 +126,7 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// CW È¸Àü °ø°İ ¾×¼Ç µî·Ï
+    /// CW íšŒì „ ê³µê²© ì•¡ì…˜ ë“±ë¡
     /// </summary>
     private void RegisterCWAction()
     {
@@ -140,7 +140,7 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// ÀÏ¹İ °ø°İ ¾×¼Ç ÇØÁ¦
+    /// ì¼ë°˜ ê³µê²© ì•¡ì…˜ í•´ì œ
     /// </summary>
     private void UnregisterShootAction()
     {
@@ -154,7 +154,7 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// CCW È¸Àü °ø°İ ¾×¼Ç ÇØÁ¦
+    /// CCW íšŒì „ ê³µê²© ì•¡ì…˜ í•´ì œ
     /// </summary>
     private void UnregisterCCWAction()
     {
@@ -168,7 +168,7 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// CW È¸Àü °ø°İ ¾×¼Ç ÇØÁ¦
+    /// CW íšŒì „ ê³µê²© ì•¡ì…˜ í•´ì œ
     /// </summary>
     private void UnregisterCWAction()
     {
@@ -182,19 +182,19 @@ public class PlayerShooter : MonoBehaviour
     }
     #endregion
 
-    #region ¾÷µ¥ÀÌÆ® ·çÇÁ
+    #region ì—…ë°ì´íŠ¸ ë£¨í”„
     private void Update()
     {
-        // °¢ °ø°İ Å¸ÀÔº°·Î ¿¬»ç Ã³¸®
+        // ê° ê³µê²© íƒ€ì…ë³„ë¡œ ì—°ì‚¬ ì²˜ë¦¬
         ProcessContinuousAttacks();
     }
 
     /// <summary>
-    /// ¿¬¼Ó °ø°İ Ã³¸® (°¢ °ø°İ Å¸ÀÔº°·Î)
+    /// ì—°ì† ê³µê²© ì²˜ë¦¬ (ê° ê³µê²© íƒ€ì…ë³„ë¡œ)
     /// </summary>
     private void ProcessContinuousAttacks()
     {
-        // ÀÏ¹İ °ø°İ ¿¬»ç Ã³¸®
+        // ì¼ë°˜ ê³µê²© ì—°ì‚¬ ì²˜ë¦¬
         if (isAttackHeld)
         {
             attackTimer -= Time.deltaTime;
@@ -205,7 +205,7 @@ public class PlayerShooter : MonoBehaviour
             }
         }
 
-        // CCW È¸Àü °ø°İ ¿¬»ç Ã³¸®
+        // CCW íšŒì „ ê³µê²© ì—°ì‚¬ ì²˜ë¦¬
         if (isCCWAttackHeld)
         {
             CCWAttackTimer -= Time.deltaTime;
@@ -216,7 +216,7 @@ public class PlayerShooter : MonoBehaviour
             }
         }
 
-        // CW È¸Àü °ø°İ ¿¬»ç Ã³¸®
+        // CW íšŒì „ ê³µê²© ì—°ì‚¬ ì²˜ë¦¬
         if (isCWAttackHeld)
         {
             CWAttackTimer -= Time.deltaTime;
@@ -229,15 +229,15 @@ public class PlayerShooter : MonoBehaviour
     }
     #endregion
 
-    #region ÀÔ·Â ÀÌº¥Æ® ÇÚµé·¯
+    #region ì…ë ¥ ì´ë²¤íŠ¸ í•¸ë“¤ëŸ¬
     /// <summary>
-    /// ÀÏ¹İ °ø°İ ÀÔ·Â Ã³¸®
+    /// ì¼ë°˜ ê³µê²© ì…ë ¥ ì²˜ë¦¬
     /// </summary>
     private void OnAttack(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            // Ã¹ ¹ß»ç Áï½Ã ½ÇÇà
+            // ì²« ë°œì‚¬ ì¦‰ì‹œ ì‹¤í–‰
             if (attackTimer <= 0f)
             {
                 Fire();
@@ -252,13 +252,13 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// CCW(¹İ½Ã°è¹æÇâ) È¸Àü °ø°İ ÀÔ·Â Ã³¸®
+    /// CCW(ë°˜ì‹œê³„ë°©í–¥) íšŒì „ ê³µê²© ì…ë ¥ ì²˜ë¦¬
     /// </summary>
     private void OnCCWRotationAttack(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            // Ã¹ ¹ß»ç Áï½Ã ½ÇÇà
+            // ì²« ë°œì‚¬ ì¦‰ì‹œ ì‹¤í–‰
             if (CCWAttackTimer <= 0f)
             {
                 FireCCWBullet();
@@ -273,13 +273,13 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// CW(½Ã°è¹æÇâ) È¸Àü °ø°İ ÀÔ·Â Ã³¸®
+    /// CW(ì‹œê³„ë°©í–¥) íšŒì „ ê³µê²© ì…ë ¥ ì²˜ë¦¬
     /// </summary>
     private void OnCWRotationAttack(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            // Ã¹ ¹ß»ç Áï½Ã ½ÇÇà
+            // ì²« ë°œì‚¬ ì¦‰ì‹œ ì‹¤í–‰
             if (CWAttackTimer <= 0f)
             {
                 FireCWBullet();
@@ -294,87 +294,87 @@ public class PlayerShooter : MonoBehaviour
     }
     #endregion
 
-    #region ¹ß»ç ¸Ş¼­µåµé
+    #region ë°œì‚¬ ë©”ì„œë“œë“¤
     /// <summary>
-    /// ÀÏ¹İ ÃÑ¾Ë ¹ß»ç
+    /// ì¼ë°˜ ì´ì•Œ ë°œì‚¬
     /// </summary>
     private void Fire()
     {
         if (bulletPrefab == null) return;
 
-        // Ç®¿¡¼­ ÃÑ¾Ë °¡Á®¿À±â (Á¦³×¸¯ ¹æ½Ä)
+        // í’€ì—ì„œ ì´ì•Œ ê°€ì ¸ì˜¤ê¸° (ì œë„¤ë¦­ ë°©ì‹)
         Bullet pooledBullet = PoolManager.Instance.Get(bulletPrefab);
         if (pooledBullet == null) return;
 
-        // ÃÑ¾Ë ¼³Á¤ ¹× ¹ß»ç
+        // ì´ì•Œ ì„¤ì • ë° ë°œì‚¬
         SetupAndFireBullet(pooledBullet, bulletData, Vector2.up);
     }
 
     /// <summary>
-    /// CCW(¹İ½Ã°è¹æÇâ) È¸Àü ÃÑ¾Ë ¹ß»ç
+    /// CCW(ë°˜ì‹œê³„ë°©í–¥) íšŒì „ ì´ì•Œ ë°œì‚¬
     /// </summary>
     private void FireCCWBullet()
     {
 
-        // Ç®¿¡¼­ CCW ÃÑ¾Ë °¡Á®¿À±â (Á¦³×¸¯ ¹æ½Ä)
+        // í’€ì—ì„œ CCW ì´ì•Œ ê°€ì ¸ì˜¤ê¸° (ì œë„¤ë¦­ ë°©ì‹)
         Bullet pooledBullet = PoolManager.Instance.Get(bulletPrefab);
         if (pooledBullet == null) return;
 
-        // CCW È¸Àü ¹æÇâÀ¸·Î ¹ß»ç 
+        // CCW íšŒì „ ë°©í–¥ìœ¼ë¡œ ë°œì‚¬ 
         Vector2 direction = Vector2.up;
         SetupAndFireRotationBullet(pooledBullet, CCWBulletData, direction);
     }
 
     /// <summary>
-    /// CW(½Ã°è¹æÇâ) È¸Àü ÃÑ¾Ë ¹ß»ç
+    /// CW(ì‹œê³„ë°©í–¥) íšŒì „ ì´ì•Œ ë°œì‚¬
     /// </summary>
     private void FireCWBullet()
     {
-        // Ç®¿¡¼­ CW ÃÑ¾Ë °¡Á®¿À±â (Á¦³×¸¯ ¹æ½Ä)
+        // í’€ì—ì„œ CW ì´ì•Œ ê°€ì ¸ì˜¤ê¸° (ì œë„¤ë¦­ ë°©ì‹)
         Bullet pooledBullet = PoolManager.Instance.Get(bulletPrefab);
         if (pooledBullet == null) return;
 
-        // CW È¸Àü ¹æÇâÀ¸·Î ¹ß»ç
+        // CW íšŒì „ ë°©í–¥ìœ¼ë¡œ ë°œì‚¬
         Vector2 direction = Vector2.up;
         SetupAndFireRotationBullet(pooledBullet, CWBulletData, direction);
     }
 
 
     /// <summary>
-    /// ÃÑ¾Ë ±âº» ¼³Á¤ ¹× ¹ß»ç (°øÅë ·ÎÁ÷)
+    /// ì´ì•Œ ê¸°ë³¸ ì„¤ì • ë° ë°œì‚¬ (ê³µí†µ ë¡œì§)
     /// </summary>
     private void SetupAndFireBullet(Bullet bullet, BulletData data, Vector2 direction)
     {
         if (bullet == null) return;
 
-        // À§Ä¡ ¹× È¸Àü ¼³Á¤
+        // ìœ„ì¹˜ ë° íšŒì „ ì„¤ì •
         bullet.transform.position = firePoint.position;
         bullet.transform.rotation = Quaternion.identity;
 
-        // ÃÑ¾Ë µ¥ÀÌÅÍ ¼³Á¤
+        // ì´ì•Œ ë°ì´í„° ì„¤ì •
         BulletData dataToUse = data != null ? data : bulletData;
-        float damage = stat.GetStat(PlayerEnforcement.AutoDamage);
+        float damage = stat.GetStat(PlayerEnforcement.AutoDamage)[0];
 
         bullet.Setup(dataToUse, damage);
         bullet.Fire(direction, "Enemy");
     }
 
     /// <summary>
-    /// È¸Àü ÃÑ¾Ë ±âº» ¼³Á¤ ¹× ¹ß»ç (CCW/CW Àü¿ë)
+    /// íšŒì „ ì´ì•Œ ê¸°ë³¸ ì„¤ì • ë° ë°œì‚¬ (CCW/CW ì „ìš©)
     /// </summary>
     private void SetupAndFireRotationBullet<T>(T bullet, BulletData data, Vector2 direction) where T : Component
     {
         if (bullet == null) return;
 
-        // À§Ä¡ ¹× È¸Àü ¼³Á¤
+        // ìœ„ì¹˜ ë° íšŒì „ ì„¤ì •
         bullet.transform.position = firePoint.position;
         bullet.transform.rotation = Quaternion.identity;
 
-        // ÃÑ¾Ë µ¥ÀÌÅÍ ¼³Á¤
+        // ì´ì•Œ ë°ì´í„° ì„¤ì •
         BulletData dataToUse = data != null ? data : bulletData;
-        float damage = stat.GetStat(PlayerEnforcement.AutoDamage);
+        float damage = stat.GetStat(PlayerEnforcement.AutoDamage)[0];
 
-        // Å¸ÀÔ¿¡ µû¶ó Setup È£Ãâ
+        // íƒ€ì…ì— ë”°ë¼ Setup í˜¸ì¶œ
         if (bullet is Bullet ccwBullet)
         {
             ccwBullet.Setup(dataToUse, damage);
@@ -388,9 +388,9 @@ public class PlayerShooter : MonoBehaviour
     }
     #endregion
 
-    #region À¯Æ¿¸®Æ¼ ¸Ş¼­µå
+    #region ìœ í‹¸ë¦¬í‹° ë©”ì„œë“œ
     /// <summary>
-    /// ¸ğµç °ø°İ Å¸ÀÌ¸Ó ÃÊ±âÈ­
+    /// ëª¨ë“  ê³µê²© íƒ€ì´ë¨¸ ì´ˆê¸°í™”
     /// </summary>
     private void ResetAllTimers()
     {
@@ -400,7 +400,7 @@ public class PlayerShooter : MonoBehaviour
     }
 
     /// <summary>
-    /// µğ¹ö±× Á¤º¸ Ç¥½Ã (°ÔÀÓÀë¿ë)
+    /// ë””ë²„ê·¸ ì •ë³´ í‘œì‹œ (ê²Œì„ì¼ìš©)
     /// </summary>
     private void OnGUI()
     {
@@ -408,9 +408,9 @@ public class PlayerShooter : MonoBehaviour
 
         GUILayout.BeginArea(new Rect(10, 200, 250, 150));
         GUILayout.Label("=== PlayerShooter Debug ===");
-        GUILayout.Label($"ÀÏ¹İ °ø°İ: {(isAttackHeld ? "ON" : "OFF")} ({attackTimer:F1}s)");
-        GUILayout.Label($"CCW °ø°İ: {(isCCWAttackHeld ? "ON" : "OFF")} ({CCWAttackTimer:F1}s)");
-        GUILayout.Label($"CW °ø°İ: {(isCWAttackHeld ? "ON" : "OFF")} ({CWAttackTimer:F1}s)");
+        GUILayout.Label($"ì¼ë°˜ ê³µê²©: {(isAttackHeld ? "ON" : "OFF")} ({attackTimer:F1}s)");
+        GUILayout.Label($"CCW ê³µê²©: {(isCCWAttackHeld ? "ON" : "OFF")} ({CCWAttackTimer:F1}s)");
+        GUILayout.Label($"CW ê³µê²©: {(isCWAttackHeld ? "ON" : "OFF")} ({CWAttackTimer:F1}s)");
         GUILayout.EndArea();
     }
     #endregion

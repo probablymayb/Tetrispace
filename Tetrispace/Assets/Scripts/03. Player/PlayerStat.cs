@@ -7,7 +7,7 @@ public class PlayerStat : MonoBehaviour
 {
     public event Action<PlayerEnforcement> OnLevelUp;
     private Dictionary<PlayerEnforcement, int> levelsByEnforcement = new();
-    private Dictionary<PlayerEnforcement, List<float>> valuesByEnforcement = new();
+    private Dictionary<PlayerEnforcement, List<EnforcementValue>> valuesByEnforcement = new();
     [SerializeField] private PlayerLevelData playerLevelData;
     
     private PlayerSlowArea slowArea;
@@ -19,7 +19,7 @@ public class PlayerStat : MonoBehaviour
     {
         foreach (var pair in playerLevelData.enforcements)
         {
-            valuesByEnforcement.Add(pair.enforcement, pair.valueByLevel);
+            valuesByEnforcement.Add(pair.enforcement, pair.valuesByLevel);
         }
         
         foreach (PlayerEnforcement enforcement in Enum.GetValues(typeof(PlayerEnforcement)))
@@ -30,7 +30,6 @@ public class PlayerStat : MonoBehaviour
         slowArea = GetComponentInChildren<PlayerSlowArea>(true);
         drone = GetComponentInChildren<PlayerDrone>(true);
         autoShooter = GetComponentInChildren<PlayerAutoShooter>();
-        autoShooter.Init(this);
 
         OnLevelUp -= InitSlowArea;
         OnLevelUp += InitSlowArea;
@@ -44,15 +43,20 @@ public class PlayerStat : MonoBehaviour
         // EventManager.Instance.PlayerEnforcementLevelUp(PlayerEnforcement.Bomb);
     }
 
-    public float GetStat(PlayerEnforcement enforcement)
+    private void Start()
+    {
+        autoShooter.Init(this);
+    }
+
+    public List<float> GetStat(PlayerEnforcement enforcement)
     { 
         int level = levelsByEnforcement[enforcement];
         if (valuesByEnforcement[enforcement].Count <= level)
         {
             Debug.Log($"PlayerEnforcement {enforcement}가 Level Data에 없는 레벨{level}을 가리키고 있음");
-            return 0;
+            return new List<float>();
         }
-        return valuesByEnforcement[enforcement][level];
+        return valuesByEnforcement[enforcement][level].innerList;
     }
 
     public int GetLevel(PlayerEnforcement enforcement)
@@ -73,6 +77,7 @@ public class PlayerStat : MonoBehaviour
 
         OnLevelUp -= InitSlowArea;
         slowArea.gameObject.SetActive(true);
+        slowArea.Init(this);
     }
     
     private void InitDrone(PlayerEnforcement enforcement)

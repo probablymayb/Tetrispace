@@ -15,7 +15,7 @@ public class PlayerDrone : MonoBehaviour
     public void Init(PlayerStat stat)
     {
         playerStat = stat;
-        damage = playerStat.GetStat(PlayerEnforcement.Drone);
+        damage = playerStat.GetStat(PlayerEnforcement.Drone)[0];
         playerStat.OnLevelUp -= OnDroneLevelUp;
         playerStat.OnLevelUp += OnDroneLevelUp;
         StartCoroutine(AutoFire());
@@ -25,7 +25,7 @@ public class PlayerDrone : MonoBehaviour
     private void OnDroneLevelUp(PlayerEnforcement enforcement)
     {
         if (enforcement != PlayerEnforcement.Drone) return;
-        damage = playerStat.GetStat(PlayerEnforcement.Drone);
+        damage = playerStat.GetStat(PlayerEnforcement.Drone)[0];
     }
     
     

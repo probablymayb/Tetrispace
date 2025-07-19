@@ -27,7 +27,7 @@ public class PlayerSlowArea : MonoBehaviour
     public void Init(PlayerStat playerStat)
     {
         stat = playerStat;
-        Radius = playerStat.GetStat(PlayerEnforcement.Area);
+        Radius = playerStat.GetStat(PlayerEnforcement.Area)[0];
         playerStat.OnLevelUp -= OnSlowAreaLevelUp;
         playerStat.OnLevelUp += OnSlowAreaLevelUp;
     }
@@ -35,6 +35,6 @@ public class PlayerSlowArea : MonoBehaviour
     private void OnSlowAreaLevelUp(PlayerEnforcement enforcement)
     {
         if (enforcement != PlayerEnforcement.Area) return;
-        Radius = stat.GetStat(PlayerEnforcement.Area);
+        Radius = stat.GetStat(PlayerEnforcement.Area)[0];
     }
 }

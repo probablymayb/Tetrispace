@@ -106,6 +106,7 @@ Material:
     - _EnableExternalAlpha: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Switch: 0
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 0.2783019, b: 0.2783019, a: 1}

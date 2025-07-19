@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PL_Fire3
   m_EditorClassIdentifier: 
   speed: 8
-  lifeTime: 5
+  lifeTime: 4
   logicType: 0
   effectPrefabTransform: {fileID: 8549592270297081311, guid: 844a620179005a8448a0d6d4efdc6419, type: 3}
   capsuleSize: {x: 0.2, y: 0.2}

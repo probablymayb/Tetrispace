@@ -1,14 +1,21 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PlayerStat))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IEntity
 {
+    private static readonly int ColorSwitch = Shader.PropertyToID("_Color_Switch");
     private PlayerStat stat;
     private InputAction moveAction;
     private const string MoveActionName = "Move";
 
+    [SerializeField] private float hitInvincibleTime = 1.5f;
+    private float hitInvincibleTimer = 0f;
+    
     [SerializeField] private UI_Enforcement enforcementUI;
     [SerializeField] private float moveSpeed = 3f; // 연속 이동 속도
     [SerializeField] private float tileSize = 1f; // 한 칸 크기 (스냅 기준)
@@ -17,9 +24,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float gridWorldUnitPerStep = 0.28f;
     private float gridMoveBuffer = 0f;
     private Vector3 targetWorldPos;
+    
+    private Material instancedMat;
 
     private void Awake()
-    {
+    {    
+        var sr = GetComponentInChildren<SpriteRenderer>();
+        instancedMat = Instantiate(sr.material);  // 인스턴스화
+        sr.material = instancedMat;        
+            
         stat = GetComponent<PlayerStat>();
         moveAction = InputSystem.actions.FindAction(MoveActionName);
         
@@ -55,12 +68,13 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
+        hitInvincibleTimer += Time.deltaTime;
         // enforcementUI 테스트
-        // if (Input.GetKeyDown(KeyCode.B))
-        // {
-        //     enforcementUI.gameObject.SetActive(true);
-        // }
-        float speed = stat.GetStat(PlayerEnforcement.Speed); // 초당 이동속도
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            enforcementUI.gameObject.SetActive(true);
+        }
+        float speed = stat.GetStat(PlayerEnforcement.Speed)[0]; // 초당 이동속도
         bool hasArrived = Vector3.Distance(transform.position, targetWorldPos) < 0.001f;
 
         if (isInputHeld && hasArrived)
@@ -103,5 +117,21 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = targetWorldPos;
         gridMoveBuffer = 0;
+    }
+
+    public void OnHit(float Damage, Vector2 hitPosition)
+    {
+        if (hitInvincibleTimer < hitInvincibleTime) return;
+        
+        hitInvincibleTimer = 0f;
+        TetriminoManager.Instance.SpawnUselessBlock();
+        instancedMat.SetFloat(ColorSwitch, 1f);
+        StartCoroutine(HitCoroutine());
+    }
+
+    private IEnumerator HitCoroutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        instancedMat.SetFloat(ColorSwitch, 0f);
     }
 }
