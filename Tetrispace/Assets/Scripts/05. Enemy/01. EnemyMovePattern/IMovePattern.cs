@@ -12,8 +12,7 @@ public class IMovePattern : IEnemyMovePattern
         rigid = rigidBody;
         moveSpeed = speed;
 
-        float dx = 10f;
-
+        float dx = GridSystem.WorldUnitsPerGridX * 10f;
         points = new Vector2[]
         {
             startPosition + new Vector2(-dx, 0),   // 0: 왼쪽

@@ -12,8 +12,8 @@ public class LMovePattern : IEnemyMovePattern
         rigid = rigidBody;
         moveSpeed = speed;
 
-        float dx = 7f;
-        float dy = 3f;
+        float dx = GridSystem.WorldUnitsPerGridX * 7f;
+        float dy = GridSystem.WorldUnitsPerGridY * 3f;
 
         // L자 삼각형 루트
         points = new Vector2[]
