@@ -374,7 +374,7 @@
     "m_ObjectId": "1ae6ce860d784f909efcaa341d7db243",
     "m_Title": "Main Color",
     "m_Position": {
-        "x": -734.9999389648438,
+        "x": -735.0,
         "y": -628.0
     }
 }
@@ -1615,7 +1615,7 @@
     "m_Title": "Main Texture",
     "m_Position": {
         "x": -1255.0,
-        "y": -332.0000305175781
+        "y": -332.0
     }
 }
 
@@ -1848,8 +1848,8 @@
     "m_ObjectId": "d3d10f883fd94cc3b6a411e593fc38a0",
     "m_Title": "Alpha",
     "m_Position": {
-        "x": -812.9999389648438,
-        "y": -139.0000762939453
+        "x": -813.0,
+        "y": -139.0
     }
 }
 
@@ -1929,7 +1929,7 @@
     "m_ObjectId": "def5e3dffb884876bdffb019f7d54167",
     "m_Title": "Emissive Power",
     "m_Position": {
-        "x": -267.9998779296875,
+        "x": -268.0001220703125,
         "y": -626.0
     }
 }
