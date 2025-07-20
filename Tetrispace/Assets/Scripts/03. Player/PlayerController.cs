@@ -85,6 +85,23 @@ public class PlayerController : MonoBehaviour, IEntity
         }
     }
 
+    private void Start()
+    {
+        GameManager.OnGameStart -= OnGameStart;
+        GameManager.OnGameStart += OnGameStart;
+    }
+
+    private void OnGameStart()
+    {
+        TetriminoManager.Instance.OnLineClear -= TurnOnEnhancement;
+        TetriminoManager.Instance.OnLineClear += TurnOnEnhancement;
+    }
+
+    private void TurnOnEnhancement()
+    {
+        enforcementUI.gameObject.SetActive(true);
+    }
+
     private void SetTargetWorldPosByGrid()
     {
         Vector2Int gridPos = GridSystem.GetGridPos(GridSystem.GridPos.x, GridSystem.GridPos.y);
@@ -356,7 +373,7 @@ public class PlayerController : MonoBehaviour, IEntity
         if (hitInvincibleTimer < hitInvincibleTime) return;
 
         hitInvincibleTimer = 0f;
-        TetriminoManager.Instance.SpawnUselessBlock();
+        if(GameManager.Instance.IsGamePlaying()) TetriminoManager.Instance.SpawnUselessBlock();
         instancedMat.SetFloat(ColorSwitch, 1f);
         StartCoroutine(HitCoroutine());
     }

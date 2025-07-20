@@ -4,6 +4,8 @@ using UnityEngine;
 
 public partial class Enemy : MonoBehaviour, IEntity
 {
+    private static readonly int ColorSwitch = Shader.PropertyToID("_Color_Switch");
+    private static readonly int Dissolve = Shader.PropertyToID("_Dissolve");
     public event Action OnDeath;
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private EnemyData data;
@@ -22,13 +24,16 @@ public partial class Enemy : MonoBehaviour, IEntity
     private CapsuleCollider2D capsule;
     [SerializeField] private float deathBlinkDuration = 1f;
     [SerializeField] private float deathBlinkInterval = 0.1f;
-
+    
+    private Material instancedMat;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         capsule = GetComponent<CapsuleCollider2D>();
+        instancedMat = Instantiate(sprite.material);  // 인스턴스화
+        sprite.material = instancedMat;        
     }
 
     private void FixedUpdate()
@@ -69,6 +74,7 @@ public partial class Enemy : MonoBehaviour, IEntity
     private void OnEnable()
     {
         capsule.enabled = true;
+        instancedMat.SetFloat(Dissolve, 0f);
     }
 
     private void OnDisable()
@@ -108,6 +114,14 @@ public partial class Enemy : MonoBehaviour, IEntity
         {
             OnHpZero();
         }
+        instancedMat.SetFloat(ColorSwitch, 1f);
+        StartCoroutine(HitCoroutine());
+    }
+
+    private IEnumerator HitCoroutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        instancedMat.SetFloat(ColorSwitch, 0f);
     }
 
     private void OnHpZero()
@@ -119,23 +133,25 @@ public partial class Enemy : MonoBehaviour, IEntity
         dieEffect.localPosition = Vector3.zero;
 
         capsule.enabled = false;
-        StartCoroutine(BlinkThenDie());
+        StartCoroutine(DissolveThenDie());
     }
     
-    private IEnumerator BlinkThenDie()
+    private IEnumerator DissolveThenDie()
     {
         float elapsed = 0f;
-        bool visible = true;
+        float duration = 1.5f;
 
-        while (elapsed < deathBlinkDuration)
+        while (elapsed < duration)
         {
-            visible = !visible;
-            sprite.enabled = visible;
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration); // 0 ~ 1
 
-            yield return new WaitForSeconds(deathBlinkInterval);
-            elapsed += deathBlinkInterval;
+            instancedMat.SetFloat("_Dissolve", t);
+
+            yield return null;
         }
-        sprite.enabled = true; // 마지막엔 켜진 상태로
+
+        instancedMat.SetFloat(Dissolve, 1f); // 확실히 1로 마무리
         Die();
     }
 

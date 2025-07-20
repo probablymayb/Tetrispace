@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -14,6 +15,7 @@ using System.Collections;
 /// </summary>
 public class TetriminoManager : Singleton<TetriminoManager>
 {
+    public event Action OnLineClear;
     private int width = 4;
     private int height = 5;
 
@@ -66,6 +68,14 @@ public class TetriminoManager : Singleton<TetriminoManager>
         gridArray = new GameObject[width, height];
         gridOrigin = gridOriginTransform.position;
         EventManager.Instance.onPlayerMove += OnPlayerMove;
+    }
+
+    public void ResetGrid()
+    {
+        foreach(var elem in gridArray)
+        {
+            Destroy(elem);
+        }
     }
 
     /// <summary>
@@ -256,6 +266,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
         if (linesToClear.Count > 0)
         {
             Debug.Log($"라인 클리어 발생: {linesToClear.Count}줄 (UselessBlock 제외)");
+            OnLineClear?.Invoke();
             StartCoroutine(ClearLinesCoroutine(linesToClear));
         }
     }

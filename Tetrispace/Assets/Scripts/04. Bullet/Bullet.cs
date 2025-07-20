@@ -22,6 +22,18 @@ public class Bullet : MonoBehaviour
         capsule = GetComponent<CapsuleCollider2D>();
     }
 
+    private void Update()
+    {
+        if (isSetup)
+        {
+            LifeTime -= Time.deltaTime;
+            if (LifeTime <= 0)
+            {
+                Die();
+            }
+        }
+    }
+
     /// <summary>
     /// Bullet 생성 후 BulletData를 전달해 새로운 Bullet을 만드는 메서드
     /// </summary>
@@ -54,6 +66,7 @@ public class Bullet : MonoBehaviour
             print("Bullet이 Setup되지 않은채로 Fire 시도");
             return;
         }
+
         targetTag = trgtTag;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
@@ -64,6 +77,7 @@ public class Bullet : MonoBehaviour
     {
         isSetup = false;
         OnDeath = null;
+        StopAllCoroutines();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -86,13 +100,13 @@ public class Bullet : MonoBehaviour
                     other.GetComponent<TetriminoController>().TurnLeft();
                     Die();
                 }
-                break;
+                return;
             case BulletLogicType.CW:
                 {
                     other.GetComponent<TetriminoController>().TurnRight();
                     Die();
                 }
-                break;
+                return;
         }
 
         IEntity entity = other.GetComponent<IEntity>();

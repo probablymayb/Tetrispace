@@ -1,72 +1,72 @@
 using UnityEngine;
 
 /// <summary>
-/// MagnetLazer °£´Ü ¹öÀü
-/// ÀÚ½Ä VFX_Magnet °´Ã¼¸¦ È°¼ºÈ­/ºñÈ°¼ºÈ­¸¸ Ã³¸®
+/// MagnetLazer ê°„ë‹¨ ë²„ì „
+/// ìì‹ VFX_Magnet ê°ì²´ë¥¼ í™œì„±í™”/ë¹„í™œì„±í™”ë§Œ ì²˜ë¦¬
 /// </summary>
 public class MagnetLazer : MonoBehaviour
 {
-    [Header("=== VFX ¼³Á¤ ===")]
-    [SerializeField] private GameObject vfxMagnet;  // VFX_Magnet ÀÚ½Ä °´Ã¼
+    [Header("=== VFX ì„¤ì • ===")]
+    [SerializeField] private GameObject vfxMagnet;  // VFX_Magnet ìì‹ ê°ì²´
 
-    [Header("=== µğ¹ö±× ===")]
+    [Header("=== ë””ë²„ê·¸ ===")]
     [SerializeField] private bool showDebugLogs = true;
 
     void Start()
     {
-        // VFX_Magnet ÀÚ½Ä °´Ã¼ ÀÚµ¿ Ã£±â
+        // VFX_Magnet ìì‹ ê°ì²´ ìë™ ì°¾ê¸°
         if (vfxMagnet == null)
         {
             Transform vfxTransform = transform.Find("VFX_Magnet");
             if (vfxTransform != null)
             {
                 vfxMagnet = vfxTransform.gameObject;
-                DebugLog("VFX_Magnet ÀÚµ¿ ¹ß°ß: " + vfxMagnet.name);
+                DebugLog("VFX_Magnet ìë™ ë°œê²¬: " + vfxMagnet.name);
             }
             else
             {
-                DebugLog("VFX_Magnet ÀÚ½Ä °´Ã¼¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+                DebugLog("VFX_Magnet ìì‹ ê°ì²´ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
             }
         }
 
-        // ÃÊ±â¿¡´Â VFX ºñÈ°¼ºÈ­
+        // ì´ˆê¸°ì—ëŠ” VFX ë¹„í™œì„±í™”
         if (vfxMagnet != null)
         {
             vfxMagnet.SetActive(false);
-            DebugLog("VFX_Magnet ÃÊ±â ºñÈ°¼ºÈ­ ¿Ï·á");
+            DebugLog("VFX_Magnet ì´ˆê¸° ë¹„í™œì„±í™” ì™„ë£Œ");
         }
     }
 
     /// <summary>
-    /// MagnetLazer°¡ È°¼ºÈ­µÉ ¶§ VFXµµ È°¼ºÈ­
+    /// MagnetLazerê°€ í™œì„±í™”ë  ë•Œ VFXë„ í™œì„±í™”
     /// </summary>
     void OnEnable()
     {
-        DebugLog("=== MagnetLazer È°¼ºÈ­ ===");
+        DebugLog("=== MagnetLazer í™œì„±í™” ===");
 
         if (vfxMagnet != null)
         {
             vfxMagnet.SetActive(true);
-            DebugLog("VFX_Magnet È°¼ºÈ­ ¿Ï·á");
+            DebugLog("VFX_Magnet í™œì„±í™” ì™„ë£Œ");
         }
     }
 
     /// <summary>
-    /// MagnetLazer°¡ ºñÈ°¼ºÈ­µÉ ¶§ VFXµµ ºñÈ°¼ºÈ­
+    /// MagnetLazerê°€ ë¹„í™œì„±í™”ë  ë•Œ VFXë„ ë¹„í™œì„±í™”
     /// </summary>
     void OnDisable()
     {
-        DebugLog("=== MagnetLazer ºñÈ°¼ºÈ­ ===");
+        DebugLog("=== MagnetLazer ë¹„í™œì„±í™” ===");
 
         if (vfxMagnet != null)
         {
             vfxMagnet.SetActive(false);
-            DebugLog("VFX_Magnet ºñÈ°¼ºÈ­ ¿Ï·á");
+            DebugLog("VFX_Magnet ë¹„í™œì„±í™” ì™„ë£Œ");
         }
     }
 
     /// <summary>
-    /// µğ¹ö±× ·Î±× (Åä±Û °¡´É)
+    /// ë””ë²„ê·¸ ë¡œê·¸ (í† ê¸€ ê°€ëŠ¥)
     /// </summary>
     private void DebugLog(string message)
     {
@@ -77,19 +77,19 @@ public class MagnetLazer : MonoBehaviour
     }
 
     /// <summary>
-    /// ¼öµ¿À¸·Î VFX È°¼ºÈ­/ºñÈ°¼ºÈ­ (¿ÜºÎ Á¦¾î¿ë)
+    /// ìˆ˜ë™ìœ¼ë¡œ VFX í™œì„±í™”/ë¹„í™œì„±í™” (ì™¸ë¶€ ì œì–´ìš©)
     /// </summary>
     public void SetVFXActive(bool active)
     {
         if (vfxMagnet != null)
         {
             vfxMagnet.SetActive(active);
-            DebugLog($"VFX_Magnet ¼öµ¿ {(active ? "È°¼ºÈ­" : "ºñÈ°¼ºÈ­")}");
+            DebugLog($"VFX_Magnet ìˆ˜ë™ {(active ? "í™œì„±í™”" : "ë¹„í™œì„±í™”")}");
         }
     }
 
     /// <summary>
-    /// VFX È°¼ºÈ­ »óÅÂ È®ÀÎ
+    /// VFX í™œì„±í™” ìƒíƒœ í™•ì¸
     /// </summary>
     public bool IsVFXActive()
     {
@@ -97,7 +97,7 @@ public class MagnetLazer : MonoBehaviour
     }
 
     /// <summary>
-    /// Context Menu Å×½ºÆ®
+    /// Context Menu í…ŒìŠ¤íŠ¸
     /// </summary>
     [ContextMenu("Toggle VFX")]
     public void ToggleVFX()
@@ -106,7 +106,7 @@ public class MagnetLazer : MonoBehaviour
         {
             bool newState = !vfxMagnet.activeSelf;
             vfxMagnet.SetActive(newState);
-            DebugLog($"VFX Åä±Û: {newState}");
+            DebugLog($"VFX í† ê¸€: {newState}");
         }
     }
 }

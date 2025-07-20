@@ -43,7 +43,8 @@ public class EnemySpawner : MonoBehaviour
     
     private void Start()
     {
-        StartNextPhase();
+        GameManager.OnGameStart -= StartNextPhase;
+        GameManager.OnGameStart += StartNextPhase;
     }
 
     private void StartNextPhase()
