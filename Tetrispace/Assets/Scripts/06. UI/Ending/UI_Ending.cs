@@ -1,4 +1,4 @@
-// UI_GameOverPopup.cs (¾ÈÀüÇÑ ¹öÀü - ³ÎÃ¼Å© ¿Ïºñ)
+// UI_GameOverPopup.cs (ì•ˆì „í•œ ë²„ì „ - ë„ì²´í¬ ì™„ë¹„)
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,8 +6,8 @@ using TMPro;
 using UnityEngine.UI;
 
 /// <summary>
-/// ¾ÈÀüÇÑ °ÔÀÓ¿À¹ö ÆË¾÷ UI (³ÎÃ¼Å© ¿Ïºñ)
-/// ÀÏºÎ ¿ä¼Ò°¡ ¾ø¾îµµ ¿À·ù ¾øÀÌ µ¿ÀÛ
+/// ì•ˆì „í•œ ê²Œì„ì˜¤ë²„ íŒì—… UI (ë„ì²´í¬ ì™„ë¹„)
+/// ì¼ë¶€ ìš”ì†Œê°€ ì—†ì–´ë„ ì˜¤ë¥˜ ì—†ì´ ë™ì‘
 /// </summary>
 public class UI_GameOverPopup : UI_Base
 {
@@ -16,7 +16,7 @@ public class UI_GameOverPopup : UI_Base
     {
         //GameManager.Instance.OnGameOver += OnGameOver;
     }
-    #region UI ¿ä¼Ò Á¤ÀÇ
+    #region UI ìš”ì†Œ ì •ì˜
     enum Texts
     {
         GameOverText,
@@ -51,32 +51,32 @@ public class UI_GameOverPopup : UI_Base
     }
     #endregion
 
-    #region ¼³Á¤°ªµé
-    [Header("=== ÆäÀÌµå ¼³Á¤ ===")]
+    #region ì„¤ì •ê°’ë“¤
+    [Header("=== í˜ì´ë“œ ì„¤ì • ===")]
     [SerializeField] private float backgroundFadeDuration = 1.0f;
     [SerializeField] private float panelFadeDuration = 0.8f;
     [SerializeField] private float textFadeDuration = 0.5f;
 
-    [Header("=== ¾Ö´Ï¸ŞÀÌ¼Ç ¼³Á¤ ===")]
+    [Header("=== ì• ë‹ˆë©”ì´ì…˜ ì„¤ì • ===")]
     [SerializeField] private float gameOverTypingSpeed = 0.1f;
     [SerializeField] private float scoreCountUpDuration = 1.5f;
     [SerializeField] private float buttonAppearDelay = 1.0f;
 
-    [Header("=== »ö»ó ¼³Á¤ ===")]
+    [Header("=== ìƒ‰ìƒ ì„¤ì • ===")]
     [SerializeField] private Color gameOverColor = new Color(1f, 0.2f, 0.2f, 1f);
     [SerializeField] private Color normalScoreColor = Color.white;
     [SerializeField] private Color newRecordColor = Color.yellow;
     [SerializeField] private Color selectedButtonColor = Color.yellow;
     [SerializeField] private Color normalButtonColor = Color.white;
 
-    [Header("=== ¼öµ¿ ÇÒ´ç (¼±ÅÃ»çÇ×) ===")]
+    [Header("=== ìˆ˜ë™ í• ë‹¹ (ì„ íƒì‚¬í•­) ===")]
     [SerializeField] private TextMeshProUGUI manualGameOverText;
     [SerializeField] private TextMeshProUGUI manualScoreText;
     [SerializeField] private Button manualRestartButton;
     [SerializeField] private Button manualTitleButton;
     #endregion
 
-    #region ³»ºÎ º¯¼öµé
+    #region ë‚´ë¶€ ë³€ìˆ˜ë“¤
     private int currentScore;
     private int previousHighScore;
     private int newHighScore;
@@ -84,12 +84,12 @@ public class UI_GameOverPopup : UI_Base
     private bool isAnimating = true;
     private bool canNavigate = false;
 
-    // ¹öÆ° ³×ºñ°ÔÀÌ¼Ç
+    // ë²„íŠ¼ ë„¤ë¹„ê²Œì´ì…˜
     private int selectedButtonIndex = 0;
     private Button[] navigationButtons;
     private TextMeshProUGUI[] buttonTexts;
 
-    // ¾ÈÀüÇÑ UI ÂüÁ¶
+    // ì•ˆì „í•œ UI ì°¸ì¡°
     private TextMeshProUGUI safeGameOverText;
     private TextMeshProUGUI safeScoreText;
     private TextMeshProUGUI safeHighScoreText;
@@ -97,10 +97,10 @@ public class UI_GameOverPopup : UI_Base
     private Button safeTitleButton;
     #endregion
 
-    #region ÃÊ±âÈ­ (¾ÈÀü ¹öÀü)
+    #region ì´ˆê¸°í™” (ì•ˆì „ ë²„ì „)
     public override void Init()
     {
-        Debug.Log("=== °ÔÀÓ¿À¹ö UI ÃÊ±âÈ­ ½ÃÀÛ ===");
+        Debug.Log("=== ê²Œì„ì˜¤ë²„ UI ì´ˆê¸°í™” ì‹œì‘ ===");
 
         try
         {
@@ -110,52 +110,52 @@ public class UI_GameOverPopup : UI_Base
             SetupNavigationSafely();
             RegisterEventsSafely();
 
-            StartCoroutine(PlayCompleteAnimationSafely());
+            //StartCoroutine(PlayCompleteAnimationSafely());
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"°ÔÀÓ¿À¹ö UI ÃÊ±âÈ­ ½ÇÆĞ: {e.Message}");
-            // ÃÖ¼ÒÇÑÀÇ ±â´ÉÀÌ¶óµµ µ¿ÀÛÇÏµµ·Ï
+            Debug.LogError($"ê²Œì„ì˜¤ë²„ UI ì´ˆê¸°í™” ì‹¤íŒ¨: {e.Message}");
+            // ìµœì†Œí•œì˜ ê¸°ëŠ¥ì´ë¼ë„ ë™ì‘í•˜ë„ë¡
             SetupFallbackUI();
         }
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ UI ¹ÙÀÎµù (¿À·ù ¹æÁö)
+    /// ì•ˆì „í•œ UI ë°”ì¸ë”© (ì˜¤ë¥˜ ë°©ì§€)
     /// </summary>
     private void BindUIElementsSafely()
     {
         try
         {
-            // ±âÁ¸ ¹ÙÀÎµù ½Ãµµ
+            // ê¸°ì¡´ ë°”ì¸ë”© ì‹œë„
             Bind<TextMeshProUGUI>(typeof(Texts));
             Bind<Button>(typeof(Buttons));
             Bind<Image>(typeof(Images));
             Bind<GameObject>(typeof(GameObjects));
 
-            Debug.Log("ÀÚµ¿ ¹ÙÀÎµù ¼º°ø!");
+            Debug.Log("ìë™ ë°”ì¸ë”© ì„±ê³µ!");
         }
         catch (System.Exception e)
         {
-            Debug.LogWarning($"ÀÚµ¿ ¹ÙÀÎµù ½ÇÆĞ: {e.Message}. ¼öµ¿ ¹ÙÀÎµùÀ¸·Î ÀüÈ¯ÇÕ´Ï´Ù.");
+            Debug.LogWarning($"ìë™ ë°”ì¸ë”© ì‹¤íŒ¨: {e.Message}. ìˆ˜ë™ ë°”ì¸ë”©ìœ¼ë¡œ ì „í™˜í•©ë‹ˆë‹¤.");
         }
 
-        // ¾ÈÀüÇÑ ÂüÁ¶ ¼³Á¤
+        // ì•ˆì „í•œ ì°¸ì¡° ì„¤ì •
         SetupSafeReferences();
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ ÂüÁ¶ ¼³Á¤
+    /// ì•ˆì „í•œ ì°¸ì¡° ì„¤ì •
     /// </summary>
     private void SetupSafeReferences()
     {
-        // 1¼øÀ§: ¼öµ¿ ÇÒ´çµÈ °Íµé
+        // 1ìˆœìœ„: ìˆ˜ë™ í• ë‹¹ëœ ê²ƒë“¤
         safeGameOverText = manualGameOverText;
         safeScoreText = manualScoreText;
         safeRestartButton = manualRestartButton;
         safeTitleButton = manualTitleButton;
 
-        // 2¼øÀ§: ÀÚµ¿ ¹ÙÀÎµùµÈ °Íµé
+        // 2ìˆœìœ„: ìë™ ë°”ì¸ë”©ëœ ê²ƒë“¤
         if (safeGameOverText == null)
             safeGameOverText = GetTextSafely((int)Texts.GameOverText);
 
@@ -171,7 +171,7 @@ public class UI_GameOverPopup : UI_Base
         if (safeTitleButton == null)
             safeTitleButton = GetButtonSafely((int)Buttons.TitleButton);
 
-        // 3¼øÀ§: ÀÌ¸§À¸·Î Ã£±â
+        // 3ìˆœìœ„: ì´ë¦„ìœ¼ë¡œ ì°¾ê¸°
         if (safeGameOverText == null)
             safeGameOverText = GameObject.Find("GameOverText")?.GetComponent<TextMeshProUGUI>();
 
@@ -181,7 +181,7 @@ public class UI_GameOverPopup : UI_Base
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ GetText (³ÎÃ¼Å© Æ÷ÇÔ)
+    /// ì•ˆì „í•œ GetText (ë„ì²´í¬ í¬í•¨)
     /// </summary>
     private TextMeshProUGUI GetTextSafely(int index)
     {
@@ -196,7 +196,7 @@ public class UI_GameOverPopup : UI_Base
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ GetButton (³ÎÃ¼Å© Æ÷ÇÔ)
+    /// ì•ˆì „í•œ GetButton (ë„ì²´í¬ í¬í•¨)
     /// </summary>
     private Button GetButtonSafely(int index)
     {
@@ -211,11 +211,11 @@ public class UI_GameOverPopup : UI_Base
     }
 
     /// <summary>
-    /// °ÔÀÓ µ¥ÀÌÅÍ ·Îµå
+    /// ê²Œì„ ë°ì´í„° ë¡œë“œ
     /// </summary>
     private void LoadGameData()
     {
-        // GameManager°¡ ÀÖÀ¸¸é µ¥ÀÌÅÍ °¡Á®¿À±â
+        // GameManagerê°€ ìˆìœ¼ë©´ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
         if (GameManager.Instance != null)
         {
             currentScore = GameManager.Instance.CurrentScore;
@@ -223,13 +223,13 @@ public class UI_GameOverPopup : UI_Base
         }
         else
         {
-            // Å×½ºÆ®¿ë ±âº»°ª
+            // í…ŒìŠ¤íŠ¸ìš© ê¸°ë³¸ê°’
             currentScore = 4000;
             previousHighScore = 8000;
-            Debug.LogWarning("GameManager°¡ ¾ø¾î¼­ Å×½ºÆ® µ¥ÀÌÅÍ »ç¿ë");
+            Debug.LogWarning("GameManagerê°€ ì—†ì–´ì„œ í…ŒìŠ¤íŠ¸ ë°ì´í„° ì‚¬ìš©");
         }
 
-        // ½Å±â·Ï Ã¼Å©
+        // ì‹ ê¸°ë¡ ì²´í¬
         if (currentScore > previousHighScore)
         {
             isNewRecord = true;
@@ -240,15 +240,15 @@ public class UI_GameOverPopup : UI_Base
             newHighScore = previousHighScore;
         }
 
-        Debug.Log($"ÇöÀçÁ¡¼ö: {currentScore}, ÃÖ°íÁ¡¼ö: {previousHighScore}, ½Å±â·Ï: {isNewRecord}");
+        Debug.Log($"í˜„ì¬ì ìˆ˜: {currentScore}, ìµœê³ ì ìˆ˜: {previousHighScore}, ì‹ ê¸°ë¡: {isNewRecord}");
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ ÃÊ±â »óÅÂ ¼³Á¤
+    /// ì•ˆì „í•œ ì´ˆê¸° ìƒíƒœ ì„¤ì •
     /// </summary>
     private void SetupInitialStateSafely()
     {
-        // ÅØ½ºÆ® ¼³Á¤
+        // í…ìŠ¤íŠ¸ ì„¤ì •
         if (safeGameOverText != null)
         {
             safeGameOverText.text = "GAME\nOVER";
@@ -270,7 +270,7 @@ public class UI_GameOverPopup : UI_Base
             SetAlpha(safeHighScoreText, 0f);
         }
 
-        // ÀÌ¹ÌÁöµé Åõ¸íÇÏ°Ô (ÀÖ´Ù¸é)
+        // ì´ë¯¸ì§€ë“¤ íˆ¬ëª…í•˜ê²Œ (ìˆë‹¤ë©´)
         for (int i = 0; i < System.Enum.GetValues(typeof(Images)).Length; i++)
         {
             try
@@ -281,18 +281,18 @@ public class UI_GameOverPopup : UI_Base
             catch { }
         }
 
-        Debug.Log("ÃÊ±â »óÅÂ ¼³Á¤ ¿Ï·á");
+        Debug.Log("ì´ˆê¸° ìƒíƒœ ì„¤ì • ì™„ë£Œ");
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ ³×ºñ°ÔÀÌ¼Ç ¼³Á¤
+    /// ì•ˆì „í•œ ë„¤ë¹„ê²Œì´ì…˜ ì„¤ì •
     /// </summary>
     private void SetupNavigationSafely()
     {
         var buttons = new System.Collections.Generic.List<Button>();
         var texts = new System.Collections.Generic.List<TextMeshProUGUI>();
 
-        // ¹öÆ°µé ¼öÁı
+        // ë²„íŠ¼ë“¤ ìˆ˜ì§‘
         if (safeRestartButton != null)
         {
             buttons.Add(safeRestartButton);
@@ -313,15 +313,15 @@ public class UI_GameOverPopup : UI_Base
         selectedButtonIndex = 0;
         UpdateButtonSelectionSafely();
 
-        Debug.Log($"³×ºñ°ÔÀÌ¼Ç ¼³Á¤ ¿Ï·á: {navigationButtons.Length}°³ ¹öÆ°");
+        Debug.Log($"ë„¤ë¹„ê²Œì´ì…˜ ì„¤ì • ì™„ë£Œ: {navigationButtons.Length}ê°œ ë²„íŠ¼");
     }
 
     /// <summary>
-    /// ¾ÈÀüÇÑ ÀÌº¥Æ® µî·Ï
+    /// ì•ˆì „í•œ ì´ë²¤íŠ¸ ë“±ë¡
     /// </summary>
     private void RegisterEventsSafely()
     {
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡
         if (safeRestartButton != null)
         {
             safeRestartButton.onClick.AddListener(() => OnRestartSelectedSafely());
@@ -332,17 +332,17 @@ public class UI_GameOverPopup : UI_Base
             safeTitleButton.onClick.AddListener(() => OnTitleSelectedSafely());
         }
 
-        Debug.Log("ÀÌº¥Æ® µî·Ï ¿Ï·á");
+        Debug.Log("ì´ë²¤íŠ¸ ë“±ë¡ ì™„ë£Œ");
     }
 
     /// <summary>
-    /// Æú¹é UI ¼³Á¤ (ÃÖ¾ÇÀÇ °æ¿ì)
+    /// í´ë°± UI ì„¤ì • (ìµœì•…ì˜ ê²½ìš°)
     /// </summary>
     private void SetupFallbackUI()
     {
-        Debug.Log("Æú¹é UI ¼³Á¤ ½ÃÀÛ");
+        Debug.Log("í´ë°± UI ì„¤ì • ì‹œì‘");
 
-        // ±âº» ÅØ½ºÆ® »ı¼º
+        // ê¸°ë³¸ í…ìŠ¤íŠ¸ ìƒì„±
         if (safeGameOverText == null)
         {
             GameObject textObj = new GameObject("GameOverText");
@@ -361,59 +361,59 @@ public class UI_GameOverPopup : UI_Base
         canNavigate = true;
         isAnimating = false;
 
-        Debug.Log("Æú¹é UI ¼³Á¤ ¿Ï·á");
+        Debug.Log("í´ë°± UI ì„¤ì • ì™„ë£Œ");
     }
     #endregion
 
-    #region ¾ÈÀüÇÑ ¾Ö´Ï¸ŞÀÌ¼Ç
+    #region ì•ˆì „í•œ ì• ë‹ˆë©”ì´ì…˜
     /// <summary>
-    /// ¾ÈÀüÇÑ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+    /// ì•ˆì „í•œ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
     /// </summary>
     private IEnumerator PlayCompleteAnimationSafely()
     {
         isAnimating = true;
         canNavigate = false;
 
-        Debug.Log("¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ");
+        Debug.Log("ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘");
 
-        //// °ÔÀÓ¿À¹ö ÅØ½ºÆ® Ç¥½Ã
+        //// ê²Œì„ì˜¤ë²„ í…ìŠ¤íŠ¸ í‘œì‹œ
         //if (safeGameOverText != null)
         //{
         //    yield return StartCoroutine(TypeGameOverTextSafely());
         //}
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
 
-        // Á¡¼ö Ç¥½Ã
+        // ì ìˆ˜ í‘œì‹œ
         if (safeScoreText != null)
         {
             yield return StartCoroutine(CountUpScoreSafely());
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
 
-        // ÇÏÀÌ½ºÄÚ¾î Ç¥½Ã
+        // í•˜ì´ìŠ¤ì½”ì–´ í‘œì‹œ
         if (safeHighScoreText != null)
         {
             yield return StartCoroutine(FadeInTextSafely(safeHighScoreText, textFadeDuration));
         }
 
-        // ½Å±â·Ï È¿°ú
+        // ì‹ ê¸°ë¡ íš¨ê³¼
         if (isNewRecord)
         {
             yield return StartCoroutine(PlayNewRecordEffectSafely());
         }
 
-        yield return new WaitForSeconds(buttonAppearDelay);
+        yield return new WaitForSecondsRealtime(buttonAppearDelay);
 
-        // ¹öÆ° Ç¥½Ã
+        // ë²„íŠ¼ í‘œì‹œ
         yield return StartCoroutine(ShowButtonsSafely());
 
-        // ³×ºñ°ÔÀÌ¼Ç È°¼ºÈ­
+        // ë„¤ë¹„ê²Œì´ì…˜ í™œì„±í™”
         canNavigate = true;
         isAnimating = false;
 
-        Debug.Log("¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á! ³×ºñ°ÔÀÌ¼Ç È°¼ºÈ­");
+        Debug.Log("ì• ë‹ˆë©”ì´ì…˜ ì™„ë£Œ! ë„¤ë¹„ê²Œì´ì…˜ í™œì„±í™”");
     }
 
     private IEnumerator TypeGameOverTextSafely()
@@ -427,16 +427,16 @@ public class UI_GameOverPopup : UI_Base
         for (int i = 0; i <= fullText.Length; i++)
         {
             safeGameOverText.text = fullText.Substring(0, i);
-            yield return new WaitForSeconds(gameOverTypingSpeed);
+            yield return new WaitForSecondsRealtime(gameOverTypingSpeed);
         }
 
-        // ±ôºıÀÓ È¿°ú
+        // ê¹œë¹¡ì„ íš¨ê³¼
         for (int i = 0; i < 3; i++)
         {
             SetAlpha(safeGameOverText, 0.3f);
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSecondsRealtime(0.15f);
             SetAlpha(safeGameOverText, 1f);
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSecondsRealtime(0.15f);
         }
     }
 
@@ -455,7 +455,7 @@ public class UI_GameOverPopup : UI_Base
             float progress = elapsed / scoreCountUpDuration;
             displayScore = Mathf.RoundToInt(Mathf.Lerp(0, currentScore, progress));
             safeScoreText.text = displayScore.ToString();
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.01f);
         }
 
         safeScoreText.text = currentScore.ToString();
@@ -465,21 +465,21 @@ public class UI_GameOverPopup : UI_Base
     {
         if (!isNewRecord) yield break;
 
-        Debug.Log("½Å±â·Ï È¿°ú Àç»ı!");
+        Debug.Log("ì‹ ê¸°ë¡ íš¨ê³¼ ì¬ìƒ!");
 
-        // Á¡¼ö ÅØ½ºÆ® ±ôºıÀÓ
+        // ì ìˆ˜ í…ìŠ¤íŠ¸ ê¹œë¹¡ì„
         if (safeScoreText != null)
         {
             for (int i = 0; i < 5; i++)
             {
                 safeScoreText.color = Color.red;
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSecondsRealtime(0.2f);
                 safeScoreText.color = newRecordColor;
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSecondsRealtime(0.2f);
             }
         }
 
-        // ÇÏÀÌ½ºÄÚ¾î ¾÷µ¥ÀÌÆ®
+        // í•˜ì´ìŠ¤ì½”ì–´ ì—…ë°ì´íŠ¸
         if (safeHighScoreText != null)
         {
             yield return StartCoroutine(CountUpHighScoreSafely(safeHighScoreText, previousHighScore, newHighScore, 1f));
@@ -496,20 +496,20 @@ public class UI_GameOverPopup : UI_Base
             elapsed += Time.deltaTime;
             int currentValue = Mathf.RoundToInt(Mathf.Lerp(from, to, elapsed / duration));
             text.text = currentValue.ToString();
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.01f);
         }
         text.text = to.ToString();
     }
 
     private IEnumerator ShowButtonsSafely()
     {
-        // ¹öÆ° ÅØ½ºÆ®µé ÆäÀÌµåÀÎ
+        // ë²„íŠ¼ í…ìŠ¤íŠ¸ë“¤ í˜ì´ë“œì¸
         foreach (var text in buttonTexts)
         {
             if (text != null)
             {
                 yield return StartCoroutine(FadeInTextSafely(text, textFadeDuration));
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSecondsRealtime(0.2f);
             }
         }
 
@@ -530,7 +530,7 @@ public class UI_GameOverPopup : UI_Base
             elapsed += Time.deltaTime;
             color.a = Mathf.Lerp(0f, 1f, elapsed / duration);
             text.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.01f);
         }
 
         color.a = 1f;
@@ -538,7 +538,7 @@ public class UI_GameOverPopup : UI_Base
     }
     #endregion
 
-    #region ¾ÈÀüÇÑ ³×ºñ°ÔÀÌ¼Ç
+    #region ì•ˆì „í•œ ë„¤ë¹„ê²Œì´ì…˜
     private void Update()
     {
         if (!canNavigate || isAnimating) return;
@@ -568,7 +568,7 @@ public class UI_GameOverPopup : UI_Base
         if (moved)
         {
             UpdateButtonSelectionSafely();
-            Debug.Log($"¹öÆ° ¼±ÅÃ: {selectedButtonIndex}");
+            Debug.Log($"ë²„íŠ¼ ì„ íƒ: {selectedButtonIndex}");
         }
     }
 
@@ -626,10 +626,10 @@ public class UI_GameOverPopup : UI_Base
     }
     #endregion
 
-    #region ¾ÈÀüÇÑ ¹öÆ° ÀÌº¥Æ®
+    #region ì•ˆì „í•œ ë²„íŠ¼ ì´ë²¤íŠ¸
     private void OnRestartSelectedSafely()
     {
-        Debug.Log("Àç½ÃÀÛ ¼±ÅÃµÊ!");
+        Debug.Log("ì¬ì‹œì‘ ì„ íƒë¨!");
 
         if (GameManager.Instance != null)
         {
@@ -637,7 +637,7 @@ public class UI_GameOverPopup : UI_Base
         }
         else
         {
-            Debug.Log("GameManager°¡ ¾ø¾î¼­ Àç½ÃÀÛ ½Ã¹Ä·¹ÀÌ¼Ç");
+            Debug.Log("GameManagerê°€ ì—†ì–´ì„œ ì¬ì‹œì‘ ì‹œë®¬ë ˆì´ì…˜");
         }
 
         ClosePopupSafely();
@@ -645,7 +645,7 @@ public class UI_GameOverPopup : UI_Base
 
     private void OnTitleSelectedSafely()
     {
-        Debug.Log("Å¸ÀÌÆ²·Î ÀÌµ¿ ¼±ÅÃµÊ!");
+        Debug.Log("íƒ€ì´í‹€ë¡œ ì´ë™ ì„ íƒë¨!");
 
         if (GameManager.Instance != null)
         {
@@ -653,7 +653,7 @@ public class UI_GameOverPopup : UI_Base
         }
         else
         {
-            Debug.Log("GameManager°¡ ¾ø¾î¼­ Å¸ÀÌÆ² ÀÌµ¿ ½Ã¹Ä·¹ÀÌ¼Ç");
+            Debug.Log("GameManagerê°€ ì—†ì–´ì„œ íƒ€ì´í‹€ ì´ë™ ì‹œë®¬ë ˆì´ì…˜");
         }
 
         ClosePopupSafely();
@@ -666,7 +666,7 @@ public class UI_GameOverPopup : UI_Base
     }
     #endregion
 
-    #region ÇïÆÛ ¸Ş¼­µå
+    #region í—¬í¼ ë©”ì„œë“œ
     private void SetAlpha(Image image, float alpha)
     {
         if (image == null) return;

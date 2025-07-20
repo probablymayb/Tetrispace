@@ -1,6 +1,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum EGameState
 {
@@ -55,7 +56,7 @@ public class GameManager : Singleton<GameManager>
         switch (newState)
         {
             case EGameState.Title:
-                Time.timeScale = 0f;
+                Time.timeScale = 1f;
                 break;
 
             case EGameState.Playing:
@@ -99,7 +100,9 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void RestartGame()
     {
-        StartGame();
+        OnGameStart = null;
+        ChangeState(EGameState.Title);
+        SceneManager.LoadScene("DH_Test");
     }
 
     /// <summary>
@@ -274,31 +277,6 @@ public class GameManager : Singleton<GameManager>
         {
             TogglePause();
         }
-    }
-
-    #endregion
-
-    #region === 디버그 (빌드 시 제거 가능) ===
-
-    private void OnGUI()
-    {
-        if (!Application.isEditor) return;
-
-        GUILayout.BeginArea(new Rect(10, 10, 200, 150));
-        GUILayout.Label($"상태: {CurrentGameState}");
-        GUILayout.Label($"점수: {currentScore}");
-        GUILayout.Label($"최고점수: {highScore}");
-
-        if (GUILayout.Button("게임 시작"))
-            StartGame();
-
-        if (GUILayout.Button("점수 +100"))
-            AddScore(100);
-
-        if (GUILayout.Button("게임 오버"))
-            GameOver();
-
-        GUILayout.EndArea();
     }
 
     #endregion

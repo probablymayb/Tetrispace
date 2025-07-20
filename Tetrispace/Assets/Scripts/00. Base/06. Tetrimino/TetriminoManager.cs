@@ -956,6 +956,6 @@ public class TetriminoManager : Singleton<TetriminoManager>
     private void OnDestroy()
     {
         // 모든 UselessBlock 정리
-        RemoveAllUselessBlocks();
+        // RemoveAllUselessBlocks();
     }
 }

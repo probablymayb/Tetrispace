@@ -95,21 +95,4 @@ public class PoolManager : Singleton<PoolManager>
         poolDict.Clear();
         Debug.Log("[PoolManager] 모든 풀이 정리되었습니다.");
     }
-
-    // 디버그 정보 표시
-    void OnGUI()
-    {
-        if (Application.isPlaying)
-        {
-            GUILayout.BeginArea(new Rect(10, 100, 300, 200));
-            GUILayout.Label($"활성 풀 개수: {poolDict.Count}");
-
-            foreach (var kvp in poolDict)
-            {
-                GUILayout.Label($"- {kvp.Key}");
-            }
-
-            GUILayout.EndArea();
-        }
-    }
 }

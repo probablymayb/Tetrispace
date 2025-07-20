@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour, IEntity
         // Lazer 오브젝트 설정
         SetupLazerObject();
     }
-
+    
     /// <summary>
     /// Lazer 오브젝트 초기 설정
     /// </summary>
@@ -98,6 +99,7 @@ public class PlayerController : MonoBehaviour, IEntity
     {
         TetriminoManager.Instance.OnLineClear -= TurnOnEnhancement;
         TetriminoManager.Instance.OnLineClear += TurnOnEnhancement;
+        enforcementUI.gameObject.SetActive(true);
     }
 
     private void TurnOnEnhancement()

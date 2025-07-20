@@ -1,12 +1,19 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class RestartButton : MonoBehaviour
 {
-    public string sceneToLoad = "DH_Test";
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ChangeScene();
+        }
+    }
 
     public void ChangeScene()
     {
-        SceneManager.LoadScene(sceneToLoad);
+        GameManager.Instance.RestartGame();
     }
 }
