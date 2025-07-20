@@ -172,3 +172,4 @@ MonoBehaviour:
   dieEffectPrefab: {fileID: 6412439330536265488, guid: 80d307688dea6fe47b37631a994451e1, type: 3}
   deathBlinkDuration: 1
   deathBlinkInterval: 0.1
+  boomSound: {fileID: 8300000, guid: c520a395cc0c7034e90abaf309d6da1f, type: 3}

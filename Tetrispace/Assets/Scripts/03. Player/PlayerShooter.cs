@@ -41,6 +41,10 @@ public class PlayerShooter : MonoBehaviour
     #endregion
 
     #region 초기화
+
+    public AudioClip Qsound;
+    public AudioClip Esound;
+
     private void Awake()
     {
         // 컴포넌트 참조 획득
@@ -307,7 +311,7 @@ public class PlayerShooter : MonoBehaviour
     /// </summary>
     private void FireCCWBullet()
     {
-
+        SFXManager.Instance.PlaySFX(Qsound);
         // 풀에서 CCW 총알 가져오기 (제네릭 방식)
         Bullet pooledBullet = PoolManager.Instance.Get(bulletPrefab);
         if (pooledBullet == null) return;
@@ -322,6 +326,8 @@ public class PlayerShooter : MonoBehaviour
     /// </summary>
     private void FireCWBullet()
     {
+        SFXManager.Instance.PlaySFX(Esound);
+
         // 풀에서 CW 총알 가져오기 (제네릭 방식)
         Bullet pooledBullet = PoolManager.Instance.Get(bulletPrefab);
         if (pooledBullet == null) return;

@@ -55,7 +55,8 @@ MonoBehaviour:
   useStaticPosition: 1
   customGridX: 0
   customGridY: 0
-  fSpeed: 0.5
+  fSpeed: 0.8
+  fMultiplier: 1
 --- !u!50 &5422869007413842325
 Rigidbody2D:
   serializedVersion: 5
@@ -257,6 +258,7 @@ MonoBehaviour:
   customGridX: 0
   customGridY: 0
   fSpeed: 0.1
+  fMultiplier: 1
 --- !u!61 &7433535099928150698
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -409,6 +411,7 @@ MonoBehaviour:
   customGridX: 0
   customGridY: 0
   fSpeed: 0.1
+  fMultiplier: 1
 --- !u!61 &6349328391043261174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -561,6 +564,7 @@ MonoBehaviour:
   customGridX: 0
   customGridY: 0
   fSpeed: 0.1
+  fMultiplier: 1
 --- !u!61 &4686413992834624538
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -713,6 +717,7 @@ MonoBehaviour:
   customGridX: 0
   customGridY: 0
   fSpeed: 0.1
+  fMultiplier: 1
 --- !u!61 &4989975742821321828
 BoxCollider2D:
   m_ObjectHideFlags: 0

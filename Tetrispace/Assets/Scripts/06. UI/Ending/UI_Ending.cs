@@ -106,7 +106,7 @@ public class UI_GameOverPopup : UI_Base
         {
             BindUIElementsSafely();
             LoadGameData();
-            SetupInitialStateSafely();
+            //SetupInitialStateSafely();
             SetupNavigationSafely();
             RegisterEventsSafely();
 
@@ -376,11 +376,11 @@ public class UI_GameOverPopup : UI_Base
 
         Debug.Log("애니메이션 시작");
 
-        // 게임오버 텍스트 표시
-        if (safeGameOverText != null)
-        {
-            yield return StartCoroutine(TypeGameOverTextSafely());
-        }
+        //// 게임오버 텍스트 표시
+        //if (safeGameOverText != null)
+        //{
+        //    yield return StartCoroutine(TypeGameOverTextSafely());
+        //}
 
         yield return new WaitForSeconds(0.5f);
 
@@ -633,7 +633,7 @@ public class UI_GameOverPopup : UI_Base
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.RestartGame();
+            //GameManager.Instance.RestartGame();
         }
         else
         {

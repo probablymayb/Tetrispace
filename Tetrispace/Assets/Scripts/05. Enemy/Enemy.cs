@@ -27,6 +27,8 @@ public partial class Enemy : MonoBehaviour, IEntity
     
     private Material instancedMat;
 
+
+    public AudioClip boomSound;
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -157,6 +159,9 @@ public partial class Enemy : MonoBehaviour, IEntity
 
     private void Die()
     {
+        GameManager.Instance.AddScore(100);
+        SFXManager.Instance.PlaySFX(boomSound);
+
         OnDeath?.Invoke();
         dieEffect.SetParent(null);
 

@@ -4,20 +4,25 @@ using System.Collections.Generic;
 using System.Collections;
 
 /// <summary>
-/// 테트리미노 매니저 간단 버전 (UselessBlock 그리드 등록, 라인 클리어만 제외)
+/// 테트리미노 매니저 - 게임오버 조건 수정 버전
+/// 
+/// 수정 사항:
+/// - 4x5 그리드에서 올바른 게임오버 조건 적용
+/// - 5칸째(Y=4, 최상단)에 블록이 있으면서 6칸째(Y=5+) 위에도 블록이 있으면 게임오버
+/// - 인덱스 기반: 4칸째(Y=3)과 5칸째(Y=4) 체크하는 것이 아니라, 5칸째(Y=4)와 6칸째(Y=5+) 체크
 /// 
 /// 주요 기능:
 /// 1. UselessBlock도 그리드에 정상 등록
 /// 2. 라인 클리어 체크에서만 UselessBlock 제외
 /// 3. 플레이어 움직임에 자동으로 따라다님
 /// 4. 10초 후 자동 삭제
-/// 5. 게임오버 조건: 4칸(Y=4)에 블록이 있으면서 동시에 5칸(Y=5+) 위에도 블록이 있어야 함
+/// 5. 게임오버 조건: 5칸째(Y=4, 최상단)에 블록이 있으면서 동시에 6칸째(Y=5+) 위에도 블록이 있어야 함
 /// </summary>
 public class TetriminoManager : Singleton<TetriminoManager>
 {
     public event Action OnLineClear;
     private int width = 4;
-    private int height = 5;
+    private int height = 5;  // 0,1,2,3,4 인덱스 = 총 5칸
 
     private GameObject[,] gridArray;
     Vector3 lastPlayerPosition = Vector3.zero;
@@ -62,6 +67,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
     // UselessBlock 관리 (간단하게)
     private List<UselessBlock> activeUselessBlocks = new List<UselessBlock>();
 
+    public AudioClip clearSound;
+    public UI_GameOverPopup gameOverPopup;
+
     protected override void Awake()
     {
         base.Awake();
@@ -72,7 +80,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
     public void ResetGrid()
     {
-        foreach(var elem in gridArray)
+        foreach (var elem in gridArray)
         {
             Destroy(elem);
         }
@@ -112,51 +120,51 @@ public class TetriminoManager : Singleton<TetriminoManager>
                 collider.enabled = true;
             }
 
-            // 4칸(맨 위칸)에 블록이 등록되면 게임오버 상태 체크
-            if (gridPos.y == height - 1)
+            // 5칸째(최상단, Y=4)에 블록이 등록되면 게임오버 상태 체크
+            if (gridPos.y == height - 1) // Y=4 (5칸째, 최상단)
             {
                 CheckAndUpdateGameOverState();
             }
         }
-        // 그리드 밖(5칸 위)에 블록이 등록되려고 하면 게임오버 체크
-        else if (gridPos.y >= height)
+        // 그리드 밖(6칸째 위, Y=5+)에 블록이 등록되려고 하면 게임오버 체크
+        else if (gridPos.y >= height) // Y=5 이상 (6칸째 위)
         {
-            Debug.Log($"5칸 위에 블록 등록 시도: Grid({gridPos.x}, {gridPos.y}) - 게임오버 조건 체크");
+            Debug.Log($"6칸째 위에 블록 등록 시도: Grid({gridPos.x}, {gridPos.y}) - 게임오버 조건 체크");
             CheckAndUpdateGameOverState();
         }
     }
 
     /// <summary>
-    /// 게임오버 상태 체크 및 업데이트 (정확한 조건)
-    /// 조건: 4칸(맨 위칸)에 블록이 있으면서 동시에 5칸 위에도 블록이 있어야 게임오버
+    /// 게임오버 상태 체크 및 업데이트 (4x5 그리드 기준 수정)
+    /// 조건: 5칸째(Y=4, 최상단)에 블록이 있으면서 동시에 6칸째(Y=5+) 위에도 블록이 있어야 게임오버
     /// </summary>
     private void CheckAndUpdateGameOverState()
     {
-        bool hasTopRowBlocks = false;  // 4칸(Y=4)에 블록 있는지
-        bool hasOverflowBlocks = false; // 5칸(Y=5) 위에 블록 있는지
+        bool hasTopRowBlocks = false;  // 5칸째(Y=4, 최상단)에 블록 있는지
+        bool hasOverflowBlocks = false; // 6칸째(Y=5+) 위에 블록 있는지
 
-        // 1단계: 4칸(맨 위칸) 체크
+        // 1단계: 5칸째(최상단, Y=4) 체크
         for (int x = 0; x < width; x++)
         {
-            if (IsLocked(x, height - 1)) // Y=4 체크
+            if (IsLocked(x, height - 1)) // Y=4 체크 (5칸째, 최상단)
             {
                 hasTopRowBlocks = true;
-                Debug.Log($"4칸(맨 위칸) Grid({x}, {height - 1})에 블록 발견");
+                Debug.Log($"5칸째(최상단) Grid({x}, {height - 1})에 블록 발견");
                 break;
             }
         }
 
-        // 2단계: 5칸 위(Y=5 이상) 체크 (실제 월드에 존재하는 모든 블록 검사)
+        // 2단계: 6칸째 위(Y=5 이상) 체크 (실제 월드에 존재하는 모든 블록 검사)
         GameObject[] allBlocks = FindObjectsOfType<GameObject>();
         foreach (GameObject obj in allBlocks)
         {
             if (obj.CompareTag("LockedBlock") || obj.CompareTag("UselessBlock") || obj.CompareTag("TetriminoBlock"))
             {
                 Vector2Int gridPos = WorldToGrid(obj.transform.position);
-                if (gridPos.y >= height) // Y=5 이상
+                if (gridPos.y >= height) // Y=5 이상 (6칸째 위)
                 {
                     hasOverflowBlocks = true;
-                    Debug.Log($"5칸 위 블록 발견: {obj.name} at Grid({gridPos.x}, {gridPos.y})");
+                    Debug.Log($"6칸째 위 블록 발견: {obj.name} at Grid({gridPos.x}, {gridPos.y})");
                     break;
                 }
             }
@@ -171,20 +179,29 @@ public class TetriminoManager : Singleton<TetriminoManager>
         // 상태별 로그
         if (shouldGameOver)
         {
-            Debug.LogError("=== 게임오버 발생! ===");
-            Debug.LogError("조건: 4칸에 블록 있음 AND 5칸 위에도 블록 있음");
+            // GameManager에 점수 설정
+            //GameManager.Instance.SetScore(6000);
+
+            GameManager.Instance.ChangeState(EGameState.Paused);
+            // 게임오버 실행
+            if (gameOverPopup != null)
+            {
+                // 프리팹이 할당된 경우
+                gameOverPopup.gameObject.SetActive(true);
+                gameOverPopup.Init();
+            }
         }
         else if (hasTopRowBlocks && !hasOverflowBlocks)
         {
-            Debug.LogWarning("4칸에 블록 있지만 5칸 위는 비어있음 - 아직 게임 계속");
+            Debug.LogWarning("5칸째(최상단)에 블록 있지만 6칸째 위는 비어있음 - 아직 게임 계속");
         }
         else if (!hasTopRowBlocks && hasOverflowBlocks)
         {
-            Debug.LogWarning("5칸 위에 블록 있지만 4칸은 비어있음 - 아직 게임 계속");
+            Debug.LogWarning("6칸째 위에 블록 있지만 5칸째(최상단)는 비어있음 - 아직 게임 계속");
         }
         else
         {
-            Debug.Log("4칸과 5칸 위 모두 비어있음 - 게임 정상");
+            Debug.Log("5칸째(최상단)과 6칸째 위 모두 비어있음 - 게임 정상");
         }
     }
 
@@ -194,10 +211,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     private void OnGameOver()
     {
         Debug.Log("=== 게임오버 발생 ===");
-        GameManager.Instance.ChangeState(EGameState.GameOver);
-        //게임오버
-        //게임오버
-        //게임오버
+        //GameManager.Instance.ChangeState(EGameState.GameOver);
         // 추가 게임오버 처리 로직 여기에 구현
     }
 
@@ -238,9 +252,6 @@ public class TetriminoManager : Singleton<TetriminoManager>
     /// </summary>
     public void CheckAndClearLines()
     {
-        // 그리드 이동 중에는 라인 체크하지 않음
-        //if (IsGridMoving) return;
-
         List<int> linesToClear = new List<int>();
 
         // 모든 제거할 라인들을 먼저 찾기 (UselessBlock 제외)
@@ -273,14 +284,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
     public void ClearLine(int i)
     {
-        // 그리드 이동 중에는 라인 체크하지 않음
-        //if (IsGridMoving) return;
-
         List<int> linesToClear = new List<int>();
-
         linesToClear.Add(i);
         StartCoroutine(ClearLinesCoroutine(linesToClear));
-
     }
 
     /// <summary>
@@ -330,7 +336,8 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
 
         Debug.Log("=== 라인 클리어 완료 (UselessBlock은 영향 없음) ===");
-
+        GameManager.Instance.AddScore(1000);
+        SFXManager.Instance.PlaySFX(clearSound);
         // 라인 클리어 후 게임오버 상태 재체크
         CheckAndUpdateGameOverState();
     }
@@ -469,11 +476,11 @@ public class TetriminoManager : Singleton<TetriminoManager>
     {
         Debug.Log("=== 라인 위로 올리기 시작 ===");
 
-        // 맨 위줄 체크 (게임오버 방지)
+        // 5칸째(최상단, Y=4) 체크 (게임오버 방지)
         bool topRowHasBlocks = false;
         for (int x = 0; x < width; x++)
         {
-            if (IsLocked(x, height - 1))
+            if (IsLocked(x, height - 1)) // Y=4 (5칸째, 최상단)
             {
                 topRowHasBlocks = true;
                 break;
@@ -482,14 +489,14 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         if (topRowHasBlocks)
         {
-            Debug.LogWarning("맨 위줄에 블록이 있어서 더 이상 올릴 수 없습니다! 게임오버!");
+            Debug.LogWarning("5칸째(최상단)에 블록이 있어서 더 이상 올릴 수 없습니다! 게임오버!");
             // 게임오버 처리
             CheckAndUpdateGameOverState();
             yield break;
         }
 
         // 위에서부터 아래로 모든 라인을 한 칸씩 위로 이동
-        for (int y = height - 1; y >= 1; y--) // 맨 위(height-1)부터 Y=1까지
+        for (int y = height - 1; y >= 1; y--) // 최상단(height-1)부터 Y=1까지
         {
             for (int x = 0; x < width; x++)
             {
@@ -691,9 +698,9 @@ public class TetriminoManager : Singleton<TetriminoManager>
         // 범위 체크는 하지만 클램핑하지 않음 (게임오버 감지를 위해)
         if (x < 0 || x >= width || y >= height)
         {
-            if (y >= height)
+            if (y >= height) // Y=5 이상 (6칸째 위)
             {
-                Debug.LogWarning($"WorldToGrid: 블록이 5칸 위에 위치 - Grid({x}, {y})");
+                Debug.LogWarning($"WorldToGrid: 블록이 6칸째 위에 위치 - Grid({x}, {y})");
                 // 게임오버 조건이므로 실제 값 반환
                 return new Vector2Int(Mathf.Clamp(x, 0, width - 1), y);
             }
@@ -733,21 +740,21 @@ public class TetriminoManager : Singleton<TetriminoManager>
     #region === 디버그 및 테스트 메서드들 ===
 
     /// <summary>
-    /// 게임오버 조건 상세 체크 (디버깅용)
+    /// 게임오버 조건 상세 체크 (디버깅용) - 4x5 그리드 기준 수정
     /// </summary>
     [ContextMenu("Check GameOver Condition Detail")]
     public void CheckGameOverConditionDetail()
     {
-        Debug.Log("=== 게임오버 조건 상세 체크 ===");
+        Debug.Log("=== 게임오버 조건 상세 체크 (4x5 그리드) ===");
 
-        // 4칸(맨 위칸) 상태 체크
+        // 5칸째(최상단, Y=4) 상태 체크
         bool hasTopRowBlocks = false;
         int topRowBlockCount = 0;
 
-        Debug.Log("4칸(Y=4) 맨 위칸 상태:");
+        Debug.Log("5칸째(Y=4) 최상단 상태:");
         for (int x = 0; x < width; x++)
         {
-            if (IsLocked(x, height - 1))
+            if (IsLocked(x, height - 1)) // Y=4 체크 (5칸째, 최상단)
             {
                 hasTopRowBlocks = true;
                 topRowBlockCount++;
@@ -761,11 +768,11 @@ public class TetriminoManager : Singleton<TetriminoManager>
             }
         }
 
-        // 5칸 위 상태 체크
+        // 6칸째 위(Y=5 이상) 상태 체크
         bool hasOverflowBlocks = false;
         int overflowBlockCount = 0;
 
-        Debug.Log("5칸 위(Y=5+) 오버플로우 영역:");
+        Debug.Log("6칸째 위(Y=5+) 오버플로우 영역:");
         string[] targetTags = { "LockedBlock", "UselessBlock", "TetriminoBlock" };
 
         foreach (string tag in targetTags)
@@ -774,7 +781,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
             foreach (GameObject block in blocks)
             {
                 Vector2Int gridPos = WorldToGrid(block.transform.position);
-                if (gridPos.y >= height)
+                if (gridPos.y >= height) // Y=5 이상 (6칸째 위)
                 {
                     hasOverflowBlocks = true;
                     overflowBlockCount++;
@@ -785,46 +792,46 @@ public class TetriminoManager : Singleton<TetriminoManager>
 
         if (!hasOverflowBlocks)
         {
-            Debug.Log("  5칸 위에는 블록 없음");
+            Debug.Log("  6칸째 위에는 블록 없음");
         }
 
         // 최종 판정
         bool shouldGameOver = hasTopRowBlocks && hasOverflowBlocks;
 
-        Debug.Log("=== 최종 판정 ===");
-        Debug.Log($"4칸에 블록 있음: {hasTopRowBlocks} ({topRowBlockCount}개)");
-        Debug.Log($"5칸 위에 블록 있음: {hasOverflowBlocks} ({overflowBlockCount}개)");
+        Debug.Log("=== 최종 판정 (4x5 그리드) ===");
+        Debug.Log($"5칸째(최상단)에 블록 있음: {hasTopRowBlocks} ({topRowBlockCount}개)");
+        Debug.Log($"6칸째 위에 블록 있음: {hasOverflowBlocks} ({overflowBlockCount}개)");
         Debug.Log($"게임오버 조건 충족: {shouldGameOver}");
         Debug.Log($"현재 게임오버 상태: {IsGameOver}");
 
         if (shouldGameOver)
         {
-            Debug.LogError("▶ 게임오버! (4칸 AND 5칸 위 둘 다 블록 있음)");
+            Debug.LogError("▶ 게임오버! (5칸째 AND 6칸째 위 둘 다 블록 있음)");
         }
         else if (hasTopRowBlocks)
         {
-            Debug.LogWarning("▶ 위험! 4칸에 블록 있음 (5칸 위에만 블록 오면 게임오버)");
+            Debug.LogWarning("▶ 위험! 5칸째(최상단)에 블록 있음 (6칸째 위에만 블록 오면 게임오버)");
         }
         else if (hasOverflowBlocks)
         {
-            Debug.LogWarning("▶ 5칸 위에 블록 있지만 4칸은 비어있어서 아직 안전");
+            Debug.LogWarning("▶ 6칸째 위에 블록 있지만 5칸째(최상단)는 비어있어서 아직 안전");
         }
         else
         {
-            Debug.Log("▶ 안전! 4칸과 5칸 위 모두 비어있음");
+            Debug.Log("▶ 안전! 5칸째(최상단)과 6칸째 위 모두 비어있음");
         }
     }
 
     /// <summary>
-    /// 맨 위칸 상태 로그 (정확한 조건 반영)
+    /// 최상단 상태 로그 (4x5 그리드 기준)
     /// </summary>
     [ContextMenu("Log Top Row Status")]
     public void LogTopRowStatus()
     {
-        Debug.Log("=== 게임오버 조건 체크 ===");
+        Debug.Log("=== 게임오버 조건 체크 (4x5 그리드) ===");
 
         // 조건 설명
-        Debug.Log("게임오버 조건: 4칸(Y=4)에 블록이 있으면서 AND 5칸(Y=5+) 위에도 블록이 있어야 함");
+        Debug.Log("게임오버 조건: 5칸째(Y=4, 최상단)에 블록이 있으면서 AND 6칸째(Y=5+) 위에도 블록이 있어야 함");
 
         // 상세 체크 실행
         CheckGameOverConditionDetail();
@@ -912,7 +919,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
     [ContextMenu("Show Grid State")]
     public void ShowGridState()
     {
-        Debug.Log("=== 전체 그리드 상태 ===");
+        Debug.Log("=== 전체 그리드 상태 (4x5) ===");
         for (int y = height - 1; y >= 0; y--)
         {
             string row = $"Y={y}: ";
@@ -936,6 +943,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
         }
 
         Debug.Log($"활성 UselessBlock: {GetUselessBlockCount()}개");
+        Debug.Log("그리드 설명: Y=0(맨아래) ~ Y=4(최상단), 6칸째 위는 Y=5+");
     }
 
     #endregion

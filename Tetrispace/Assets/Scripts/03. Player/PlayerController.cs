@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour, IEntity
 
     private Material instancedMat;
 
+    public AudioClip Wsound;
+    public AudioClip hitsound;
+
     private void Awake()
     {
         var sr = GetComponentInChildren<SpriteRenderer>();
@@ -256,6 +259,7 @@ public class PlayerController : MonoBehaviour, IEntity
     /// </summary>
     public void OnMagnetAction(InputAction.CallbackContext context)
     {
+        SFXManager.Instance.PlaySFX(Wsound);
         if (context.started)
         {
             Debug.Log("MagnetAction 입력 감지!");
@@ -370,6 +374,7 @@ public class PlayerController : MonoBehaviour, IEntity
 
     public void OnHit(float Damage, Vector2 hitPosition)
     {
+        SFXManager.Instance.PlaySFX(hitsound);
         if (hitInvincibleTimer < hitInvincibleTime) return;
 
         hitInvincibleTimer = 0f;

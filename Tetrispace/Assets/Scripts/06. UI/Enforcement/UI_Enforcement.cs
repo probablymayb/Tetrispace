@@ -35,6 +35,9 @@ public class UI_Enforcement : UI_Base
     private const string CardSelectActionName = "Select";
     private const string PlayerActionMap = "PlayerActions";
     private const string UIActionMap = "UIActions";
+
+    public AudioClip menuSwap;
+    public AudioClip powerSelect;
     
     private void Awake()
     {
@@ -61,6 +64,8 @@ public class UI_Enforcement : UI_Base
 
     public void OnEnable()
     {
+        SFXManager.Instance.PlaySFX(menuSwap);
+
         if (!CanEnforcement())
         {
             gameObject.SetActive(false);
@@ -91,7 +96,9 @@ public class UI_Enforcement : UI_Base
     
     private void OnSelect(InputAction.CallbackContext context)
     {
-        PlayerEnforcement enforcement = Get<UI_EnforcementCardList>((int)CardLists.EnforcementCardList).SelectNowHovered();
+        SFXManager.Instance.PlaySFX(powerSelect);
+
+           PlayerEnforcement enforcement = Get<UI_EnforcementCardList>((int)CardLists.EnforcementCardList).SelectNowHovered();
         levels[enforcement]++;
         if(!earnedEnforcement.Contains(enforcement)) earnedEnforcement.Add(enforcement);
         gameObject.SetActive(false);

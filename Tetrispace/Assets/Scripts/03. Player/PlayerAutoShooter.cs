@@ -16,6 +16,8 @@ public class PlayerAutoShooter : MonoBehaviour
     private float bombCoolTime;
     private PlayerStat playerStat;
 
+    public AudioClip gunShotSound;
+
     private void Awake()
     {
         FindShootPos();
@@ -70,6 +72,8 @@ public class PlayerAutoShooter : MonoBehaviour
 
     private IEnumerator AutoFire()
     {
+        SFXManager.Instance.PlayLooping(gunShotSound,"gun", 0.3f );
+
         print("AutoFire");
         float fireInterval = 1f / attackSpeed;
 
