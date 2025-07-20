@@ -1683,11 +1683,9 @@ MonoBehaviour:
   firePoint: {fileID: 586898067}
   attackCooldown: 0.3
   rotationAttackCooldown: 0.5
-  magnetAttackCooldown: 0.8
   bulletData: {fileID: 11400000, guid: cad128d8d73be074d9962bf378ebf1d6, type: 2}
   CCWBulletData: {fileID: 11400000, guid: a87d9f2cdbf2ca14983ec3d7bfb27af4, type: 2}
   CWBulletData: {fileID: 11400000, guid: d23c9017163a93e499ed51f2deb0211e, type: 2}
-  MagnetBulletData: {fileID: 11400000, guid: 44c3b764c54bb694b907280686ed253a, type: 2}
 --- !u!1 &618780412
 GameObject:
   m_ObjectHideFlags: 0
@@ -4267,7 +4265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8752358720641827366, guid: 5dd82490ee6afeb4ab8becd33d0c9f2c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -11,6 +11,11 @@ using UnityEngine.UI;
 /// </summary>
 public class UI_GameOverPopup : UI_Base
 {
+
+    private void Awake()
+    {
+        //GameManager.Instance.OnGameOver += OnGameOver;
+    }
     #region UI 요소 정의
     enum Texts
     {
