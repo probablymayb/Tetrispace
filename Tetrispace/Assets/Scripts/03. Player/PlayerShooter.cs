@@ -396,20 +396,5 @@ public class PlayerShooter : MonoBehaviour
         CCWAttackTimer = 0f;
         CWAttackTimer = 0f;
     }
-
-    /// <summary>
-    /// 디버그 정보 표시 (게임잼용)
-    /// </summary>
-    private void OnGUI()
-    {
-        if (!Application.isEditor) return;
-
-        GUILayout.BeginArea(new Rect(10, 200, 250, 150));
-        GUILayout.Label("=== PlayerShooter Debug ===");
-        GUILayout.Label($"일반 공격: {(isAttackHeld ? "ON" : "OFF")} ({attackTimer:F1}s)");
-        GUILayout.Label($"CCW 공격: {(isCCWAttackHeld ? "ON" : "OFF")} ({CCWAttackTimer:F1}s)");
-        GUILayout.Label($"CW 공격: {(isCWAttackHeld ? "ON" : "OFF")} ({CWAttackTimer:F1}s)");
-        GUILayout.EndArea();
-    }
     #endregion
 }

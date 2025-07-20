@@ -22,6 +22,7 @@ public class UI_EnforcementIcon : UI_Base
     }
     
     [SerializeField] private List<EnforcementIconPair> enforcementIcons = new();
+    [SerializeField] private Sprite defaultImg;
     private Dictionary<PlayerEnforcement, Sprite> spriteDict;
 
     private void Awake()
@@ -45,7 +46,7 @@ public class UI_EnforcementIcon : UI_Base
         for (int i = 0; i < 6; i++)
         {
             if(i < earnedEnforcement.Count) GetImage((int)Images.IconOne + i).sprite = spriteDict[earnedEnforcement[i]];
-            else GetImage((int)Images.IconOne + i).sprite = null;
+            else GetImage((int)Images.IconOne + i).sprite = defaultImg;
         }
     }
 }
