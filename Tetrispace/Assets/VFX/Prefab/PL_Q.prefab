@@ -9443,7 +9443,7 @@ ParticleSystem:
     vector0_2:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 18
+      scalar: 31
       minScalar: 0
       maxCurve:
         serializedVersion: 2
