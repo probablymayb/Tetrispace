@@ -181,7 +181,7 @@ public class TetriminoManager : Singleton<TetriminoManager>
         {
             // GameManager에 점수 설정
             //GameManager.Instance.SetScore(6000);
-
+            CameraShake.Instance.ShakeCamera(2f,1f);
             GameManager.Instance.ChangeState(EGameState.Paused);
             // 게임오버 실행
             if (gameOverPopup != null)
@@ -338,6 +338,8 @@ public class TetriminoManager : Singleton<TetriminoManager>
         Debug.Log("=== 라인 클리어 완료 (UselessBlock은 영향 없음) ===");
         GameManager.Instance.AddScore(1000);
         SFXManager.Instance.PlaySFX(clearSound);
+        CameraShake.Instance.ShakeCamera();
+
         // 라인 클리어 후 게임오버 상태 재체크
         CheckAndUpdateGameOverState();
     }

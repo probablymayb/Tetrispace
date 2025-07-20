@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour, IEntity
 
     public AudioClip Wsound;
     public AudioClip hitsound;
-
+    
     private void Awake()
     {
         var sr = GetComponentInChildren<SpriteRenderer>();
@@ -383,6 +383,9 @@ public class PlayerController : MonoBehaviour, IEntity
         if(GameManager.Instance.IsGamePlaying()) TetriminoManager.Instance.SpawnUselessBlock();
         instancedMat.SetFloat(ColorSwitch, 1f);
         StartCoroutine(HitCoroutine());
+
+        CameraShake.Instance.ShakeCamera(0.7f, 1f);
+        //EventManager.Instance.PlayerBlockHit(0.5f);
     }
 
     private IEnumerator HitCoroutine()
