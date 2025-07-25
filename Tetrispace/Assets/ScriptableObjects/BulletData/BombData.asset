@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BombData
   m_EditorClassIdentifier: 
   speed: 5
-  lifeTime: 5
+  lifeTime: 1.4
   logicType: 0
   effectPrefabTransform: {fileID: 8479999644374675931, guid: 5f40009d10769a14cad008f3363b3475, type: 3}
   capsuleSize: {x: 0.2, y: 0.33}

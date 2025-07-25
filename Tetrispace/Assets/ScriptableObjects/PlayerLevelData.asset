@@ -28,11 +28,11 @@ MonoBehaviour:
     - innerList:
       - 1
     - innerList:
-      - 2
+      - 1.1
     - innerList:
-      - 3
+      - 1.2
     - innerList:
-      - 4
+      - 1.3
   - enforcement: 2
     valuesByLevel:
     - innerList:
@@ -50,22 +50,22 @@ MonoBehaviour:
     - innerList:
       - 1
     - innerList:
-      - 2
+      - 1.2
     - innerList:
-      - 3
+      - 1.4
   - enforcement: 4
     valuesByLevel:
     - innerList:
       - 0
       - 0
     - innerList:
-      - 4
+      - 10
       - 2
     - innerList:
-      - 3
+      - 8
       - 3
     - innerList:
-      - 2
+      - 6
       - 4
   - enforcement: 5
     valuesByLevel:
